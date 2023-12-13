@@ -1,0 +1,27 @@
+# Dependencias de NuGet
+**/[Pp]ackages/*
+**/packages/
+
+# Archivos compilados
+**/[Bb]in/
+**/[Oo]bj/
+
+# Archivos de configuración de usuario de Visual Studio
+**/*.user
+**/*.suo
+
+# Carpetas específicas de IDE y editor
+.vs/
+.vscode/
+
+# Archivos temporales
+**/*.[Tt]mp
+**/*.[Bb]ak
+**/*.[Ll]og
+
+# Otros archivos y carpetas ignorados
+*.nupkg
+*.[Rr]esx
+.DS_Store
+Thumbs.db
+
