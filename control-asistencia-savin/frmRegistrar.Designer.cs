@@ -28,116 +28,170 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.label1 = new System.Windows.Forms.Label();
-            this.label2 = new System.Windows.Forms.Label();
-            this.btnAgregar = new System.Windows.Forms.Button();
-            this.txtNombre = new System.Windows.Forms.TextBox();
-            this.txtHuella = new System.Windows.Forms.TextBox();
-            this.btnRegistrarHuella = new System.Windows.Forms.Button();
-            this.dgvListar = new System.Windows.Forms.DataGridView();
-            this.txtId = new System.Windows.Forms.TextBox();
-            this.label3 = new System.Windows.Forms.Label();
-            ((System.ComponentModel.ISupportInitialize)(this.dgvListar)).BeginInit();
-            this.SuspendLayout();
+            label1 = new Label();
+            label2 = new Label();
+            btnAgregar = new Button();
+            txtPaterno = new TextBox();
+            txtHuella = new TextBox();
+            btnRegistrarHuella = new Button();
+            dgvListar = new DataGridView();
+            txtId_ciudad = new TextBox();
+            label3 = new Label();
+            txtMaterno = new TextBox();
+            label4 = new Label();
+            txtNombre = new TextBox();
+            label5 = new Label();
+            ((System.ComponentModel.ISupportInitialize)dgvListar).BeginInit();
+            SuspendLayout();
             // 
             // label1
             // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(44, 51);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(47, 13);
-            this.label1.TabIndex = 0;
-            this.label1.Text = "Nombre:";
+            label1.AutoSize = true;
+            label1.Location = new Point(51, 59);
+            label1.Margin = new Padding(4, 0, 4, 0);
+            label1.Name = "label1";
+            label1.Size = new Size(51, 15);
+            label1.TabIndex = 0;
+            label1.Text = "Paterno:";
             // 
             // label2
             // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(47, 92);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(40, 13);
-            this.label2.TabIndex = 1;
-            this.label2.Text = "Huella:";
+            label2.AutoSize = true;
+            label2.Location = new Point(55, 199);
+            label2.Margin = new Padding(4, 0, 4, 0);
+            label2.Name = "label2";
+            label2.Size = new Size(44, 15);
+            label2.TabIndex = 1;
+            label2.Text = "Huella:";
             // 
             // btnAgregar
             // 
-            this.btnAgregar.Enabled = false;
-            this.btnAgregar.Location = new System.Drawing.Point(47, 135);
-            this.btnAgregar.Name = "btnAgregar";
-            this.btnAgregar.Size = new System.Drawing.Size(75, 23);
-            this.btnAgregar.TabIndex = 2;
-            this.btnAgregar.Text = "Agregar";
-            this.btnAgregar.UseVisualStyleBackColor = true;
-            this.btnAgregar.Click += new System.EventHandler(this.btnAgregar_Click);
+            btnAgregar.Enabled = false;
+            btnAgregar.Location = new Point(51, 248);
+            btnAgregar.Margin = new Padding(4, 3, 4, 3);
+            btnAgregar.Name = "btnAgregar";
+            btnAgregar.Size = new Size(88, 27);
+            btnAgregar.TabIndex = 2;
+            btnAgregar.Text = "Agregar";
+            btnAgregar.UseVisualStyleBackColor = true;
+            btnAgregar.Click += btnAgregar_Click;
             // 
-            // txtNombre
+            // txtPaterno
             // 
-            this.txtNombre.Location = new System.Drawing.Point(98, 51);
-            this.txtNombre.Name = "txtNombre";
-            this.txtNombre.Size = new System.Drawing.Size(193, 20);
-            this.txtNombre.TabIndex = 3;
+            txtPaterno.Location = new Point(114, 59);
+            txtPaterno.Margin = new Padding(4, 3, 4, 3);
+            txtPaterno.Name = "txtPaterno";
+            txtPaterno.Size = new Size(224, 23);
+            txtPaterno.TabIndex = 3;
             // 
             // txtHuella
             // 
-            this.txtHuella.Location = new System.Drawing.Point(98, 85);
-            this.txtHuella.Name = "txtHuella";
-            this.txtHuella.Size = new System.Drawing.Size(193, 20);
-            this.txtHuella.TabIndex = 4;
+            txtHuella.Location = new Point(114, 191);
+            txtHuella.Margin = new Padding(4, 3, 4, 3);
+            txtHuella.Name = "txtHuella";
+            txtHuella.Size = new Size(224, 23);
+            txtHuella.TabIndex = 4;
             // 
             // btnRegistrarHuella
             // 
-            this.btnRegistrarHuella.Location = new System.Drawing.Point(297, 85);
-            this.btnRegistrarHuella.Name = "btnRegistrarHuella";
-            this.btnRegistrarHuella.Size = new System.Drawing.Size(75, 23);
-            this.btnRegistrarHuella.TabIndex = 5;
-            this.btnRegistrarHuella.Text = "Registrar Huella";
-            this.btnRegistrarHuella.UseVisualStyleBackColor = true;
-            this.btnRegistrarHuella.Click += new System.EventHandler(this.btnRegistrarHuella_Click);
+            btnRegistrarHuella.Location = new Point(321, 248);
+            btnRegistrarHuella.Margin = new Padding(4, 3, 4, 3);
+            btnRegistrarHuella.Name = "btnRegistrarHuella";
+            btnRegistrarHuella.Size = new Size(88, 27);
+            btnRegistrarHuella.TabIndex = 5;
+            btnRegistrarHuella.Text = "Registrar Huella";
+            btnRegistrarHuella.UseVisualStyleBackColor = true;
+            btnRegistrarHuella.Click += btnRegistrarHuella_Click;
             // 
             // dgvListar
             // 
-            this.dgvListar.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dgvListar.Location = new System.Drawing.Point(47, 184);
-            this.dgvListar.Name = "dgvListar";
-            this.dgvListar.Size = new System.Drawing.Size(327, 150);
-            this.dgvListar.TabIndex = 6;
+            dgvListar.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            dgvListar.Location = new Point(38, 298);
+            dgvListar.Margin = new Padding(4, 3, 4, 3);
+            dgvListar.Name = "dgvListar";
+            dgvListar.Size = new Size(382, 173);
+            dgvListar.TabIndex = 6;
             // 
-            // txtId
+            // txtId_ciudad
             // 
-            this.txtId.Location = new System.Drawing.Point(98, 12);
-            this.txtId.Name = "txtId";
-            this.txtId.Size = new System.Drawing.Size(193, 20);
-            this.txtId.TabIndex = 8;
+            txtId_ciudad.Location = new Point(114, 14);
+            txtId_ciudad.Margin = new Padding(4, 3, 4, 3);
+            txtId_ciudad.Name = "txtId_ciudad";
+            txtId_ciudad.Size = new Size(224, 23);
+            txtId_ciudad.TabIndex = 8;
             // 
             // label3
             // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(44, 12);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(19, 13);
-            this.label3.TabIndex = 7;
-            this.label3.Text = "Id:";
+            label3.AutoSize = true;
+            label3.Location = new Point(51, 14);
+            label3.Margin = new Padding(4, 0, 4, 0);
+            label3.Name = "label3";
+            label3.Size = new Size(61, 15);
+            label3.TabIndex = 7;
+            label3.Text = "Id_ciudad:";
+            label3.Click += label3_Click;
+            // 
+            // txtMaterno
+            // 
+            txtMaterno.Location = new Point(114, 102);
+            txtMaterno.Margin = new Padding(4, 3, 4, 3);
+            txtMaterno.Name = "txtMaterno";
+            txtMaterno.Size = new Size(224, 23);
+            txtMaterno.TabIndex = 10;
+            // 
+            // label4
+            // 
+            label4.AutoSize = true;
+            label4.Location = new Point(51, 102);
+            label4.Margin = new Padding(4, 0, 4, 0);
+            label4.Name = "label4";
+            label4.Size = new Size(55, 15);
+            label4.TabIndex = 9;
+            label4.Text = "Materno:";
+            // 
+            // txtNombre
+            // 
+            txtNombre.Location = new Point(114, 145);
+            txtNombre.Margin = new Padding(4, 3, 4, 3);
+            txtNombre.Name = "txtNombre";
+            txtNombre.Size = new Size(224, 23);
+            txtNombre.TabIndex = 12;
+            // 
+            // label5
+            // 
+            label5.AutoSize = true;
+            label5.Location = new Point(51, 145);
+            label5.Margin = new Padding(4, 0, 4, 0);
+            label5.Name = "label5";
+            label5.Size = new Size(54, 15);
+            label5.TabIndex = 11;
+            label5.Text = "Nombre:";
             // 
             // frmRegistrar
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(423, 346);
-            this.Controls.Add(this.txtId);
-            this.Controls.Add(this.label3);
-            this.Controls.Add(this.dgvListar);
-            this.Controls.Add(this.btnRegistrarHuella);
-            this.Controls.Add(this.txtHuella);
-            this.Controls.Add(this.txtNombre);
-            this.Controls.Add(this.btnAgregar);
-            this.Controls.Add(this.label2);
-            this.Controls.Add(this.label1);
-            this.Name = "frmRegistrar";
-            this.Text = "frmRegistrar";
-            this.Load += new System.EventHandler(this.frmRegistrar_Load);
-            ((System.ComponentModel.ISupportInitialize)(this.dgvListar)).EndInit();
-            this.ResumeLayout(false);
-            this.PerformLayout();
-
+            AutoScaleDimensions = new SizeF(7F, 15F);
+            AutoScaleMode = AutoScaleMode.Font;
+            ClientSize = new Size(493, 495);
+            Controls.Add(txtNombre);
+            Controls.Add(label5);
+            Controls.Add(txtMaterno);
+            Controls.Add(label4);
+            Controls.Add(txtId_ciudad);
+            Controls.Add(label3);
+            Controls.Add(dgvListar);
+            Controls.Add(btnRegistrarHuella);
+            Controls.Add(txtHuella);
+            Controls.Add(txtPaterno);
+            Controls.Add(btnAgregar);
+            Controls.Add(label2);
+            Controls.Add(label1);
+            Margin = new Padding(4, 3, 4, 3);
+            Name = "frmRegistrar";
+            Text = "frmRegistrar";
+            Load += frmRegistrar_Load;
+            ((System.ComponentModel.ISupportInitialize)dgvListar).EndInit();
+            ResumeLayout(false);
+            PerformLayout();
         }
 
         #endregion
@@ -145,11 +199,15 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Button btnAgregar;
-        private System.Windows.Forms.TextBox txtNombre;
+        private System.Windows.Forms.TextBox txtPaterno;
         private System.Windows.Forms.TextBox txtHuella;
         private System.Windows.Forms.Button btnRegistrarHuella;
         private System.Windows.Forms.DataGridView dgvListar;
-        private System.Windows.Forms.TextBox txtId;
+        private System.Windows.Forms.TextBox txtId_ciudad;
         private System.Windows.Forms.Label label3;
+        private TextBox txtMaterno;
+        private Label label4;
+        private TextBox txtNombre;
+        private Label label5;
     }
 }

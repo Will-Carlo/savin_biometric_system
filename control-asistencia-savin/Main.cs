@@ -15,6 +15,8 @@ namespace control_asistencia_savin
         {
             InitializeComponent();
             tmrTime.Start();
+            StoreContext s = new StoreContext();
+            s.TestConnection();
         }
 
         private void btnRegistrar_Click(object sender, EventArgs e)

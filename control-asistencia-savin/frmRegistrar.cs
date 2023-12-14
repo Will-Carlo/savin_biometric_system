@@ -1,4 +1,5 @@
-﻿using System;
+﻿using control_asistencia_savin.Models;
+using System;
 
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -14,8 +15,7 @@ namespace control_asistencia_savin
     {
         private DPFP.Template Template;
         //private UsuariosDBEntities contexto;
-        //private UsuariosDBEntities contexto;
-        private int cont = 1;
+        private StoreContext contexto;
         public frmRegistrar()
         {
             InitializeComponent();
@@ -48,35 +48,40 @@ namespace control_asistencia_savin
 
         private void frmRegistrar_Load(object sender, EventArgs e)
         {
-            //contexto = new UsuariosDBEntities();
+            contexto = new StoreContext();
             Listar();
         }
 
         private void Limpiar()
         {
+            txtId_ciudad.Text = "";
+            txtPaterno.Text = "";
+            txtMaterno.Text = "";
             txtNombre.Text = "";
+            txtHuella.Text = "";
+
         }
 
         private void Listar()
         {
-            try
-            {
-                //var empleados = from emp in contexto.Empleadoes
-                //                select new
-                //                {
-                //                    ID = emp.Id,
-                //                    EMPLEADO = emp.Nombre
-                //                };
-                //if (empleados!=null)
-                //{
-                //    dgvListar.DataSource = empleados.ToList();
-                //}
-            }
-            catch (Exception ex)
-            {
+            //try
+            //{
+            //    var personal = from emp in contexto.RrhhPersonals
+            //                   select new
+            //                   {
+            //                       ID = emp.Id,
+            //                       EMPLEADO = emp.Nombre +" "+ emp.Paterno + " " + emp.Materno ,
+            //                   };
+            //    if (personal != null)
+            //    {
+            //        dgvListar.DataSource = personal.ToList();
+            //    }
+            //}
+            //catch (Exception ex)
+            //{
 
-                MessageBox.Show(ex.Message);
-            }
+            //    MessageBox.Show(ex.Message);
+            //}
         }
 
         private void btnAgregar_Click(object sender, EventArgs e)
@@ -84,18 +89,20 @@ namespace control_asistencia_savin
             //try
             //{
             //    byte[] streamHuella = Template.Bytes;
-            //    Empleado empleado = new Empleado()
-                 
+            //    RrhhPersonal personal = new RrhhPersonal()
+
             //    {
-            //        Id = int.Parse(txtId.Text),
+            //        Id = 1,
+            //        IdCiudad = int.Parse(txtId_ciudad.Text),
+            //        Paterno = txtPaterno.Text,
+            //        Materno = txtMaterno.Text,
             //        Nombre = txtNombre.Text,
-            //        Huella = streamHuella
+            //        HuellaIndDer = streamHuella
             //    };
 
-            //    contexto.Empleadoes.Add(empleado);
+            //    contexto.RrhhPersonals.Add(personal);
             //    contexto.SaveChanges();
             //    MessageBox.Show("Registro agregado a la BD correctamente");
-            //    cont++;
             //    Limpiar();
             //    Listar();
             //    Template = null;
@@ -104,9 +111,16 @@ namespace control_asistencia_savin
             //}
             //catch (Exception ex)
             //{
+            //    // Obtener detalles completos del error, incluyendo la InnerException
+            //    string errorMessage = ex.InnerException != null ? ex.InnerException.Message : ex.Message;
 
-            //    MessageBox.Show(ex.Message);
+            //    MessageBox.Show(errorMessage, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             //}
+        }
+
+        private void label3_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }

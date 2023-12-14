@@ -13,6 +13,9 @@ namespace control_asistencia_savin.Models
         public string Direccion { get; set; }
         public string Responsable { get; set; }
         public string DireccionMac { get; set; }
+        public int IdSucursal { get; set; }
+
+        public InvSucursal Sucursal { get; set; }
 
         // Colección para relación
         public ICollection<RrhhTurnoAsignado> TurnosAsignados { get; set; }
