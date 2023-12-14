@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "control-asistencia-savin": {
+      "commandName": "Project",
+      "workingDirectory": "C:\\Users\\ASUS\\source\\repos\\control-asistencia-savin\\control-asistencia-savin"
+    }
+  }
+}

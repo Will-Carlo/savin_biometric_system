@@ -1,4 +1,5 @@
-﻿using System;
+﻿using control_asistencia_savin.Models2;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -14,8 +15,9 @@ namespace control_asistencia_savin
     {
         private DPFP.Template Template;
         private DPFP.Verification.Verification Verificator;
-        //private UsuariosDBEntities contexto;
+        private StoreContext contexto;
         public String personalName;
+        public int idEncontrado;
 
 
 
@@ -50,36 +52,36 @@ namespace control_asistencia_savin
             // TODO: move to a separate task
             if (features != null)
             {
-                // Compare the feature set with our template
-                //DPFP.Verification.Verification.Result result = new DPFP.Verification.Verification.Result();
+                //Compare the feature set with our template
+                DPFP.Verification.Verification.Result result = new DPFP.Verification.Verification.Result();
 
-                //DPFP.Template template = new DPFP.Template();
-                //Stream stream;
+                DPFP.Template template = new DPFP.Template();
+                Stream stream;
 
-                //foreach (var emp in contexto.Empleadoes)
-                //{
-                //    stream = new MemoryStream(emp.Huella);
-                //    template = new DPFP.Template(stream);
+                foreach (var emp in contexto.RrhhPersonals)
+                {
+                    stream = new MemoryStream(emp.HuellaIndDer);
+                    template = new DPFP.Template(stream);
 
-                //    Verificator.Verify(features, template, ref result);
-                //    UpdateStatus(result.FARAchieved);
-                //    if (result.Verified)
-                //    {
-                //        MakeReport("The fingerprint was VERIFIED. " + emp.Nombre);
-                //        personalName = emp.Nombre;
-                //        Stop();
-                //        break;
-                //    }
-                //}
+                    Verificator.Verify(features, template, ref result);
+                    UpdateStatus(result.FARAchieved);
+                    if (result.Verified)
+                    {
+                        MakeReport("La huella ha sido verificada con éxito.");
+                        MakeReport("CIERRE LA VENTANA PARA CONTINUAR.");
 
-
-
+                        personalName = emp.Nombre +" "+ emp.Paterno + " " + emp.Materno;
+                        idEncontrado = emp.Id;
+                        Stop();
+                        break;
+                    }
+                }
             }
         }
 
         public frmVerificar()
         {
-            //contexto = new UsuariosDBEntities();
+            contexto = new StoreContext();
             InitializeComponent();
         }
     }

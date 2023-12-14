@@ -75,7 +75,6 @@
             label1.Size = new Size(208, 15);
             label1.TabIndex = 2;
             label1.Text = "Sistema de Asistencia: PUNTO ZAPATA";
-            label1.Click += label1_Click;
             // 
             // label2
             // 
@@ -115,6 +114,7 @@
             linkLabel1.TabIndex = 6;
             linkLabel1.TabStop = true;
             linkLabel1.Text = "Opciones";
+            linkLabel1.LinkClicked += linkLabel1_LinkClicked;
             // 
             // label4
             // 
@@ -135,7 +135,6 @@
             label5.Size = new Size(36, 15);
             label5.TabIndex = 9;
             label5.Text = "Hora:";
-            label5.Click += label5_Click;
             // 
             // dsa
             // 
@@ -146,7 +145,6 @@
             dsa.Size = new Size(55, 15);
             dsa.TabIndex = 8;
             dsa.Text = "Personal:";
-            dsa.Click += label6_Click;
             // 
             // lblNombre
             // 

@@ -1,21 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace control_asistencia_savin.Models
+namespace control_asistencia_savin.Models2;
+
+public partial class GenCiudad
 {
-    internal class GenCiudad
-    {
-        public int Id { get; set; }
-        public string Nombre { get; set; }
+    public int Id { get; set; }
 
-        // Colecciones para relaciones uno a muchos
+    public string? Nombre { get; set; }
 
+    public virtual ICollection<InvSucursal> InvSucursals { get; set; } = new List<InvSucursal>();
 
-        public ICollection<RrhhPersonal> Personal { get; set; }
-        public ICollection<RrhhFeriado> Feriados { get; set; }
-        public ICollection<InvSucursal> Sucursales { get; set; }
-    }
+    public virtual ICollection<RrhhFeriado> RrhhFeriados { get; set; } = new List<RrhhFeriado>();
+
+    public virtual ICollection<RrhhPersonal> RrhhPersonals { get; set; } = new List<RrhhPersonal>();
 }

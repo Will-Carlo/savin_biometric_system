@@ -3,17 +3,21 @@ using System.Collections.Generic;
 
 namespace control_asistencia_savin.Models2;
 
-public partial class RrhhTurno
+public partial class RrhhPuntoAsistencium
 {
     public int Id { get; set; }
 
     public string? Nombre { get; set; }
 
-    public TimeSpan? HoraIngreso { get; set; }
+    public string? Direccion { get; set; }
 
-    public TimeSpan? HoraSalida { get; set; }
+    public string? Responsable { get; set; }
 
-    public virtual ICollection<RrhhAsistencia> RrhhAsistencia { get; set; } = new List<RrhhAsistencia>();
+    public string? DireccionMac { get; set; }
+
+    public int IdSucursal { get; set; }
+
+    public virtual InvSucursal IdSucursalNavigation { get; set; } = null!;
 
     public virtual ICollection<RrhhTurnoAsignado> RrhhTurnoAsignados { get; set; } = new List<RrhhTurnoAsignado>();
 }

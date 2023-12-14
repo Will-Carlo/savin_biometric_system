@@ -1,22 +1,23 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace control_asistencia_savin.Models
+namespace control_asistencia_savin.Models2;
+
+public partial class RrhhAsistencia
 {
-    internal class RrhhAsistencia
-    {
-        public int Id { get; set; }
-        public int IdTurno { get; set; }
-        public int IdPersonal { get; set; }
-        public string HoraMarcado { get; set; }
-        public int MinutosAtraso { get; set; }
-        public int IndTipoMovimiento { get; set; }
+    public int Id { get; set; }
 
-        // Relaciones de claves foráneas
-        public RrhhTurno Turno { get; set; }
-        public RrhhPersonal Personal { get; set; }
-    }
+    public int IdTurno { get; set; }
+
+    public int IdPersonal { get; set; }
+
+    public string? HoraMarcado { get; set; }
+
+    public int? MinutosAtraso { get; set; }
+
+    public int? IndTipoMovimiento { get; set; }
+
+    public virtual RrhhPersonal IdPersonalNavigation { get; set; } = null!;
+
+    public virtual RrhhTurno IdTurnoNavigation { get; set; } = null!;
 }
