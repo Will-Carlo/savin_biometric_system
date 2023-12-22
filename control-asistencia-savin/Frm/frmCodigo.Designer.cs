@@ -1,6 +1,6 @@
 ﻿namespace control_asistencia_savin
 {
-    partial class frmOpciones
+    partial class frmCodigo
     {
         /// <summary>
         /// Required designer variable.
@@ -28,44 +28,23 @@
         /// </summary>
         private void InitializeComponent()
         {
-            btnVerAtrasos = new Button();
-            btnVolver = new Button();
             SuspendLayout();
             // 
-            // btnVerAtrasos
+            // btnVerificarHuellaCod
             // 
-            btnVerAtrasos.Location = new Point(252, 216);
-            btnVerAtrasos.Name = "btnVerAtrasos";
-            btnVerAtrasos.Size = new Size(75, 23);
-            btnVerAtrasos.TabIndex = 0;
-            btnVerAtrasos.Text = "Ver atrasos acumulados";
-            btnVerAtrasos.UseVisualStyleBackColor = true;
-            btnVerAtrasos.Click += btnVerAtrasos_Click;
+            btnVerificarHuellaCod.Click += btnVerificarHuellaCod_Click;
             // 
-            // btnVolver
-            // 
-            btnVolver.Location = new Point(12, 415);
-            btnVolver.Name = "btnVolver";
-            btnVolver.Size = new Size(75, 23);
-            btnVolver.TabIndex = 1;
-            btnVolver.Text = "Volver";
-            btnVolver.UseVisualStyleBackColor = true;
-            // 
-            // frmOpciones
+            // frmCodigo
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(800, 450);
-            Controls.Add(btnVolver);
-            Controls.Add(btnVerAtrasos);
-            Name = "frmOpciones";
-            Text = "frmOpciones";
+            BackColor = Color.White;
+            ClientSize = new Size(1125, 457);
+            Name = "frmCodigo";
+            Text = "Codigo";
             ResumeLayout(false);
         }
 
         #endregion
-
-        private Button btnVerAtrasos;
-        private Button btnVolver;
     }
 }

@@ -23,7 +23,7 @@ namespace control_asistencia_savin
             base.Init();
             base.Text = "Dar de alta Huella";
             Enroller = new DPFP.Processing.Enrollment();            // Create an enrollment.
-            UpdateStatus();
+            //UpdateStatus();
         }
 
         protected override void Process(DPFP.Sample Sample)
@@ -41,7 +41,7 @@ namespace control_asistencia_savin
                 }
                 finally
                 {
-                    UpdateStatus();
+                    //UpdateStatus();
 
                     // Check if template has been created.
                     switch (Enroller.TemplateStatus)
@@ -55,7 +55,7 @@ namespace control_asistencia_savin
                         case DPFP.Processing.Enrollment.Status.Failed:  // report failure and restart capturing
                             Enroller.Clear();
                             Stop();
-                            UpdateStatus();
+                            //UpdateStatus();
                             OnTemplate(null);
                             Start();
                             break;
@@ -63,11 +63,11 @@ namespace control_asistencia_savin
                 }
         }
 
-        private void UpdateStatus()
-        {
-            // Show number of samples needed.
-            SetStatus(String.Format("Fingerprint samples needed: {0}", Enroller.FeaturesNeeded));
-        }
+        //private void UpdateStatus()
+        //{
+        //    // Show number of samples needed.
+        //    SetStatus(String.Format("Fingerprint samples needed: {0}", Enroller.FeaturesNeeded));
+        //}
 
         public CapturarHuella()
         {

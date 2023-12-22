@@ -29,144 +29,70 @@
         private void InitializeComponent()
         {
             components = new System.ComponentModel.Container();
-            btnRegistrar = new Button();
-            btnVerificar = new Button();
-            label1 = new Label();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Main));
+            lblSisAsis = new Label();
             label2 = new Label();
             lblTime = new Label();
-            textBox1 = new TextBox();
-            linkLabel1 = new LinkLabel();
-            label4 = new Label();
-            label5 = new Label();
-            dsa = new Label();
-            lblNombre = new Label();
-            lblHora = new Label();
             tmrTime = new System.Windows.Forms.Timer(components);
+            label5 = new Label();
+            label4 = new Label();
+            lblPunto = new Label();
+            lnkMarcarCodigo = new LinkLabel();
+            lnkApiTest = new LinkLabel();
+            lnkRegistrar = new LinkLabel();
+            lnkVerAtrasos = new LinkLabel();
+            lnkVerAtrasosMes = new LinkLabel();
+            lnkInicio = new LinkLabel();
+            lnkOpciones = new LinkLabel();
+            pictureBox1 = new PictureBox();
+            panel1 = new Panel();
+            pnlInfoStore = new Panel();
+            pnlHora = new Panel();
+            pnlBase = new Panel();
+            ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
+            panel1.SuspendLayout();
+            pnlInfoStore.SuspendLayout();
+            pnlHora.SuspendLayout();
             SuspendLayout();
             // 
-            // btnRegistrar
+            // lblSisAsis
             // 
-            btnRegistrar.Location = new Point(784, 436);
-            btnRegistrar.Margin = new Padding(4, 3, 4, 3);
-            btnRegistrar.Name = "btnRegistrar";
-            btnRegistrar.Size = new Size(138, 46);
-            btnRegistrar.TabIndex = 0;
-            btnRegistrar.Text = "Registrar";
-            btnRegistrar.UseVisualStyleBackColor = true;
-            btnRegistrar.Click += btnRegistrar_Click;
-            // 
-            // btnVerificar
-            // 
-            btnVerificar.Location = new Point(136, 202);
-            btnVerificar.Margin = new Padding(4, 3, 4, 3);
-            btnVerificar.Name = "btnVerificar";
-            btnVerificar.Size = new Size(138, 46);
-            btnVerificar.TabIndex = 1;
-            btnVerificar.Text = "Leer Huella";
-            btnVerificar.UseVisualStyleBackColor = true;
-            btnVerificar.Click += btnVerificar_Click;
-            // 
-            // label1
-            // 
-            label1.AutoSize = true;
-            label1.Location = new Point(362, 59);
-            label1.Margin = new Padding(4, 0, 4, 0);
-            label1.Name = "label1";
-            label1.Size = new Size(208, 15);
-            label1.TabIndex = 2;
-            label1.Text = "Sistema de Asistencia: PUNTO ZAPATA";
+            lblSisAsis.Anchor = AnchorStyles.Top;
+            lblSisAsis.AutoSize = true;
+            lblSisAsis.Font = new Font("Tahoma", 48F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            lblSisAsis.ForeColor = Color.FromArgb(10, 38, 102);
+            lblSisAsis.Location = new Point(142, 9);
+            lblSisAsis.Margin = new Padding(4, 0, 4, 0);
+            lblSisAsis.Name = "lblSisAsis";
+            lblSisAsis.Size = new Size(732, 77);
+            lblSisAsis.TabIndex = 2;
+            lblSisAsis.Text = "Sistema de Asistencia";
             // 
             // label2
             // 
+            label2.Anchor = AnchorStyles.Top;
             label2.AutoSize = true;
-            label2.Location = new Point(421, 108);
+            label2.Font = new Font("Tahoma", 25F, FontStyle.Bold);
+            label2.ForeColor = Color.FromArgb(10, 38, 102);
+            label2.Location = new Point(437, 14);
             label2.Margin = new Padding(4, 0, 4, 0);
             label2.Name = "label2";
-            label2.Size = new Size(65, 15);
+            label2.Size = new Size(234, 41);
             label2.TabIndex = 3;
             label2.Text = "12/12/2023";
             // 
             // lblTime
             // 
+            lblTime.Anchor = AnchorStyles.Top;
             lblTime.AutoSize = true;
-            lblTime.Location = new Point(440, 136);
+            lblTime.Font = new Font("Tahoma", 18F, FontStyle.Bold);
+            lblTime.ForeColor = Color.FromArgb(10, 38, 102);
+            lblTime.Location = new Point(487, 57);
             lblTime.Margin = new Padding(4, 0, 4, 0);
             lblTime.Name = "lblTime";
-            lblTime.Size = new Size(49, 15);
+            lblTime.Size = new Size(121, 29);
             lblTime.TabIndex = 4;
             lblTime.Text = "18:42:02";
-            // 
-            // textBox1
-            // 
-            textBox1.Location = new Point(310, 215);
-            textBox1.Margin = new Padding(4, 3, 4, 3);
-            textBox1.Name = "textBox1";
-            textBox1.Size = new Size(439, 23);
-            textBox1.TabIndex = 5;
-            // 
-            // linkLabel1
-            // 
-            linkLabel1.AutoSize = true;
-            linkLabel1.Location = new Point(690, 268);
-            linkLabel1.Margin = new Padding(4, 0, 4, 0);
-            linkLabel1.Name = "linkLabel1";
-            linkLabel1.Size = new Size(57, 15);
-            linkLabel1.TabIndex = 6;
-            linkLabel1.TabStop = true;
-            linkLabel1.Text = "Opciones";
-            linkLabel1.LinkClicked += linkLabel1_LinkClicked;
-            // 
-            // label4
-            // 
-            label4.AutoSize = true;
-            label4.Location = new Point(166, 361);
-            label4.Margin = new Padding(4, 0, 4, 0);
-            label4.Name = "label4";
-            label4.Size = new Size(93, 15);
-            label4.TabIndex = 7;
-            label4.Text = "Último Marcado";
-            // 
-            // label5
-            // 
-            label5.AutoSize = true;
-            label5.Location = new Point(240, 436);
-            label5.Margin = new Padding(4, 0, 4, 0);
-            label5.Name = "label5";
-            label5.Size = new Size(36, 15);
-            label5.TabIndex = 9;
-            label5.Text = "Hora:";
-            // 
-            // dsa
-            // 
-            dsa.AutoSize = true;
-            dsa.Location = new Point(222, 408);
-            dsa.Margin = new Padding(4, 0, 4, 0);
-            dsa.Name = "dsa";
-            dsa.Size = new Size(55, 15);
-            dsa.TabIndex = 8;
-            dsa.Text = "Personal:";
-            // 
-            // lblNombre
-            // 
-            lblNombre.AutoSize = true;
-            lblNombre.Location = new Point(288, 408);
-            lblNombre.Margin = new Padding(4, 0, 4, 0);
-            lblNombre.Name = "lblNombre";
-            lblNombre.Size = new Size(64, 15);
-            lblNombre.TabIndex = 10;
-            lblNombre.Text = "lblNombre";
-            lblNombre.Visible = false;
-            // 
-            // lblHora
-            // 
-            lblHora.AutoSize = true;
-            lblHora.Location = new Point(288, 436);
-            lblHora.Margin = new Padding(4, 0, 4, 0);
-            lblHora.Name = "lblHora";
-            lblHora.Size = new Size(46, 15);
-            lblHora.TabIndex = 11;
-            lblHora.Text = "lblHora";
-            lblHora.Visible = false;
             // 
             // tmrTime
             // 
@@ -174,45 +100,270 @@
             tmrTime.Interval = 1000;
             tmrTime.Tick += tmrTime_Tick;
             // 
+            // label5
+            // 
+            label5.Anchor = AnchorStyles.Top;
+            label5.AutoSize = true;
+            label5.Font = new Font("Tahoma", 18F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            label5.ForeColor = Color.FromArgb(10, 38, 102);
+            label5.Location = new Point(358, 57);
+            label5.Name = "label5";
+            label5.Size = new Size(72, 29);
+            label5.TabIndex = 22;
+            label5.Text = "Hora:";
+            // 
+            // label4
+            // 
+            label4.Anchor = AnchorStyles.Top;
+            label4.AutoSize = true;
+            label4.Font = new Font("Tahoma", 24.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            label4.ForeColor = Color.FromArgb(10, 38, 102);
+            label4.Location = new Point(317, 14);
+            label4.Name = "label4";
+            label4.Size = new Size(113, 40);
+            label4.TabIndex = 21;
+            label4.Text = "Fecha:";
+            // 
+            // lblPunto
+            // 
+            lblPunto.Anchor = AnchorStyles.Top;
+            lblPunto.AutoSize = true;
+            lblPunto.Cursor = Cursors.No;
+            lblPunto.Font = new Font("Tahoma", 36F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            lblPunto.ForeColor = Color.FromArgb(10, 38, 102);
+            lblPunto.Location = new Point(344, 86);
+            lblPunto.Margin = new Padding(4, 0, 4, 0);
+            lblPunto.Name = "lblPunto";
+            lblPunto.Size = new Size(316, 58);
+            lblPunto.TabIndex = 19;
+            lblPunto.Text = "Punto: label";
+            lblPunto.TextAlign = ContentAlignment.TopCenter;
+            // 
+            // lnkMarcarCodigo
+            // 
+            lnkMarcarCodigo.Anchor = AnchorStyles.Left;
+            lnkMarcarCodigo.AutoSize = true;
+            lnkMarcarCodigo.BackColor = Color.FromArgb(10, 38, 102);
+            lnkMarcarCodigo.Font = new Font("Segoe UI", 9F);
+            lnkMarcarCodigo.LinkColor = Color.FromArgb(241, 206, 0);
+            lnkMarcarCodigo.Location = new Point(66, 345);
+            lnkMarcarCodigo.Margin = new Padding(4, 0, 4, 0);
+            lnkMarcarCodigo.Name = "lnkMarcarCodigo";
+            lnkMarcarCodigo.Size = new Size(105, 15);
+            lnkMarcarCodigo.TabIndex = 24;
+            lnkMarcarCodigo.TabStop = true;
+            lnkMarcarCodigo.Text = "marcar por código";
+            lnkMarcarCodigo.Visible = false;
+            lnkMarcarCodigo.LinkClicked += lnkMarcarCodigo_LinkClicked;
+            // 
+            // lnkApiTest
+            // 
+            lnkApiTest.Anchor = AnchorStyles.Left;
+            lnkApiTest.AutoSize = true;
+            lnkApiTest.BackColor = Color.FromArgb(10, 38, 102);
+            lnkApiTest.Font = new Font("Segoe UI", 9F);
+            lnkApiTest.LinkColor = Color.FromArgb(241, 206, 0);
+            lnkApiTest.Location = new Point(66, 472);
+            lnkApiTest.Margin = new Padding(4, 0, 4, 0);
+            lnkApiTest.Name = "lnkApiTest";
+            lnkApiTest.Size = new Size(98, 15);
+            lnkApiTest.TabIndex = 25;
+            lnkApiTest.TabStop = true;
+            lnkApiTest.Text = "Verificar API REST";
+            lnkApiTest.Visible = false;
+            lnkApiTest.LinkClicked += lnkApiTest_LinkClicked;
+            // 
+            // lnkRegistrar
+            // 
+            lnkRegistrar.Anchor = AnchorStyles.Left;
+            lnkRegistrar.AutoSize = true;
+            lnkRegistrar.BackColor = Color.FromArgb(10, 38, 102);
+            lnkRegistrar.Font = new Font("Segoe UI", 9F);
+            lnkRegistrar.LinkColor = Color.FromArgb(241, 206, 0);
+            lnkRegistrar.Location = new Point(66, 440);
+            lnkRegistrar.Margin = new Padding(4, 0, 4, 0);
+            lnkRegistrar.Name = "lnkRegistrar";
+            lnkRegistrar.Size = new Size(88, 15);
+            lnkRegistrar.TabIndex = 17;
+            lnkRegistrar.TabStop = true;
+            lnkRegistrar.Text = "Registrar huella";
+            lnkRegistrar.Visible = false;
+            lnkRegistrar.LinkClicked += lnkRegistrar_LinkClicked;
+            // 
+            // lnkVerAtrasos
+            // 
+            lnkVerAtrasos.Anchor = AnchorStyles.Left;
+            lnkVerAtrasos.AutoSize = true;
+            lnkVerAtrasos.BackColor = Color.FromArgb(10, 38, 102);
+            lnkVerAtrasos.Font = new Font("Segoe UI", 9F);
+            lnkVerAtrasos.LinkColor = Color.FromArgb(241, 206, 0);
+            lnkVerAtrasos.Location = new Point(66, 376);
+            lnkVerAtrasos.Margin = new Padding(4, 0, 4, 0);
+            lnkVerAtrasos.Name = "lnkVerAtrasos";
+            lnkVerAtrasos.Size = new Size(138, 15);
+            lnkVerAtrasos.TabIndex = 16;
+            lnkVerAtrasos.TabStop = true;
+            lnkVerAtrasos.Text = "Ver minutos acumulados";
+            lnkVerAtrasos.Visible = false;
+            lnkVerAtrasos.LinkClicked += linkLabel2_LinkClicked;
+            // 
+            // lnkVerAtrasosMes
+            // 
+            lnkVerAtrasosMes.Anchor = AnchorStyles.Left;
+            lnkVerAtrasosMes.AutoSize = true;
+            lnkVerAtrasosMes.BackColor = Color.FromArgb(10, 38, 102);
+            lnkVerAtrasosMes.Font = new Font("Segoe UI", 9F);
+            lnkVerAtrasosMes.LinkColor = Color.FromArgb(241, 206, 0);
+            lnkVerAtrasosMes.Location = new Point(66, 410);
+            lnkVerAtrasosMes.Margin = new Padding(4, 0, 4, 0);
+            lnkVerAtrasosMes.Name = "lnkVerAtrasosMes";
+            lnkVerAtrasosMes.Size = new Size(88, 15);
+            lnkVerAtrasosMes.TabIndex = 23;
+            lnkVerAtrasosMes.TabStop = true;
+            lnkVerAtrasosMes.Text = "ver atrasos mes";
+            lnkVerAtrasosMes.Visible = false;
+            // 
+            // lnkInicio
+            // 
+            lnkInicio.Anchor = AnchorStyles.Left;
+            lnkInicio.AutoSize = true;
+            lnkInicio.BackColor = Color.FromArgb(10, 38, 102);
+            lnkInicio.Font = new Font("Segoe UI", 9F);
+            lnkInicio.LinkColor = Color.FromArgb(241, 206, 0);
+            lnkInicio.Location = new Point(66, 320);
+            lnkInicio.Margin = new Padding(4, 0, 4, 0);
+            lnkInicio.Name = "lnkInicio";
+            lnkInicio.Size = new Size(36, 15);
+            lnkInicio.TabIndex = 18;
+            lnkInicio.TabStop = true;
+            lnkInicio.Text = "Inicio";
+            lnkInicio.Visible = false;
+            lnkInicio.LinkClicked += lnkInicio_LinkClicked;
+            // 
+            // lnkOpciones
+            // 
+            lnkOpciones.Anchor = AnchorStyles.Left;
+            lnkOpciones.AutoSize = true;
+            lnkOpciones.BackColor = Color.FromArgb(10, 38, 102);
+            lnkOpciones.Font = new Font("Segoe UI", 11.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            lnkOpciones.LinkColor = Color.FromArgb(241, 206, 0);
+            lnkOpciones.Location = new Point(39, 286);
+            lnkOpciones.Margin = new Padding(4, 0, 4, 0);
+            lnkOpciones.Name = "lnkOpciones";
+            lnkOpciones.Size = new Size(71, 20);
+            lnkOpciones.TabIndex = 15;
+            lnkOpciones.TabStop = true;
+            lnkOpciones.Text = "Opciones";
+            lnkOpciones.LinkClicked += linkLabel1_LinkClicked;
+            // 
+            // pictureBox1
+            // 
+            pictureBox1.Dock = DockStyle.Top;
+            pictureBox1.Image = (Image)resources.GetObject("pictureBox1.Image");
+            pictureBox1.Location = new Point(0, 0);
+            pictureBox1.Name = "pictureBox1";
+            pictureBox1.Size = new Size(225, 172);
+            pictureBox1.SizeMode = PictureBoxSizeMode.Zoom;
+            pictureBox1.TabIndex = 20;
+            pictureBox1.TabStop = false;
+            // 
+            // panel1
+            // 
+            panel1.BackColor = Color.FromArgb(0, 37, 105);
+            panel1.Controls.Add(lnkMarcarCodigo);
+            panel1.Controls.Add(pictureBox1);
+            panel1.Controls.Add(lnkApiTest);
+            panel1.Controls.Add(lnkOpciones);
+            panel1.Controls.Add(lnkRegistrar);
+            panel1.Controls.Add(lnkInicio);
+            panel1.Controls.Add(lnkVerAtrasos);
+            panel1.Controls.Add(lnkVerAtrasosMes);
+            panel1.Dock = DockStyle.Left;
+            panel1.Location = new Point(0, 0);
+            panel1.Name = "panel1";
+            panel1.Size = new Size(225, 729);
+            panel1.TabIndex = 26;
+            // 
+            // pnlInfoStore
+            // 
+            pnlInfoStore.BackColor = Color.White;
+            pnlInfoStore.Controls.Add(lblSisAsis);
+            pnlInfoStore.Controls.Add(lblPunto);
+            pnlInfoStore.Dock = DockStyle.Top;
+            pnlInfoStore.Location = new Point(225, 0);
+            pnlInfoStore.Name = "pnlInfoStore";
+            pnlInfoStore.Size = new Size(1125, 172);
+            pnlInfoStore.TabIndex = 27;
+            // 
+            // pnlHora
+            // 
+            pnlHora.BackColor = Color.White;
+            pnlHora.Controls.Add(label4);
+            pnlHora.Controls.Add(label2);
+            pnlHora.Controls.Add(lblTime);
+            pnlHora.Controls.Add(label5);
+            pnlHora.Dock = DockStyle.Top;
+            pnlHora.Location = new Point(225, 172);
+            pnlHora.Name = "pnlHora";
+            pnlHora.Size = new Size(1125, 100);
+            pnlHora.TabIndex = 28;
+            // 
+            // pnlBase
+            // 
+            pnlBase.BackColor = Color.IndianRed;
+            pnlBase.Dock = DockStyle.Fill;
+            pnlBase.Location = new Point(225, 272);
+            pnlBase.Name = "pnlBase";
+            pnlBase.Size = new Size(1125, 457);
+            pnlBase.TabIndex = 29;
+            // 
             // Main
             // 
-            AutoScaleDimensions = new SizeF(7F, 15F);
-            AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(936, 496);
-            Controls.Add(lblHora);
-            Controls.Add(lblNombre);
-            Controls.Add(label5);
-            Controls.Add(dsa);
-            Controls.Add(label4);
-            Controls.Add(linkLabel1);
-            Controls.Add(textBox1);
-            Controls.Add(lblTime);
-            Controls.Add(label2);
-            Controls.Add(label1);
-            Controls.Add(btnVerificar);
-            Controls.Add(btnRegistrar);
+            AutoScaleDimensions = new SizeF(96F, 96F);
+            AutoScaleMode = AutoScaleMode.Dpi;
+            AutoSize = true;
+            BackColor = Color.White;
+            ClientSize = new Size(1350, 729);
+            Controls.Add(pnlBase);
+            Controls.Add(pnlHora);
+            Controls.Add(pnlInfoStore);
+            Controls.Add(panel1);
+            ForeColor = Color.DimGray;
+            Icon = (Icon)resources.GetObject("$this.Icon");
             Margin = new Padding(4, 3, 4, 3);
             Name = "Main";
             Text = "Main";
+            ((System.ComponentModel.ISupportInitialize)pictureBox1).EndInit();
+            panel1.ResumeLayout(false);
+            panel1.PerformLayout();
+            pnlInfoStore.ResumeLayout(false);
+            pnlInfoStore.PerformLayout();
+            pnlHora.ResumeLayout(false);
+            pnlHora.PerformLayout();
             ResumeLayout(false);
-            PerformLayout();
         }
 
         #endregion
-
-        private System.Windows.Forms.Button btnRegistrar;
-        private System.Windows.Forms.Button btnVerificar;
-        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Label lblSisAsis;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label lblTime;
-        private System.Windows.Forms.TextBox textBox1;
-        private System.Windows.Forms.LinkLabel linkLabel1;
-        private System.Windows.Forms.Label label4;
-        private System.Windows.Forms.Label label5;
-        private System.Windows.Forms.Label dsa;
-        private System.Windows.Forms.Label lblNombre;
-        private System.Windows.Forms.Label lblHora;
         private System.Windows.Forms.Timer tmrTime;
+        private LinkLabel lnkOpciones;
+        private LinkLabel lnkVerAtrasos;
+        private LinkLabel lnkRegistrar;
+        private LinkLabel lnkInicio;
+        private Label lblPunto;
+        private PictureBox pictureBox1;
+        private Label label4;
+        private Label label5;
+        private LinkLabel linkLabel2;
+        private LinkLabel lnkVerAtrasosMes;
+        private LinkLabel lnkMarcarCodigo;
+        private LinkLabel lnkApiTest;
+        private Panel panel1;
+        private Panel pnlInfoStore;
+        private Panel pnlHora;
+        private Panel pnlBase;
     }
 }
 

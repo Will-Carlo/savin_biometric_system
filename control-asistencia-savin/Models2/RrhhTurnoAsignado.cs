@@ -17,6 +17,8 @@ public partial class RrhhTurnoAsignado
 
     public int IdPuntoAsistencia { get; set; }
 
+    public string? Codigo { get; set; }
+
     public virtual RrhhPersonal IdPersonalNavigation { get; set; } = null!;
 
     public virtual RrhhPuntoAsistencium IdPuntoAsistenciaNavigation { get; set; } = null!;

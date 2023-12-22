@@ -16,9 +16,19 @@ namespace control_asistencia_savin
         private DPFP.Template Template;
         private DPFP.Verification.Verification Verificator;
         private StoreContext contexto;
+
         public String personalName;
         public int idEncontrado;
+        public bool statusProcess;
 
+
+        public event EventHandler DatosCapturados;
+
+        // Método que se llama cuando se han capturado los datos
+        protected virtual void OnDatosCapturados()
+        {
+            DatosCapturados?.Invoke(this, EventArgs.Empty);
+        }
 
 
         public void Verify(DPFP.Template template)
@@ -30,16 +40,16 @@ namespace control_asistencia_savin
         protected override void Init()
         {
             base.Init();
-            base.Text = "Verificación de Huella Digital";
+            base.Text = "Coloca tu huella";
             Verificator = new DPFP.Verification.Verification();     // Create a fingerprint template verificator
-            UpdateStatus(0);
+            //UpdateStatus(0);
         }
 
-        private void UpdateStatus(int FAR)
-        {
-            // Show "False accept rate" value
-            SetStatus(String.Format("False Accept Rate (FAR) = {0}", FAR));
-        }
+        //private void UpdateStatus(int FAR)
+        //{
+        //    // Show "False accept rate" value
+        //    SetStatus(String.Format("False Accept Rate (FAR) = {0}", FAR));
+        //}
 
         protected override void Process(DPFP.Sample Sample)
         {
@@ -64,16 +74,22 @@ namespace control_asistencia_savin
                     template = new DPFP.Template(stream);
 
                     Verificator.Verify(features, template, ref result);
-                    UpdateStatus(result.FARAchieved);
+                    //UpdateStatus(result.FARAchieved);
                     if (result.Verified)
                     {
-                        MakeReport("La huella ha sido verificada con éxito.");
-                        MakeReport("CIERRE LA VENTANA PARA CONTINUAR.");
+                        SetPrompt("VERIFICADO");
+                        //MakeReport("CIERRE LA VENTANA PARA CONTINUAR.");
 
                         personalName = emp.Nombre +" "+ emp.Paterno + " " + emp.Materno;
                         idEncontrado = emp.Id;
+                        statusProcess = true;
                         Stop();
                         break;
+                    }
+                    else
+                    {
+                        statusProcess = false;
+                        SetPrompt("RECHAZADO");
                     }
                 }
             }

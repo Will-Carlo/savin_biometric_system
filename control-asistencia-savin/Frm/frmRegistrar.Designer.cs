@@ -67,7 +67,7 @@
             // btnAgregar
             // 
             btnAgregar.Enabled = false;
-            btnAgregar.Location = new Point(51, 248);
+            btnAgregar.Location = new Point(649, 193);
             btnAgregar.Margin = new Padding(4, 3, 4, 3);
             btnAgregar.Name = "btnAgregar";
             btnAgregar.Size = new Size(88, 27);
@@ -86,6 +86,7 @@
             // 
             // txtHuella
             // 
+            txtHuella.Enabled = false;
             txtHuella.Location = new Point(114, 191);
             txtHuella.Margin = new Padding(4, 3, 4, 3);
             txtHuella.Name = "txtHuella";
@@ -94,10 +95,10 @@
             // 
             // btnRegistrarHuella
             // 
-            btnRegistrarHuella.Location = new Point(321, 248);
+            btnRegistrarHuella.Location = new Point(346, 191);
             btnRegistrarHuella.Margin = new Padding(4, 3, 4, 3);
             btnRegistrarHuella.Name = "btnRegistrarHuella";
-            btnRegistrarHuella.Size = new Size(88, 27);
+            btnRegistrarHuella.Size = new Size(126, 27);
             btnRegistrarHuella.TabIndex = 5;
             btnRegistrarHuella.Text = "Registrar Huella";
             btnRegistrarHuella.UseVisualStyleBackColor = true;
@@ -106,7 +107,7 @@
             // dgvListar
             // 
             dgvListar.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dgvListar.Location = new Point(38, 298);
+            dgvListar.Location = new Point(355, 12);
             dgvListar.Margin = new Padding(4, 3, 4, 3);
             dgvListar.Name = "dgvListar";
             dgvListar.Size = new Size(382, 173);
@@ -171,7 +172,7 @@
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(493, 495);
+            ClientSize = new Size(792, 262);
             Controls.Add(txtNombre);
             Controls.Add(label5);
             Controls.Add(txtMaterno);
@@ -185,6 +186,7 @@
             Controls.Add(btnAgregar);
             Controls.Add(label2);
             Controls.Add(label1);
+            FormBorderStyle = FormBorderStyle.None;
             Margin = new Padding(4, 3, 4, 3);
             Name = "frmRegistrar";
             Text = "frmRegistrar";

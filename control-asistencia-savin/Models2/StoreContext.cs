@@ -162,6 +162,8 @@ public partial class StoreContext : DbContext
             entity.Property(e => e.IdTurno).HasColumnName("id_turno");
             entity.Property(e => e.IndMarcadoFijoVariable).HasColumnName("ind_marcado_fijo_variable");
             entity.Property(e => e.IndTipoMarcado).HasColumnName("ind_tipo_marcado");
+            entity.Property(e => e.Codigo).HasColumnName("codigo");
+
 
             entity.HasOne(d => d.IdPersonalNavigation).WithMany(p => p.RrhhTurnoAsignados)
                 .HasForeignKey(d => d.IdPersonal)

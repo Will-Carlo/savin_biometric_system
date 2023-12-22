@@ -1,6 +1,6 @@
 ﻿namespace control_asistencia_savin
 {
-    partial class frmVerificar
+    partial class frmAtrasos
     {
         /// <summary>
         /// Required designer variable.
@@ -28,20 +28,31 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.SuspendLayout();
+            components = new System.ComponentModel.Container();
+            tmrTime = new System.Windows.Forms.Timer(components);
+            SuspendLayout();
             // 
-            // frmVerificar
+            // btnVerificarHuellaCod
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(384, 525);
-            this.Name = "frmVerificar";
-            this.Text = "frmVerificar";
-            this.ResumeLayout(false);
-            this.PerformLayout();
-
+            btnVerificarHuellaCod.Click += btnVerificarHuellaCod_Click;
+            // 
+            // tmrTime
+            // 
+            tmrTime.Enabled = true;
+            tmrTime.Interval = 1000;
+            // 
+            // frmAtrasos
+            // 
+            AutoScaleDimensions = new SizeF(96F, 96F);
+            AutoScaleMode = AutoScaleMode.Dpi;
+            BackColor = Color.White;
+            ClientSize = new Size(1125, 457);
+            Name = "frmAtrasos";
+            Text = "Form1";
+            ResumeLayout(false);
         }
 
         #endregion
+        private System.Windows.Forms.Timer tmrTime;
     }
 }

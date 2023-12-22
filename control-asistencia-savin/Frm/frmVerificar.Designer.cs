@@ -1,6 +1,6 @@
 ﻿namespace control_asistencia_savin
 {
-    partial class CapturarHuella
+    partial class frmVerificar
     {
         /// <summary>
         /// Required designer variable.
@@ -28,18 +28,18 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.SuspendLayout();
+            SuspendLayout();
             // 
-            // CapturarHuella
+            // frmVerificar
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(384, 525);
-            this.Name = "CapturarHuella";
-            this.Text = "CapturarHuella";
-            this.ResumeLayout(false);
-            this.PerformLayout();
-
+            AutoScaleDimensions = new SizeF(7F, 15F);
+            AutoScaleMode = AutoScaleMode.Font;
+            ClientSize = new Size(211, 241);
+            Margin = new Padding(5, 3, 5, 3);
+            Name = "frmVerificar";
+            Text = "frmVerificar";
+            ResumeLayout(false);
+            PerformLayout();
         }
 
         #endregion

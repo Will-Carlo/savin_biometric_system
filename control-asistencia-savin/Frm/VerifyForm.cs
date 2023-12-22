@@ -10,17 +10,12 @@ using System.Windows.Forms;
 
 namespace control_asistencia_savin
 {
-    public partial class frmOpciones : Form
+    public partial class VerifyForm : Form
     {
-        public frmOpciones()
+        public VerifyForm()
         {
             InitializeComponent();
         }
 
-        private void btnVerAtrasos_Click(object sender, EventArgs e)
-        {
-            frmAtrasos atrasos = new frmAtrasos();
-            atrasos.Show();
-        }
     }
 }

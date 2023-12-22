@@ -29,9 +29,9 @@ namespace control_asistencia_savin
                 if ( null != Capturer )
                     Capturer.EventHandler = this;					// Subscribe for capturing events.
                 else
-                    SetPrompt("No se pudo iniciar la operación de captura");
-            }
-            catch
+					SetPrompt("No se pudo iniciar la operación de captura");
+			}
+			catch
             {               
                 MessageBox.Show("No se pudo iniciar la operación de captura", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);            
             }
@@ -50,11 +50,11 @@ namespace control_asistencia_savin
                 try
                 {
                     Capturer.StartCapture();
-                    SetPrompt("Escanea tu huella usando el lector");
+                    //SetPrompt("Escanea tu huella usando el lector");
                 }
                 catch
                 {
-                    SetPrompt("No se puede iniciar la captura");
+                    //SetPrompt("No se puede iniciar la captura");
                 }
             }
 		}
@@ -146,12 +146,12 @@ namespace control_asistencia_savin
 				return null;
 		}
 
-		protected void SetStatus(string status)
-		{
-			this.Invoke(new Function(delegate() {
-				StatusLine.Text = status;
-			}));
-		}
+		//protected void SetStatus(string status)
+		//{
+		//	this.Invoke(new Function(delegate() {
+		//		StatusLine.Text = status;
+		//	}));
+		//}
 
 		protected void SetPrompt(string prompt)
 		{
