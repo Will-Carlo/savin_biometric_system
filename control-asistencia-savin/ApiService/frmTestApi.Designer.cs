@@ -34,6 +34,8 @@
             btnCargarDB = new Button();
             tableLayoutPanel1 = new TableLayoutPanel();
             flowLayoutPanel1 = new FlowLayoutPanel();
+            btnDeleteBD = new Button();
+            btnMakeBackUp = new Button();
             SuspendLayout();
             // 
             // btnVerificarApi
@@ -90,12 +92,34 @@
             flowLayoutPanel1.Size = new Size(186, 199);
             flowLayoutPanel1.TabIndex = 5;
             // 
+            // btnDeleteBD
+            // 
+            btnDeleteBD.Location = new Point(215, 208);
+            btnDeleteBD.Name = "btnDeleteBD";
+            btnDeleteBD.Size = new Size(75, 23);
+            btnDeleteBD.TabIndex = 6;
+            btnDeleteBD.Text = "borrar bd";
+            btnDeleteBD.UseVisualStyleBackColor = true;
+            btnDeleteBD.Click += btnDeleteBD_Click;
+            // 
+            // btnMakeBackUp
+            // 
+            btnMakeBackUp.Location = new Point(223, 251);
+            btnMakeBackUp.Name = "btnMakeBackUp";
+            btnMakeBackUp.Size = new Size(75, 23);
+            btnMakeBackUp.TabIndex = 7;
+            btnMakeBackUp.Text = "make copy";
+            btnMakeBackUp.UseVisualStyleBackColor = true;
+            btnMakeBackUp.Click += btnMakeBackUp_Click;
+            // 
             // frmTestApi
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.White;
             ClientSize = new Size(688, 295);
+            Controls.Add(btnMakeBackUp);
+            Controls.Add(btnDeleteBD);
             Controls.Add(flowLayoutPanel1);
             Controls.Add(tableLayoutPanel1);
             Controls.Add(pgrCargarDB);
@@ -116,5 +140,7 @@
         private Button btnCargarDB;
         private TableLayoutPanel tableLayoutPanel1;
         private FlowLayoutPanel flowLayoutPanel1;
+        private Button btnDeleteBD;
+        private Button btnMakeBackUp;
     }
 }

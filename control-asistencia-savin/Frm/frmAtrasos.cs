@@ -1,4 +1,4 @@
-﻿using control_asistencia_savin.Models2;
+﻿using control_asistencia_savin.Models;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace control_asistencia_savin.Models2;
+namespace control_asistencia_savin.Models;
 
 public partial class RrhhTurnoAsignado
 {

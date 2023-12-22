@@ -1,4 +1,4 @@
-﻿using control_asistencia_savin.Models2;
+﻿using control_asistencia_savin.Models;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -23,9 +23,12 @@ namespace control_asistencia_savin.ApiService
         [JsonProperty("rrhh_asistencia")]
         public List<RrhhAsistencia> RrhhAsistencia { get; set; }
         [JsonProperty("rrhh_puntos_asistencia")]
-        public List<RrhhPuntoAsistencium> RrhhPuntoAsistencia { get; set; }
+        public List<RrhhPuntoAsistencia> RrhhPuntoAsistencia { get; set; }
         [JsonProperty("rrhh_turno_asignado")]
         public List<RrhhTurnoAsignado> RrhhTurnoAsignado { get; set; }
+        [JsonProperty("inv_almacen")]
+        public List<InvAlmacen> InvAlmacen {  get; set; }
+
 
         public ModelJson()
         {
@@ -35,8 +38,9 @@ namespace control_asistencia_savin.ApiService
             InvSucursal = new List<InvSucursal>();
             RrhhFeriado = new List<RrhhFeriado>();
             RrhhAsistencia = new List<RrhhAsistencia>();
-            RrhhPuntoAsistencia = new List<RrhhPuntoAsistencium>();
+            RrhhPuntoAsistencia = new List<RrhhPuntoAsistencia>();
             RrhhTurnoAsignado = new List<RrhhTurnoAsignado>();
+            InvAlmacen = new List<InvAlmacen>();
         }
 
         public static ModelJson FromJson(string jsonString)

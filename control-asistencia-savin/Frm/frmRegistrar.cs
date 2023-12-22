@@ -1,5 +1,5 @@
 ﻿using control_asistencia_savin;
-using control_asistencia_savin.Models2;
+using control_asistencia_savin.Models;
 using System;
 
 using System.Collections.Generic;
@@ -16,7 +16,7 @@ namespace control_asistencia_savin
     {
         private DPFP.Template Template;
         //private UsuariosDBEntities contexto;
-        private Models2.StoreContext contexto;
+        private Models.StoreContext contexto;
         public frmRegistrar()
         {
             InitializeComponent();
@@ -49,7 +49,7 @@ namespace control_asistencia_savin
 
         private void frmRegistrar_Load(object sender, EventArgs e)
         {
-            contexto = new Models2.StoreContext();
+            contexto = new Models.StoreContext();
             Listar();
         }
 

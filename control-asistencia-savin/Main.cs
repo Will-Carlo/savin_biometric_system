@@ -1,4 +1,4 @@
-﻿using control_asistencia_savin.Models2;
+﻿using control_asistencia_savin.Models;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -13,10 +13,17 @@ namespace control_asistencia_savin
 {
     public partial class Main : Form
     {
+
+        private readonly ApiService.ApiService _apiService;
+
         public Main()
         {
             InitializeComponent();
             tmrTime.Start();
+
+            // Pidiendo datos de la tienda por dirección MAC
+            _apiService = new ApiService.ApiService();
+            lblPunto.Text = "Punto: " + _apiService.nomTienda;
 
             //this.FormBorderStyle = FormBorderStyle.None; // Remueve los bordes de la ventana
             this.WindowState = FormWindowState.Maximized; // Maximiza la ventana
@@ -42,6 +49,10 @@ namespace control_asistencia_savin
             this.pnlBase.Tag = f;
             f.Show();
         }
+
+        
+
+
 
         private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
@@ -79,29 +90,7 @@ namespace control_asistencia_savin
             AbrirForm(new frmAsistencia());
         }
 
-        public string macAddress()
-        {
-            try
-            {
-                NetworkInterface[] nics = NetworkInterface.GetAllNetworkInterfaces();
-
-                foreach (NetworkInterface nic in nics)
-                {
-                    if (nic.OperationalStatus == OperationalStatus.Up && !nic.Description.ToLower().Contains("virtual"))
-                    {
-                        PhysicalAddress address = nic.GetPhysicalAddress();
-                        byte[] bytes = address.GetAddressBytes();
-                        return BitConverter.ToString(bytes);
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                return $"Error al obtener la dirección MAC: {ex.Message}";
-            }
-
-            return "Dirección MAC no encontrada";
-        }
+        
 
         private void lnkMarcarCodigo_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {

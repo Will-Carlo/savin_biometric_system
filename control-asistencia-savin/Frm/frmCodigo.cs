@@ -1,5 +1,5 @@
 ﻿using control_asistencia_savin.Frm;
-using control_asistencia_savin.Models2;
+using control_asistencia_savin.Models;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;

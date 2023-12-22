@@ -11,8 +11,11 @@
 
   <ItemGroup>
     <Compile Remove="Models0.0\**" />
+    <Compile Remove="Models2\**" />
     <EmbeddedResource Remove="Models0.0\**" />
+    <EmbeddedResource Remove="Models2\**" />
     <None Remove="Models0.0\**" />
+    <None Remove="Models2\**" />
   </ItemGroup>
 
   <ItemGroup>
