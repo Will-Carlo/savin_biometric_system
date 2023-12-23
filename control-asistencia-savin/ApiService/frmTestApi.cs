@@ -140,6 +140,8 @@ namespace control_asistencia_savin
 
                     context.SaveChanges();
                 }
+                MessageBox.Show("Se ha borrado la base de datos con éxito.");
+
             }
             catch (Exception ex)
             {
@@ -158,7 +160,8 @@ namespace control_asistencia_savin
         public void BackUpDB(string dateBackUp)
         {
             var rutaBaseDeDatos = "store.db";
-            var rutaCopiaDeSeguridad = "backup/store_backup_" + dateBackUp + ".db";
+            var backupFolder = "backup";
+            var rutaCopiaDeSeguridad = Path.Combine(backupFolder, "store_backup_"+ dateBackUp + ".db");
 
             // Asegurarse de que la base de datos no está siendo utilizada
             GC.Collect();
@@ -169,11 +172,11 @@ namespace control_asistencia_savin
                 // Copiar el archivo de la base de datos a la ruta de copia de seguridad
                 File.Copy(rutaBaseDeDatos, rutaCopiaDeSeguridad, overwrite: true);
 
-                Console.WriteLine("La copia de seguridad se ha creado con éxito.");
+                MessageBox.Show("La copia de seguridad se ha creado con éxito.");
             }
             catch (IOException ex)
             {
-                Console.WriteLine("Error al crear la copia de seguridad: " + ex.Message);
+                MessageBox.Show("Error al crear la copia de seguridad: " + ex.Message);
             }
         }
 
@@ -184,7 +187,7 @@ namespace control_asistencia_savin
 
         private void btnMakeBackUp_Click(object sender, EventArgs e)
         {
-            BackUpDB("2023/12/22 18:50:00");
+            BackUpDB("2023/12/22 18 50 00");
         }
     }
 }

@@ -13,6 +13,8 @@ namespace control_asistencia_savin
 {
     public partial class Main : Form
     {
+        // Para actualizar los modelos de la BD
+        // Scaffold-DbContext "Data Source=store.db" Microsoft.EntityFrameworkCore.Sqlite -OutputDir Models
 
         private readonly ApiService.ApiService _apiService;
 

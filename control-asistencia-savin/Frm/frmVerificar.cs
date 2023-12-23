@@ -70,26 +70,39 @@ namespace control_asistencia_savin
 
                 foreach (var emp in contexto.RrhhPersonals)
                 {
-                    stream = new MemoryStream(emp.IndiceDerecho);
-                    template = new DPFP.Template(stream);
 
-                    Verificator.Verify(features, template, ref result);
-                    //UpdateStatus(result.FARAchieved);
-                    if (result.Verified)
-                    {
-                        SetPrompt("VERIFICADO");
-                        //MakeReport("CIERRE LA VENTANA PARA CONTINUAR.");
 
-                        personalName = emp.Nombres +" "+ emp.Paterno + " " + emp.Materno;
-                        idEncontrado = emp.Id;
-                        statusProcess = true;
-                        Stop();
-                        break;
-                    }
-                    else
+                    List<byte[]> FingerList = new List<byte[]>();
+                    FingerList.Add(emp.IndiceDerecho);
+                    FingerList.Add(emp.IndiceIzquierdo);
+                    FingerList.Add(emp.PulgarDerecho);
+                    FingerList.Add(emp.PulgarIzquierdo);
+                    Console.WriteLine("HELLO WOLRD");
+                    foreach (byte[] finger in FingerList)
                     {
-                        statusProcess = false;
-                        SetPrompt("RECHAZADO");
+                        if (finger != null)
+                        {
+                            stream = new MemoryStream(finger);
+                            template = new DPFP.Template(stream);
+                            Verificator.Verify(features, template, ref result);
+
+                            // Cuando el usuario es encontrado
+                            if (result.Verified)
+                            {
+                                SetPrompt("VERIFICADO");
+
+                                personalName = emp.Nombres + " " + emp.Paterno + " " + emp.Materno;
+                                idEncontrado = emp.Id;
+                                statusProcess = true;
+                                Stop();
+                                break;
+                            }
+                        }
+                        else
+                        {
+                            statusProcess = false;
+                            SetPrompt("RECHAZADO");
+                        }
                     }
                 }
             }
