@@ -7,11 +7,11 @@ public partial class RrhhFeriado
 {
     public int Id { get; set; }
 
-    public int IdCiudad { get; set; }
+    public int? IdCiudad { get; set; }
 
     public string? Fecha { get; set; }
 
     public int? IndTipoFeriado { get; set; }
 
-    public virtual GenCiudad IdCiudadNavigation { get; set; } = null!;
+    public virtual GenCiudad? IdCiudadNavigation { get; set; }
 }

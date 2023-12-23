@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace control_asistencia_savin.Models;
+namespace control_asistencia_savin.Models2;
 
 public partial class GenCiudad
 {

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace control_asistencia_savin.Models;
+namespace control_asistencia_savin.Models2;
 
 public partial class RrhhTurno
 {
@@ -9,9 +9,9 @@ public partial class RrhhTurno
 
     public string? Nombre { get; set; }
 
-    public string? HoraIngreso { get; set; }
+    public TimeSpan? HoraIngreso { get; set; }
 
-    public string? HoraSalida { get; set; }
+    public TimeSpan? HoraSalida { get; set; }
 
     public virtual ICollection<RrhhAsistencia> RrhhAsistencia { get; set; } = new List<RrhhAsistencia>();
 

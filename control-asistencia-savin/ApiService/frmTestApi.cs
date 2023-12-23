@@ -43,7 +43,6 @@ namespace control_asistencia_savin
         {
             try
             {
-                Console.WriteLine("haciendo la consulta");
                 var data = await _apiService.GetDataAsync();
 
                 if (data != null)
@@ -55,7 +54,7 @@ namespace control_asistencia_savin
             }
             catch (DbUpdateException ex)
             {
-                MessageBox.Show(ex.InnerException.Message);
+                MessageBox.Show("error bd reg: "+ex.InnerException.Message);
             }
         }
         private void GuardarDatosEnBaseDeDatos(ModelJson data)
@@ -81,11 +80,11 @@ namespace control_asistencia_savin
                 GuardarEntidades(context, data.InvSucursal);
                 GuardarEntidades(context, data.RrhhFeriado);
 
-
                 GuardarEntidades(context, data.RrhhPuntoAsistencia);
                 GuardarEntidades(context, data.RrhhTurnoAsignado);
 
-                GuardarEntidades(context, data.RrhhAsistencia);
+                // NodeLabelEditEventArgs recibimos datos de la tabla rrhh_asistencia
+                //GuardarEntidades(context, data.RrhhAsistencia);
 
                 // Confirmar todos los cambios en la base de datos
                 context.SaveChanges();
@@ -116,7 +115,7 @@ namespace control_asistencia_savin
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Error al guardar en la bd", ex.Message);
+                MessageBox.Show("Error al guardar en la bd"+ ex.Message, "Error");
             }
         }
 

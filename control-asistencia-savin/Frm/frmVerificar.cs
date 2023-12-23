@@ -70,7 +70,7 @@ namespace control_asistencia_savin
 
                 foreach (var emp in contexto.RrhhPersonals)
                 {
-                    stream = new MemoryStream(emp.HuellaIndDer);
+                    stream = new MemoryStream(emp.IndiceDerecho);
                     template = new DPFP.Template(stream);
 
                     Verificator.Verify(features, template, ref result);
@@ -80,7 +80,7 @@ namespace control_asistencia_savin
                         SetPrompt("VERIFICADO");
                         //MakeReport("CIERRE LA VENTANA PARA CONTINUAR.");
 
-                        personalName = emp.Nombre +" "+ emp.Paterno + " " + emp.Materno;
+                        personalName = emp.Nombres +" "+ emp.Paterno + " " + emp.Materno;
                         idEncontrado = emp.Id;
                         statusProcess = true;
                         Stop();

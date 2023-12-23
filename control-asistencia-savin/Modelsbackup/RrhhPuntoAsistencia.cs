@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace control_asistencia_savin.Models;
+namespace control_asistencia_savin.Models2;
 
 public partial class RrhhPuntoAsistencia
 {
@@ -15,13 +15,9 @@ public partial class RrhhPuntoAsistencia
 
     public string? DireccionMac { get; set; }
 
-    public int? IdSucursal { get; set; }
+    public int IdSucursal { get; set; }
 
-    public int? IdAlmacen { get; set; }
-
-    public virtual InvAlmacen? IdAlmacenNavigation { get; set; }
-
-    public virtual InvSucursal? IdSucursalNavigation { get; set; }
+    public virtual InvSucursal IdSucursalNavigation { get; set; } = null!;
 
     public virtual ICollection<RrhhTurnoAsignado> RrhhTurnoAsignados { get; set; } = new List<RrhhTurnoAsignado>();
 }

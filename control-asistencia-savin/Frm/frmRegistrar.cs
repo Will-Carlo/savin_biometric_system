@@ -71,7 +71,7 @@ namespace control_asistencia_savin
                                select new
                                {
                                    ID = emp.Id,
-                                   EMPLEADO = emp.Nombre + " " + emp.Paterno + " " + emp.Materno,
+                                   EMPLEADO = emp.Nombres + " " + emp.Paterno + " " + emp.Materno,
                                };
                 if (personal != null)
                 {
@@ -97,8 +97,8 @@ namespace control_asistencia_savin
                     IdCiudad = int.Parse(txtId_ciudad.Text),
                     Paterno = txtPaterno.Text,
                     Materno = txtMaterno.Text,
-                    Nombre = txtNombre.Text,
-                    HuellaIndDer = streamHuella
+                    Nombres = txtNombre.Text,
+                    IndiceDerecho = streamHuella
                 };
                 AddPersonal(personal);
                 //contexto.RrhhPersonals.Add(personal);

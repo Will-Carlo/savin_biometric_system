@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace control_asistencia_savin.Models;
+namespace control_asistencia_savin.Models2;
 
 public partial class RrhhPersonal
 {
@@ -13,15 +13,15 @@ public partial class RrhhPersonal
 
     public string? Materno { get; set; }
 
-    public string? Nombres { get; set; }
+    public string? Nombre { get; set; }
 
-    public byte[]? IndiceDerecho { get; set; }
+    public byte[]? HuellaIndDer { get; set; }
 
-    public byte[]? IndiceIzquierdo { get; set; }
+    public byte[]? HuellaIndIzq { get; set; }
 
-    public byte[]? PulgarDerecho { get; set; }
+    public byte[]? HuellaPulgDer { get; set; }
 
-    public byte[]? PulgarIzquierdo { get; set; }
+    public byte[]? HuellaPulgIzq { get; set; }
 
     public virtual GenCiudad IdCiudadNavigation { get; set; } = null!;
 

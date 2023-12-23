@@ -22,7 +22,7 @@ namespace control_asistencia_savin.ApiService
         public List<RrhhFeriado> RrhhFeriado { get; set; }
         [JsonProperty("rrhh_asistencia")]
         public List<RrhhAsistencia> RrhhAsistencia { get; set; }
-        [JsonProperty("rrhh_puntos_asistencia")]
+        [JsonProperty("rrhh_punto_asistencia")]
         public List<RrhhPuntoAsistencia> RrhhPuntoAsistencia { get; set; }
         [JsonProperty("rrhh_turno_asignado")]
         public List<RrhhTurnoAsignado> RrhhTurnoAsignado { get; set; }

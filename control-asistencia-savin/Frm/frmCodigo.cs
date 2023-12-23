@@ -47,12 +47,12 @@ namespace control_asistencia_savin
             {
                 var personal = context.RrhhPersonals
                     .Where(p => p.Id == id)
-                    .Select(p => new { p.Paterno, p.Materno, p.Nombre })
+                    .Select(p => new { p.Paterno, p.Materno, p.Nombres })
                     .FirstOrDefault(); // Usamos FirstOrDefault para obtener un solo registro o null
 
                 if (personal != null)
                 {
-                    return $"{personal.Nombre} {personal.Paterno} {personal.Materno}";
+                    return $"{personal.Nombres} {personal.Paterno} {personal.Materno}";
                 }
                 else
                 {

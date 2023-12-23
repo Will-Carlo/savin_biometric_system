@@ -12,10 +12,13 @@
   <ItemGroup>
     <Compile Remove="Models0.0\**" />
     <Compile Remove="Models2\**" />
+    <Compile Remove="Modelsbackup\**" />
     <EmbeddedResource Remove="Models0.0\**" />
     <EmbeddedResource Remove="Models2\**" />
+    <EmbeddedResource Remove="Modelsbackup\**" />
     <None Remove="Models0.0\**" />
     <None Remove="Models2\**" />
+    <None Remove="Modelsbackup\**" />
   </ItemGroup>
 
   <ItemGroup>

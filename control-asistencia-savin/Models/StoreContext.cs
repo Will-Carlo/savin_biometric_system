@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using control_asistencia_savin.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace control_asistencia_savin.Models;
@@ -9,8 +8,6 @@ public partial class StoreContext : DbContext
 {
     public StoreContext()
     {
-        //Comando para actualiza los modelos desde la base de datos
-        //Scaffold - DbContext "Data Source=store.db" Microsoft.EntityFrameworkCore.Sqlite - OutputDir Models
     }
 
     public StoreContext(DbContextOptions<StoreContext> options)
@@ -70,9 +67,7 @@ public partial class StoreContext : DbContext
             entity.Property(e => e.Id).HasColumnName("id");
             entity.Property(e => e.IdCiudad).HasColumnName("id_ciudad");
 
-            entity.HasOne(d => d.IdCiudadNavigation).WithMany(p => p.InvSucursals)
-                .HasForeignKey(d => d.IdCiudad)
-                .OnDelete(DeleteBehavior.ClientSetNull);
+            entity.HasOne(d => d.IdCiudadNavigation).WithMany(p => p.InvSucursals).HasForeignKey(d => d.IdCiudad);
         });
 
         modelBuilder.Entity<RrhhAsistencia>(entity =>
@@ -108,9 +103,7 @@ public partial class StoreContext : DbContext
             entity.Property(e => e.IdCiudad).HasColumnName("id_ciudad");
             entity.Property(e => e.IndTipoFeriado).HasColumnName("ind_tipo_feriado");
 
-            entity.HasOne(d => d.IdCiudadNavigation).WithMany(p => p.RrhhFeriados)
-                .HasForeignKey(d => d.IdCiudad)
-                .OnDelete(DeleteBehavior.ClientSetNull);
+            entity.HasOne(d => d.IdCiudadNavigation).WithMany(p => p.RrhhFeriados).HasForeignKey(d => d.IdCiudad);
         });
 
         modelBuilder.Entity<RrhhPersonal>(entity =>
@@ -120,14 +113,14 @@ public partial class StoreContext : DbContext
             entity.HasIndex(e => e.Id, "IX_rrhh_personal_id").IsUnique();
 
             entity.Property(e => e.Id).HasColumnName("id");
-            entity.Property(e => e.HuellaIndDer).HasColumnName("huella_ind_der");
-            entity.Property(e => e.HuellaIndIzq).HasColumnName("huella_ind_izq");
-            entity.Property(e => e.HuellaPulgDer).HasColumnName("huella_pulg_der");
-            entity.Property(e => e.HuellaPulgIzq).HasColumnName("huella_pulg_izq");
             entity.Property(e => e.IdCiudad).HasColumnName("id_ciudad");
+            entity.Property(e => e.IndiceDerecho).HasColumnName("indice_derecho");
+            entity.Property(e => e.IndiceIzquierdo).HasColumnName("indice_izquierdo");
             entity.Property(e => e.Materno).HasColumnName("materno");
-            entity.Property(e => e.Nombre).HasColumnName("nombre");
+            entity.Property(e => e.Nombres).HasColumnName("nombres");
             entity.Property(e => e.Paterno).HasColumnName("paterno");
+            entity.Property(e => e.PulgarDerecho).HasColumnName("pulgar_derecho");
+            entity.Property(e => e.PulgarIzquierdo).HasColumnName("pulgar_izquierdo");
 
             entity.HasOne(d => d.IdCiudadNavigation).WithMany(p => p.RrhhPersonals)
                 .HasForeignKey(d => d.IdCiudad)
@@ -148,13 +141,9 @@ public partial class StoreContext : DbContext
             entity.Property(e => e.Nombre).HasColumnName("nombre");
             entity.Property(e => e.Responsable).HasColumnName("responsable");
 
-            entity.HasOne(d => d.IdAlmacenNavigation).WithMany(p => p.RrhhPuntoAsistencia)
-                .HasForeignKey(d => d.IdAlmacen)
-                .OnDelete(DeleteBehavior.ClientSetNull);
+            entity.HasOne(d => d.IdAlmacenNavigation).WithMany(p => p.RrhhPuntoAsistencia).HasForeignKey(d => d.IdAlmacen);
 
-            entity.HasOne(d => d.IdSucursalNavigation).WithMany(p => p.RrhhPuntoAsistencia)
-                .HasForeignKey(d => d.IdSucursal)
-                .OnDelete(DeleteBehavior.ClientSetNull);
+            entity.HasOne(d => d.IdSucursalNavigation).WithMany(p => p.RrhhPuntoAsistencia).HasForeignKey(d => d.IdSucursal);
         });
 
         modelBuilder.Entity<RrhhTurno>(entity =>

@@ -46,13 +46,18 @@
             lnkOpciones = new LinkLabel();
             pictureBox1 = new PictureBox();
             panel1 = new Panel();
+            lblLogOut = new Label();
+            pictureBox2 = new PictureBox();
             pnlInfoStore = new Panel();
             pnlHora = new Panel();
             pnlBase = new Panel();
+            panel2 = new Panel();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
             panel1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)pictureBox2).BeginInit();
             pnlInfoStore.SuspendLayout();
             pnlHora.SuspendLayout();
+            panel2.SuspendLayout();
             SuspendLayout();
             // 
             // lblSisAsis
@@ -270,6 +275,7 @@
             // panel1
             // 
             panel1.BackColor = Color.FromArgb(0, 37, 105);
+            panel1.Controls.Add(panel2);
             panel1.Controls.Add(lnkMarcarCodigo);
             panel1.Controls.Add(pictureBox1);
             panel1.Controls.Add(lnkApiTest);
@@ -283,6 +289,27 @@
             panel1.Name = "panel1";
             panel1.Size = new Size(225, 729);
             panel1.TabIndex = 26;
+            // 
+            // lblLogOut
+            // 
+            lblLogOut.AutoSize = true;
+            lblLogOut.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            lblLogOut.ForeColor = Color.FromArgb(241, 206, 0);
+            lblLogOut.Location = new Point(79, 19);
+            lblLogOut.Name = "lblLogOut";
+            lblLogOut.Size = new Size(103, 21);
+            lblLogOut.TabIndex = 27;
+            lblLogOut.Text = "Cerrar seeión";
+            // 
+            // pictureBox2
+            // 
+            pictureBox2.Image = (Image)resources.GetObject("pictureBox2.Image");
+            pictureBox2.Location = new Point(42, 14);
+            pictureBox2.Name = "pictureBox2";
+            pictureBox2.Size = new Size(33, 34);
+            pictureBox2.SizeMode = PictureBoxSizeMode.Zoom;
+            pictureBox2.TabIndex = 26;
+            pictureBox2.TabStop = false;
             // 
             // pnlInfoStore
             // 
@@ -317,6 +344,16 @@
             pnlBase.Size = new Size(1125, 457);
             pnlBase.TabIndex = 29;
             // 
+            // panel2
+            // 
+            panel2.Controls.Add(lblLogOut);
+            panel2.Controls.Add(pictureBox2);
+            panel2.Dock = DockStyle.Bottom;
+            panel2.Location = new Point(0, 671);
+            panel2.Name = "panel2";
+            panel2.Size = new Size(225, 58);
+            panel2.TabIndex = 28;
+            // 
             // Main
             // 
             AutoScaleDimensions = new SizeF(96F, 96F);
@@ -336,10 +373,13 @@
             ((System.ComponentModel.ISupportInitialize)pictureBox1).EndInit();
             panel1.ResumeLayout(false);
             panel1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)pictureBox2).EndInit();
             pnlInfoStore.ResumeLayout(false);
             pnlInfoStore.PerformLayout();
             pnlHora.ResumeLayout(false);
             pnlHora.PerformLayout();
+            panel2.ResumeLayout(false);
+            panel2.PerformLayout();
             ResumeLayout(false);
         }
 
@@ -364,6 +404,9 @@
         private Panel pnlInfoStore;
         private Panel pnlHora;
         private Panel pnlBase;
+        private PictureBox pictureBox2;
+        private Label lblLogOut;
+        private Panel panel2;
     }
 }
 
