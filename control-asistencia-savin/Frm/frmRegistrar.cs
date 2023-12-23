@@ -71,6 +71,7 @@ namespace control_asistencia_savin
                                select new
                                {
                                    ID = emp.Id,
+                                   CIUDAD = emp.IdCiudad,
                                    EMPLEADO = emp.Nombres + " " + emp.Paterno + " " + emp.Materno,
                                };
                 if (personal != null)
@@ -130,6 +131,11 @@ namespace control_asistencia_savin
                 db.RrhhPersonals.Add(item);
                 db.SaveChanges();
             }
+        }
+
+        private void dgvListar_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+
         }
     }
 }

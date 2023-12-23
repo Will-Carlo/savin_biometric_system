@@ -41,6 +41,16 @@
             label4 = new Label();
             txtNombre = new TextBox();
             label5 = new Label();
+            label6 = new Label();
+            label7 = new Label();
+            textBox1 = new TextBox();
+            label8 = new Label();
+            textBox2 = new TextBox();
+            label9 = new Label();
+            textBox3 = new TextBox();
+            button1 = new Button();
+            button2 = new Button();
+            button3 = new Button();
             ((System.ComponentModel.ISupportInitialize)dgvListar).BeginInit();
             SuspendLayout();
             // 
@@ -67,12 +77,12 @@
             // btnAgregar
             // 
             btnAgregar.Enabled = false;
-            btnAgregar.Location = new Point(649, 193);
+            btnAgregar.Location = new Point(955, 418);
             btnAgregar.Margin = new Padding(4, 3, 4, 3);
             btnAgregar.Name = "btnAgregar";
-            btnAgregar.Size = new Size(88, 27);
+            btnAgregar.Size = new Size(157, 27);
             btnAgregar.TabIndex = 2;
-            btnAgregar.Text = "Agregar";
+            btnAgregar.Text = "Guardar Usuario";
             btnAgregar.UseVisualStyleBackColor = true;
             btnAgregar.Click += btnAgregar_Click;
             // 
@@ -87,18 +97,18 @@
             // txtHuella
             // 
             txtHuella.Enabled = false;
-            txtHuella.Location = new Point(114, 191);
+            txtHuella.Location = new Point(114, 238);
             txtHuella.Margin = new Padding(4, 3, 4, 3);
             txtHuella.Name = "txtHuella";
-            txtHuella.Size = new Size(224, 23);
+            txtHuella.Size = new Size(131, 23);
             txtHuella.TabIndex = 4;
             // 
             // btnRegistrarHuella
             // 
-            btnRegistrarHuella.Location = new Point(346, 191);
+            btnRegistrarHuella.Location = new Point(259, 234);
             btnRegistrarHuella.Margin = new Padding(4, 3, 4, 3);
             btnRegistrarHuella.Name = "btnRegistrarHuella";
-            btnRegistrarHuella.Size = new Size(126, 27);
+            btnRegistrarHuella.Size = new Size(79, 27);
             btnRegistrarHuella.TabIndex = 5;
             btnRegistrarHuella.Text = "Registrar Huella";
             btnRegistrarHuella.UseVisualStyleBackColor = true;
@@ -110,8 +120,9 @@
             dgvListar.Location = new Point(355, 12);
             dgvListar.Margin = new Padding(4, 3, 4, 3);
             dgvListar.Name = "dgvListar";
-            dgvListar.Size = new Size(382, 173);
+            dgvListar.Size = new Size(757, 400);
             dgvListar.TabIndex = 6;
+            dgvListar.CellContentClick += dgvListar_CellContentClick;
             // 
             // txtId_ciudad
             // 
@@ -168,11 +179,118 @@
             label5.TabIndex = 11;
             label5.Text = "Nombre:";
             // 
+            // label6
+            // 
+            label6.AutoSize = true;
+            label6.Location = new Point(51, 241);
+            label6.Margin = new Padding(4, 0, 4, 0);
+            label6.Name = "label6";
+            label6.Size = new Size(45, 15);
+            label6.TabIndex = 13;
+            label6.Text = "Ind Der";
+            // 
+            // label7
+            // 
+            label7.AutoSize = true;
+            label7.Location = new Point(51, 280);
+            label7.Margin = new Padding(4, 0, 4, 0);
+            label7.Name = "label7";
+            label7.Size = new Size(42, 15);
+            label7.TabIndex = 15;
+            label7.Text = "Ind Izq";
+            // 
+            // textBox1
+            // 
+            textBox1.Enabled = false;
+            textBox1.Location = new Point(114, 277);
+            textBox1.Margin = new Padding(4, 3, 4, 3);
+            textBox1.Name = "textBox1";
+            textBox1.Size = new Size(131, 23);
+            textBox1.TabIndex = 14;
+            // 
+            // label8
+            // 
+            label8.AutoSize = true;
+            label8.Location = new Point(51, 322);
+            label8.Margin = new Padding(4, 0, 4, 0);
+            label8.Name = "label8";
+            label8.Size = new Size(45, 15);
+            label8.TabIndex = 17;
+            label8.Text = "Pul Der";
+            // 
+            // textBox2
+            // 
+            textBox2.Enabled = false;
+            textBox2.Location = new Point(114, 319);
+            textBox2.Margin = new Padding(4, 3, 4, 3);
+            textBox2.Name = "textBox2";
+            textBox2.Size = new Size(131, 23);
+            textBox2.TabIndex = 16;
+            // 
+            // label9
+            // 
+            label9.AutoSize = true;
+            label9.Location = new Point(51, 364);
+            label9.Margin = new Padding(4, 0, 4, 0);
+            label9.Name = "label9";
+            label9.Size = new Size(45, 15);
+            label9.TabIndex = 19;
+            label9.Text = "Pul Der";
+            // 
+            // textBox3
+            // 
+            textBox3.Enabled = false;
+            textBox3.Location = new Point(114, 361);
+            textBox3.Margin = new Padding(4, 3, 4, 3);
+            textBox3.Name = "textBox3";
+            textBox3.Size = new Size(131, 23);
+            textBox3.TabIndex = 18;
+            // 
+            // button1
+            // 
+            button1.Location = new Point(259, 277);
+            button1.Margin = new Padding(4, 3, 4, 3);
+            button1.Name = "button1";
+            button1.Size = new Size(79, 27);
+            button1.TabIndex = 20;
+            button1.Text = "Registrar Huella";
+            button1.UseVisualStyleBackColor = true;
+            // 
+            // button2
+            // 
+            button2.Location = new Point(259, 316);
+            button2.Margin = new Padding(4, 3, 4, 3);
+            button2.Name = "button2";
+            button2.Size = new Size(79, 27);
+            button2.TabIndex = 21;
+            button2.Text = "Registrar Huella";
+            button2.UseVisualStyleBackColor = true;
+            // 
+            // button3
+            // 
+            button3.Location = new Point(259, 357);
+            button3.Margin = new Padding(4, 3, 4, 3);
+            button3.Name = "button3";
+            button3.Size = new Size(79, 27);
+            button3.TabIndex = 22;
+            button3.Text = "Registrar Huella";
+            button3.UseVisualStyleBackColor = true;
+            // 
             // frmRegistrar
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(792, 262);
+            ClientSize = new Size(1125, 457);
+            Controls.Add(button3);
+            Controls.Add(button2);
+            Controls.Add(button1);
+            Controls.Add(label9);
+            Controls.Add(textBox3);
+            Controls.Add(label8);
+            Controls.Add(textBox2);
+            Controls.Add(label7);
+            Controls.Add(textBox1);
+            Controls.Add(label6);
             Controls.Add(txtNombre);
             Controls.Add(label5);
             Controls.Add(txtMaterno);
@@ -211,5 +329,15 @@
         private Label label4;
         private TextBox txtNombre;
         private Label label5;
+        private Label label6;
+        private Label label7;
+        private TextBox textBox1;
+        private Label label8;
+        private TextBox textBox2;
+        private Label label9;
+        private TextBox textBox3;
+        private Button button1;
+        private Button button2;
+        private Button button3;
     }
 }

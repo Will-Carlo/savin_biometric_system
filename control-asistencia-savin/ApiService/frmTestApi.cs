@@ -76,7 +76,21 @@ namespace control_asistencia_savin
                 GuardarEntidades(context, data.GenCiudad);
                 GuardarEntidades(context, data.InvAlmacen);
 
+
+                foreach (var personal in data.RrhhPersonal)
+                {
+                    // Convertir las propiedades de tipo string base64 a byte[]
+                    if (personal.IndiceDerecho != null)
+                    {
+                        personal.IndiceDerecho = Convert.FromBase64String(personal.IndiceDerecho);
+                    }
+
+                }
                 GuardarEntidades(context, data.RrhhPersonal);
+
+
+
+
                 GuardarEntidades(context, data.InvSucursal);
                 GuardarEntidades(context, data.RrhhFeriado);
 
@@ -88,6 +102,27 @@ namespace control_asistencia_savin
 
                 // Confirmar todos los cambios en la base de datos
                 context.SaveChanges();
+            }
+        }
+
+
+        public bool EsBase64Valido(string cadenaBase64)
+        {
+            // La cadena no puede ser nula o vacía y debe tener una longitud múltiplo de 4 para ser base64 válida.
+            if (string.IsNullOrEmpty(cadenaBase64) || cadenaBase64.Length % 4 != 0
+                || cadenaBase64.Contains(" ") || cadenaBase64.Contains("\t") || cadenaBase64.Contains("\r") || cadenaBase64.Contains("\n"))
+                return false;
+
+            try
+            {
+                // Intenta decodificar la cadena para verificar si es base64 válido.
+                Convert.FromBase64String(cadenaBase64);
+                return true;
+            }
+            catch (FormatException)
+            {
+                // La cadena no es base64 válido.
+                return false;
             }
         }
 
@@ -187,7 +222,7 @@ namespace control_asistencia_savin
 
         private void btnMakeBackUp_Click(object sender, EventArgs e)
         {
-            BackUpDB("2023/12/22 18 50 00");
+            BackUpDB("20231222 18 50 00");
         }
     }
 }

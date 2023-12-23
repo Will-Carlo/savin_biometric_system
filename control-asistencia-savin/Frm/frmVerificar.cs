@@ -6,6 +6,7 @@ using System.Data;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Windows.Forms;
 
@@ -72,17 +73,24 @@ namespace control_asistencia_savin
                 {
 
 
-                    List<byte[]> FingerList = new List<byte[]>();
-                    FingerList.Add(emp.IndiceDerecho);
-                    FingerList.Add(emp.IndiceIzquierdo);
-                    FingerList.Add(emp.PulgarDerecho);
-                    FingerList.Add(emp.PulgarIzquierdo);
-                    Console.WriteLine("HELLO WOLRD");
-                    foreach (byte[] finger in FingerList)
-                    {
-                        if (finger != null)
-                        {
-                            stream = new MemoryStream(finger);
+                    //List<byte[]> FingerList = new List<byte[]>();
+                    //FingerList.Add(emp.IndiceDerecho);
+                    //FingerList.Add(emp.IndiceIzquierdo);
+                    //FingerList.Add(emp.PulgarD
+                    //erecho);
+                    //FingerList.Add(emp.PulgarIzquierdo);
+
+
+                    //MessageBox.Show("1. " + emp.IndiceDerecho);
+                    //MessageBox.Show("2. " + emp.IndiceIzquierdo);
+                    //MessageBox.Show("3. " + emp.PulgarDerecho);
+                    //MessageBox.Show("4. " + emp.PulgarIzquierdo);
+
+                    //foreach (byte[] finger in FingerList)
+                    ////{
+                    //    if (finger != null)
+                    //    {
+                            stream = new MemoryStream(emp.IndiceDerecho);
                             template = new DPFP.Template(stream);
                             Verificator.Verify(features, template, ref result);
 
@@ -97,13 +105,13 @@ namespace control_asistencia_savin
                                 Stop();
                                 break;
                             }
-                        }
+                        //}
                         else
                         {
                             statusProcess = false;
                             SetPrompt("RECHAZADO");
                         }
-                    }
+                    //}
                 }
             }
         }
