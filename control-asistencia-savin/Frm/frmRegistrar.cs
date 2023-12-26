@@ -120,11 +120,6 @@ namespace control_asistencia_savin
                 MessageBox.Show(errorMessage, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
-
-        private void label3_Click(object sender, EventArgs e)
-        {
-
-        }
         void AddPersonal(RrhhPersonal item)
         {
             using (var db = new StoreContext())
@@ -134,9 +129,5 @@ namespace control_asistencia_savin
             }
         }
 
-        private void dgvListar_CellContentClick(object sender, DataGridViewCellEventArgs e)
-        {
-
-        }
     }
 }

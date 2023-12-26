@@ -13,12 +13,15 @@ using System.Reflection.Metadata;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Windows.Forms.VisualStyles;
 
 namespace control_asistencia_savin
 {
     public partial class frmTestApi : Form
     {
         private readonly ApiService.ApiService _apiService;
+        private DPFP.Template Template;
+
         public frmTestApi()
         {
             InitializeComponent();
@@ -79,38 +82,32 @@ namespace control_asistencia_savin
                 GuardarEntidades(context, data.InvAlmacen);
 
 
-                foreach (var personal in data.RrhhPersonal)
-                {
+                //foreach (var personal in data.RrhhPersonal)
+                //{
+                //    // Convertir las propiedades de tipo string base64 a byte[]
+                //    if (personal.IndiceDerecho != null)
+                //    {
+                //        //string representacionBase64 = personal.IndiceDerecho;
+                //        //string representacionBase64 = Convert.ToBase64String(personal.IndiceDerecho);
+                //        //byte[] blobData = Convert.FromBase64String(representacionBase64);
 
-                DPFP.Template template = new DPFP.Template();
-                Stream stream;
+                //        //MessageBox.Show("Json: "+ representacionBase64);
+                //        //personal.IndiceDerecho = blobData;
 
 
-                    // Convertir las propiedades de tipo string base64 a byte[]
-                    if (personal.IndiceDerecho != null)
-                    {
-                        //string representacionBase64 = personal.IndiceDerecho;
-                        //string representacionBase64 = Convert.ToBase64String(personal.IndiceDerecho);
-                        //byte[] blobData = Convert.FromBase64String(representacionBase64);
+                //        MessageBox.Show("Finger: " + personal.IndiceDerecho);
 
-                        //MessageBox.Show("Json: "+ representacionBase64);
-                        //personal.IndiceDerecho = blobData;
+                //        byte[] streamHuella = Template.Bytes;
 
-                        
+                //        personal.IndiceDerecho = streamHuella;
 
-                        stream = new MemoryStream(personal.IndiceDerecho);
-                        template = new DPFP.Template(stream);
+                //        //personal.IndiceDerecho = Convert.FromBase64String(personal.IndiceDerecho);
+                //    }
 
-                        byte[] streamHuella = Template.Bytes;
+                //}
 
-                        personal.IndiceDerecho = streamHuella;
-                       
-                        //personal.IndiceDerecho = Convert.FromBase64String(personal.IndiceDerecho);
-                    }
-
-                    GuardarEntidades(context, data.RrhhPersonal);
-                }
-
+                GuardarPersonal(context, data.RrhhPersonal);
+                //GuardarEntidades(context, data.RrhhPersonal);
 
 
 
@@ -120,7 +117,7 @@ namespace control_asistencia_savin
                 GuardarEntidades(context, data.RrhhPuntoAsistencia);
                 GuardarEntidades(context, data.RrhhTurnoAsignado);
 
-                // NodeLabelEditEventArgs recibimos datos de la tabla rrhh_asistencia
+                //recibimos datos de la tabla rrhh_asistencia
                 //GuardarEntidades(context, data.RrhhAsistencia);
 
                 // Confirmar todos los cambios en la base de datos
@@ -129,36 +126,17 @@ namespace control_asistencia_savin
         }
 
 
-        public bool EsBase64Valido(string cadenaBase64)
-        {
-            // La cadena no puede ser nula o vacía y debe tener una longitud múltiplo de 4 para ser base64 válida.
-            if (string.IsNullOrEmpty(cadenaBase64) || cadenaBase64.Length % 4 != 0
-                || cadenaBase64.Contains(" ") || cadenaBase64.Contains("\t") || cadenaBase64.Contains("\r") || cadenaBase64.Contains("\n"))
-                return false;
-
-            try
-            {
-                // Intenta decodificar la cadena para verificar si es base64 válido.
-                Convert.FromBase64String(cadenaBase64);
-                return true;
-            }
-            catch (FormatException)
-            {
-                // La cadena no es base64 válido.
-                return false;
-            }
-        }
-
         // Método genérico para guardar entidades
         private void GuardarEntidades<TEntity>(StoreContext context, List<TEntity> entidades) where TEntity : class
         {
             var dbSet = context.Set<TEntity>();
+
+
             try
             {
                 foreach (var entidad in entidades)
                 {
-                    // Aquí asumo que tienes una propiedad 'Id' en todas tus entidades,
-                    // y que es de tipo int. Esto puede necesitar ajustes si tu situación es diferente.
+                    // Asumiendo que se tiene una propiedad 'Id' en todas las entidades.
                     var idProperty = entidad.GetType().GetProperty("Id");
                     if (idProperty != null)
                     {
@@ -177,6 +155,120 @@ namespace control_asistencia_savin
             }
         }
 
+
+        private void GuardarPersonal(StoreContext context, List<RrhhPersonal> personalList)
+        {
+            try
+            {
+                foreach (var personal in personalList)
+                {
+                    // Encuentra la entidad existente por ID o crea una nueva si no existe.
+                    var existente = context.RrhhPersonals.Find(personal.Id);
+                    if (existente == null)
+                    {
+                        // Si la entidad no existe, simplemente la añade al contexto.
+
+                        string finger = Encoding.UTF8.GetString(personal.IndiceDerecho);
+                        byte[] datoPrueba = Convert.FromBase64String(finger);
+                        personal.IndiceDerecho = datoPrueba;
+
+
+                        context.RrhhPersonals.Add(personal);
+                    }
+                    else
+                    {
+                        // Si la entidad ya existe, podría ser necesario actualizar los datos.
+                        // Copia los datos de las propiedades que quieres actualizar.
+                        existente.IdCiudad = personal.IdCiudad;
+                        existente.Paterno = personal.Paterno;
+                        existente.Materno = personal.Materno;
+                        existente.Nombres = personal.Nombres;
+                        existente.IndiceDerecho = personal.IndiceDerecho;
+                        existente.IndiceIzquierdo = personal.IndiceIzquierdo;
+                        existente.PulgarDerecho = personal.PulgarDerecho;
+                        existente.PulgarIzquierdo = personal.PulgarIzquierdo;
+                        // No es necesario llamar a Update ya que el objeto ya está siendo rastreado por el contexto.
+                    }
+                }
+
+                // Guarda todos los cambios en la base de datos.
+                context.SaveChanges();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error al guardar en la bd: " + ex.Message, "Error");
+            }
+        }
+
+
+        private void GuardarPersonal2(List<RrhhPersonal> personal)
+        {
+            //var dbSet = context.Set<TEntity>();
+
+            //DPFP.Template template = new DPFP.Template();
+            //Stream stream;
+            try
+            {
+                foreach (var entidad in personal)
+                {
+                    // Asumiendo que se tiene una propiedad 'Id' en todas las entidades.
+                    //var idProperty = entidad.GetType().GetProperty("Id");
+                    //if (idProperty != null || entidad.IndiceDerecho != null)
+                    if (entidad.IndiceDerecho != null)
+                        {
+                        //var idValue = (int)idProperty.GetValue(entidad);
+                        //var existente = dbSet.Find(idValue);
+                        //if (existente == null)
+                        //{
+                        //string prueba = "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";
+                        //byte[] datoPrueba = Convert.FromBase64String(prueba);
+
+
+                        string finger = Encoding.UTF8.GetString(entidad.IndiceDerecho);
+                        byte[] datoPrueba = Convert.FromBase64String(finger);
+
+
+                        //stream = new MemoryStream(entidad.IndiceDerecho);
+                        //template = new DPFP.Template(stream);
+
+
+                        //MessageBox.Show("IndDer: " + entidad.IndiceDerecho);
+                        //MessageBox.Show("Template: " + template);
+
+                        //byte[] streamHuella = Template.Bytes;
+
+
+                        RrhhPersonal p = new RrhhPersonal()
+                        {
+                            Id = entidad.Id,
+                            IdCiudad = entidad.IdCiudad,
+                            Paterno = entidad.Paterno,
+                            Materno = entidad.Materno,
+                            Nombres = entidad.Nombres,
+                            IndiceDerecho = datoPrueba
+                        };
+                        AddPersonal(p);
+
+
+                        //dbSet.Add(entidad);
+                        //}
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error al guardar personal en la bd: " + ex.Message, "Error");
+            }
+        }
+
+        void AddPersonal(RrhhPersonal item)
+        {
+            using (var db = new StoreContext())
+            {
+                db.RrhhPersonals.Add(item);
+                db.SaveChanges();
+            }
+        }
 
 
         public void LimpiarDB()
@@ -250,7 +342,68 @@ namespace control_asistencia_savin
 
         private void btnPruebaB64_Click(object sender, EventArgs e)
         {
+            string finger = "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";
+            RrhhPersonal p = new RrhhPersonal()
+            {
+                IdCiudad = 1,
+                Paterno = "  ",
+                Materno = "CARLO",
+                Nombres = "Will"
+            };
+            pruebasDeBlob(p, finger);
+        }
 
+
+
+        private void pruebasDeBlob(RrhhPersonal entidad,string finger)
+        {
+            //var dbSet = context.Set<TEntity>();
+
+            DPFP.Template template = new DPFP.Template();
+            Stream stream;
+
+            try
+            {
+                //foreach (var entidad in personal)
+                //{
+                    // Asumiendo que se tiene una propiedad 'Id' en todas las entidades.
+                    //var idProperty = entidad.GetType().GetProperty("Id");
+                    //if (entidad.IndiceDerecho != null)
+                    //{
+                        //var idValue = (int)idProperty.GetValue(entidad);
+                        //var existente = dbSet.Find(idValue);
+                        //if (existente == null)
+                        //{
+
+                            byte[] datoPrueba = Convert.FromBase64String(finger);
+
+
+
+                        //    stream = new MemoryStream(datoPrueba);
+                        //template = new DPFP.Template(stream);
+                        //byte[] streamHuella = Template.Bytes;
+
+
+                        RrhhPersonal p = new RrhhPersonal()
+                        {
+                            IdCiudad = entidad.IdCiudad,
+                            Paterno = entidad.Paterno,
+                            Materno = entidad.Materno,
+                            Nombres = entidad.Nombres,
+                            IndiceDerecho = datoPrueba
+                        };
+                        AddPersonal(p);
+
+
+                        //dbSet.Add(entidad);
+                        //}
+                    //}
+                //}
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error al guardar en la bd" + ex.Message, "Error");
+            }
         }
     }
 }

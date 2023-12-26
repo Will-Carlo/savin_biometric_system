@@ -23,7 +23,7 @@ namespace control_asistencia_savin.ApiService
             nomTienda = GetNombreTienda();
             //_httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", "SavinBio-23%");
             _httpClient.DefaultRequestHeaders.Add("Tkn", "SavinBio-23%");
-            _httpClient.DefaultRequestHeaders.Add("DirMac", dirMac);
+            _httpClient.DefaultRequestHeaders.Add("DirMac", "00-E0-4C-36-17-61");
 
             //var client = new HttpClient();
             //var request = new HttpRequestMessage(HttpMethod.Get, "http://200.105.183.173:8080/savin-rest/ws/biometrico/listar-estructura-biometrico");

@@ -122,7 +122,6 @@
             dgvListar.Name = "dgvListar";
             dgvListar.Size = new Size(757, 400);
             dgvListar.TabIndex = 6;
-            dgvListar.CellContentClick += dgvListar_CellContentClick;
             // 
             // txtId_ciudad
             // 
@@ -141,7 +140,6 @@
             label3.Size = new Size(61, 15);
             label3.TabIndex = 7;
             label3.Text = "Id_ciudad:";
-            label3.Click += label3_Click;
             // 
             // txtMaterno
             // 

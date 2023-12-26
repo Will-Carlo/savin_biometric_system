@@ -71,8 +71,6 @@ namespace control_asistencia_savin
 
                 foreach (var emp in contexto.RrhhPersonals)
                 {
-
-
                     //List<byte[]> FingerList = new List<byte[]>();
                     //FingerList.Add(emp.IndiceDerecho);
                     //FingerList.Add(emp.IndiceIzquierdo);
@@ -86,11 +84,16 @@ namespace control_asistencia_savin
                     //MessageBox.Show("3. " + emp.PulgarDerecho);
                     //MessageBox.Show("4. " + emp.PulgarIzquierdo);
 
+
                     //foreach (byte[] finger in FingerList)
                     ////{
                     //    if (finger != null)
                     //    {
-                            stream = new MemoryStream(emp.IndiceDerecho);
+                    //MessageBox.Show("ind: " + emp.IndiceDerecho);
+                    if (emp.IndiceDerecho != null)
+                    {
+                        
+                    stream = new MemoryStream(emp.IndiceDerecho);
                             template = new DPFP.Template(stream);
                             Verificator.Verify(features, template, ref result);
 
@@ -112,6 +115,7 @@ namespace control_asistencia_savin
                             SetPrompt("RECHAZADO");
                         }
                     //}
+                    }
                 }
             }
         }
