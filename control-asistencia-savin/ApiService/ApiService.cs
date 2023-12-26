@@ -48,7 +48,7 @@ namespace control_asistencia_savin.ApiService
             }
             else
             {
-                throw new HttpRequestException($"Error: {response.StatusCode}");
+                throw new HttpRequestException($"No se pudo conectar al servidor: {response.StatusCode}");
             }
         }
 

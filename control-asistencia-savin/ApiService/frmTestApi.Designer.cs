@@ -36,6 +36,7 @@
             flowLayoutPanel1 = new FlowLayoutPanel();
             btnDeleteBD = new Button();
             btnMakeBackUp = new Button();
+            btnPruebaB64 = new Button();
             SuspendLayout();
             // 
             // btnVerificarApi
@@ -112,12 +113,23 @@
             btnMakeBackUp.UseVisualStyleBackColor = true;
             btnMakeBackUp.Click += btnMakeBackUp_Click;
             // 
+            // btnPruebaB64
+            // 
+            btnPruebaB64.Location = new Point(390, 266);
+            btnPruebaB64.Name = "btnPruebaB64";
+            btnPruebaB64.Size = new Size(130, 23);
+            btnPruebaB64.TabIndex = 8;
+            btnPruebaB64.Text = "Convertir base 64";
+            btnPruebaB64.UseVisualStyleBackColor = true;
+            btnPruebaB64.Click += btnPruebaB64_Click;
+            // 
             // frmTestApi
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.White;
             ClientSize = new Size(688, 295);
+            Controls.Add(btnPruebaB64);
             Controls.Add(btnMakeBackUp);
             Controls.Add(btnDeleteBD);
             Controls.Add(flowLayoutPanel1);
@@ -142,5 +154,6 @@
         private FlowLayoutPanel flowLayoutPanel1;
         private Button btnDeleteBD;
         private Button btnMakeBackUp;
+        private Button btnPruebaB64;
     }
 }

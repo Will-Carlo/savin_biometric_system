@@ -73,6 +73,7 @@ namespace control_asistencia_savin
                                    ID = emp.Id,
                                    CIUDAD = emp.IdCiudad,
                                    EMPLEADO = emp.Nombres + " " + emp.Paterno + " " + emp.Materno,
+                                   //HUELLA = emp.IndiceDerecho,
                                };
                 if (personal != null)
                 {

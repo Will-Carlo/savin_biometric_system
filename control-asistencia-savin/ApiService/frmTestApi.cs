@@ -7,7 +7,9 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.IO;
 using System.Linq;
+using System.Reflection.Metadata;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -36,7 +38,7 @@ namespace control_asistencia_savin
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Error de conexión: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show($"No se pudo conectar al servidor: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
         private async void btnCargarDB_Click(object sender, EventArgs e)
@@ -54,7 +56,7 @@ namespace control_asistencia_savin
             }
             catch (DbUpdateException ex)
             {
-                MessageBox.Show("error bd reg: "+ex.InnerException.Message);
+                MessageBox.Show("error bd reg: " + ex.InnerException.Message);
             }
         }
         private void GuardarDatosEnBaseDeDatos(ModelJson data)
@@ -79,14 +81,35 @@ namespace control_asistencia_savin
 
                 foreach (var personal in data.RrhhPersonal)
                 {
+
+                DPFP.Template template = new DPFP.Template();
+                Stream stream;
+
+
                     // Convertir las propiedades de tipo string base64 a byte[]
                     if (personal.IndiceDerecho != null)
                     {
-                        personal.IndiceDerecho = Convert.FromBase64String(personal.IndiceDerecho);
+                        //string representacionBase64 = personal.IndiceDerecho;
+                        //string representacionBase64 = Convert.ToBase64String(personal.IndiceDerecho);
+                        //byte[] blobData = Convert.FromBase64String(representacionBase64);
+
+                        //MessageBox.Show("Json: "+ representacionBase64);
+                        //personal.IndiceDerecho = blobData;
+
+                        
+
+                        stream = new MemoryStream(personal.IndiceDerecho);
+                        template = new DPFP.Template(stream);
+
+                        byte[] streamHuella = Template.Bytes;
+
+                        personal.IndiceDerecho = streamHuella;
+                       
+                        //personal.IndiceDerecho = Convert.FromBase64String(personal.IndiceDerecho);
                     }
 
+                    GuardarEntidades(context, data.RrhhPersonal);
                 }
-                GuardarEntidades(context, data.RrhhPersonal);
 
 
 
@@ -150,7 +173,7 @@ namespace control_asistencia_savin
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Error al guardar en la bd"+ ex.Message, "Error");
+                MessageBox.Show("Error al guardar en la bd" + ex.Message, "Error");
             }
         }
 
@@ -196,7 +219,7 @@ namespace control_asistencia_savin
         {
             var rutaBaseDeDatos = "store.db";
             var backupFolder = "backup";
-            var rutaCopiaDeSeguridad = Path.Combine(backupFolder, "store_backup_"+ dateBackUp + ".db");
+            var rutaCopiaDeSeguridad = Path.Combine(backupFolder, "store_backup_" + dateBackUp + ".db");
 
             // Asegurarse de que la base de datos no está siendo utilizada
             GC.Collect();
@@ -223,6 +246,11 @@ namespace control_asistencia_savin
         private void btnMakeBackUp_Click(object sender, EventArgs e)
         {
             BackUpDB("20231222 18 50 00");
+        }
+
+        private void btnPruebaB64_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }
