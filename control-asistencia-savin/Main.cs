@@ -17,22 +17,43 @@ namespace control_asistencia_savin
         // Scaffold-DbContext "Data Source=store.db" Microsoft.EntityFrameworkCore.Sqlite -OutputDir Models
 
         private readonly ApiService.ApiService _apiService;
+        private ApiService.FunctionsDataBase _functionsDataBase;
 
         public Main()
         {
             InitializeComponent();
             tmrTime.Start();
 
-            // Pidiendo datos de la tienda por dirección MAC
-            _apiService = new ApiService.ApiService();
-            lblPunto.Text = "Punto: " + _apiService.nomTienda;
-
             //this.FormBorderStyle = FormBorderStyle.None; // Remueve los bordes de la ventana
             this.WindowState = FormWindowState.Maximized; // Maximiza la ventana
             //this.TopMost = true;
             AbrirForm(new frmAsistencia());
+
+            _functionsDataBase = new ApiService.FunctionsDataBase();
+            _apiService = new ApiService.ApiService();
+            _functionsDataBase.verifyConection();
+
+            loadSystem();
         }
 
+        private void loadSystem()
+        {
+
+
+            if (_functionsDataBase.correctConection)
+            {
+                _functionsDataBase.LimpiarDB();
+                _functionsDataBase.loadDataBase();
+                // Pidiendo datos de la tienda por dirección MAC
+                lblPunto.Text = "Punto: " + _apiService.nomTienda;
+            }
+            else
+            {
+                MessageBox.Show("Error de conexión al servidor. \nCerrando la aplicación.");  
+                Environment.Exit(0);
+            }
+
+        }
         private void tmrTime_Tick(object sender, EventArgs e)
         {
             lblTime.Text = DateTime.Now.ToString("HH:mm:ss");
@@ -54,8 +75,6 @@ namespace control_asistencia_savin
         }
 
         
-
-
 
         private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
@@ -92,8 +111,6 @@ namespace control_asistencia_savin
         {
             AbrirForm(new frmAsistencia());
         }
-
-        
 
         private void lnkMarcarCodigo_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {

@@ -50,7 +50,7 @@ namespace control_asistencia_savin
 
                     RrhhAsistencia regisAsis = new RrhhAsistencia()
                     {
-                        IdTurno = m.capturaIdTurno(),
+                        IdTurno = m.getIdTurno(verificar.idEncontrado),
                         IdPersonal = verificar.idEncontrado,
                         HoraMarcado = m.getCapturaHoraMarcado(),
                         MinutosAtraso = m.capturaMinAtraso(verificar.idEncontrado),
@@ -60,10 +60,10 @@ namespace control_asistencia_savin
 
                     // Enviando datos al API REST
                     var response = _apiService.RegistrarAsistenciaAsync(regisAsis);
-                    if (response != null)
-                    {
-                        MessageBox.Show("Asistencia enviada al servidor con éxito: " + response.Status);
-                    }
+                    //if (response != null)
+                    //{
+                    //    MessageBox.Show("Asistencia enviada al servidor con éxito: " + response.Status);
+                    //}
                 }
                 else
                 {

@@ -149,6 +149,53 @@ namespace control_asistencia_savin.Frm
             return 3;
         }
 
+
+        public bool validarTurno(int idPersonal, int idTurno)
+        {
+            using (var context = new StoreContext())
+            {
+                // Busca si existe un turno asignado que coincida con el idPersonal y idTurno
+                var asignacion = context.RrhhTurnoAsignados
+                                        .Any(ta => ta.IdPersonal == idPersonal && ta.IdTurno == idTurno);
+
+                return asignacion; // True si existe la asignación, False de lo contrario
+            }
+        }
+
+        public int getIdTurno(int idPersonal)
+        {
+            int idTurno = this.capturaIdTurno();
+            if(validarTurno(idPersonal, idTurno))
+            {
+                return idTurno;
+            }
+            else
+            {
+                MessageBox.Show("El porsonal no tiene asignado el turno: " + turnoNombre2(idTurno));
+                return 0;
+            }
+        }
+
+        public string turnoNombre(int idTurno)
+        {
+            using (var context = new StoreContext())
+            {
+                var turno = context.RrhhTurnos.Find(idTurno);
+                return turno?.Nombre; // Devuelve el nombre si se encuentra el turno, o null si no se encuentra
+            }
+        }
+
+        public string turnoNombre2(int idTurno)
+        {
+            switch (idTurno)
+            {
+                case 1: return "MAÑANA";
+                case 2: return "TARDE";
+                case 3: return "SÁBADO";
+            }
+            return "";
+        }
+
         public bool EsSabado()
         {
             return DateTime.Today.DayOfWeek == DayOfWeek.Saturday;

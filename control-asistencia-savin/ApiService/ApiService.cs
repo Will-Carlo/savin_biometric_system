@@ -23,18 +23,10 @@ namespace control_asistencia_savin.ApiService
             //dirMac = macAddress();
             dirMac = "00-E0-4C-36-17-61";
             nomTienda = GetNombreTienda();
-            //_httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", "SavinBio-23%");
             _httpClient.DefaultRequestHeaders.Add("Tkn", "SavinBio-23%");
             _httpClient.DefaultRequestHeaders.Add("DirMac", dirMac);
 
-            //var client = new HttpClient();
-            //var request = new HttpRequestMessage(HttpMethod.Get, "http://200.105.183.173:8080/savin-rest/ws/biometrico/listar-estructura-biometrico");
-            //request.Headers.Add("Tkn", "SavinBio-23%");
-            //request.Headers.Add("DirMac", "00-E0-4C-36-17-C0");
-            //if (request != null)
-            //{
-            //    MessageBox.Show("Conexión exitosa");
-            //}
+   
         }
 
         public async Task<ModelJson> GetDataAsync()
@@ -93,7 +85,6 @@ namespace control_asistencia_savin.ApiService
 
         public async Task<HttpResponseMessage> RegistrarAsistenciaAsync(RrhhAsistencia asistencia)
         {
-            // Serializa el objeto RrhhAsistencia a JSON
             var regAsistencia = new
             {
                 idTurno = asistencia.IdTurno,
@@ -105,15 +96,15 @@ namespace control_asistencia_savin.ApiService
 
             string jsonContent = JsonConvert.SerializeObject(regAsistencia);
 
-            MessageBox.Show("json" + asistencia 
-                                + "\nIdTurno: "+ asistencia.IdTurno
-                                + "\nIdPersonal: " + asistencia.IdPersonal
-                                + "\nHoraMarcado: " + asistencia.HoraMarcado
-                                + "\nMinutosAtraso: " + asistencia.MinutosAtraso
-                                + "\nIndTipoMovimiento: " + asistencia.IndTipoMovimiento
-                            );
+            //MessageBox.Show("json" + asistencia 
+            //                    + "\nIdTurno: "+ asistencia.IdTurno
+            //                    + "\nIdPersonal: " + asistencia.IdPersonal
+            //                    + "\nHoraMarcado: " + asistencia.HoraMarcado
+            //                    + "\nMinutosAtraso: " + asistencia.MinutosAtraso
+            //                    + "\nIndTipoMovimiento: " + asistencia.IndTipoMovimiento
+            //                );
 
-            MessageBox.Show("json" + regAsistencia);
+            //MessageBox.Show("json" + regAsistencia);
 
             var content = new StringContent(jsonContent, Encoding.UTF8, "application/json");
 
@@ -127,7 +118,6 @@ namespace control_asistencia_savin.ApiService
             if (!response.IsSuccessStatusCode)
             {
                 MessageBox.Show("Error al registrar a la asistencia: " + response.StatusCode + "\nDetalles: "+ responseBody);
-                //throw new HttpRequestException($"Error al registrar la asistencia: {response.StatusCode}");
             }
 
             return response;
