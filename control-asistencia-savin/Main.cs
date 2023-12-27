@@ -36,6 +36,7 @@ namespace control_asistencia_savin
         private void tmrTime_Tick(object sender, EventArgs e)
         {
             lblTime.Text = DateTime.Now.ToString("HH:mm:ss");
+            lblFecha.Text = DateTime.Now.ToString("dd/MM/yyyy");
         }
 
         public void AbrirForm(object subForm)

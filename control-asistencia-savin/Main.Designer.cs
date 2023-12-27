@@ -31,7 +31,7 @@
             components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Main));
             lblSisAsis = new Label();
-            label2 = new Label();
+            lblFecha = new Label();
             lblTime = new Label();
             tmrTime = new System.Windows.Forms.Timer(components);
             label5 = new Label();
@@ -46,18 +46,18 @@
             lnkOpciones = new LinkLabel();
             pictureBox1 = new PictureBox();
             panel1 = new Panel();
+            panel2 = new Panel();
             lblLogOut = new Label();
             pictureBox2 = new PictureBox();
             pnlInfoStore = new Panel();
             pnlHora = new Panel();
             pnlBase = new Panel();
-            panel2 = new Panel();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
             panel1.SuspendLayout();
+            panel2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)pictureBox2).BeginInit();
             pnlInfoStore.SuspendLayout();
             pnlHora.SuspendLayout();
-            panel2.SuspendLayout();
             SuspendLayout();
             // 
             // lblSisAsis
@@ -73,18 +73,18 @@
             lblSisAsis.TabIndex = 2;
             lblSisAsis.Text = "Sistema de Asistencia";
             // 
-            // label2
+            // lblFecha
             // 
-            label2.Anchor = AnchorStyles.Top;
-            label2.AutoSize = true;
-            label2.Font = new Font("Tahoma", 25F, FontStyle.Bold);
-            label2.ForeColor = Color.FromArgb(10, 38, 102);
-            label2.Location = new Point(437, 14);
-            label2.Margin = new Padding(4, 0, 4, 0);
-            label2.Name = "label2";
-            label2.Size = new Size(234, 41);
-            label2.TabIndex = 3;
-            label2.Text = "12/12/2023";
+            lblFecha.Anchor = AnchorStyles.Top;
+            lblFecha.AutoSize = true;
+            lblFecha.Font = new Font("Tahoma", 25F, FontStyle.Bold);
+            lblFecha.ForeColor = Color.FromArgb(10, 38, 102);
+            lblFecha.Location = new Point(437, 14);
+            lblFecha.Margin = new Padding(4, 0, 4, 0);
+            lblFecha.Name = "lblFecha";
+            lblFecha.Size = new Size(234, 41);
+            lblFecha.TabIndex = 3;
+            lblFecha.Text = "12/12/2023";
             // 
             // lblTime
             // 
@@ -290,6 +290,16 @@
             panel1.Size = new Size(225, 729);
             panel1.TabIndex = 26;
             // 
+            // panel2
+            // 
+            panel2.Controls.Add(lblLogOut);
+            panel2.Controls.Add(pictureBox2);
+            panel2.Dock = DockStyle.Bottom;
+            panel2.Location = new Point(0, 671);
+            panel2.Name = "panel2";
+            panel2.Size = new Size(225, 58);
+            panel2.TabIndex = 28;
+            // 
             // lblLogOut
             // 
             lblLogOut.AutoSize = true;
@@ -326,7 +336,7 @@
             // 
             pnlHora.BackColor = Color.White;
             pnlHora.Controls.Add(label4);
-            pnlHora.Controls.Add(label2);
+            pnlHora.Controls.Add(lblFecha);
             pnlHora.Controls.Add(lblTime);
             pnlHora.Controls.Add(label5);
             pnlHora.Dock = DockStyle.Top;
@@ -343,16 +353,6 @@
             pnlBase.Name = "pnlBase";
             pnlBase.Size = new Size(1125, 457);
             pnlBase.TabIndex = 29;
-            // 
-            // panel2
-            // 
-            panel2.Controls.Add(lblLogOut);
-            panel2.Controls.Add(pictureBox2);
-            panel2.Dock = DockStyle.Bottom;
-            panel2.Location = new Point(0, 671);
-            panel2.Name = "panel2";
-            panel2.Size = new Size(225, 58);
-            panel2.TabIndex = 28;
             // 
             // Main
             // 
@@ -373,19 +373,19 @@
             ((System.ComponentModel.ISupportInitialize)pictureBox1).EndInit();
             panel1.ResumeLayout(false);
             panel1.PerformLayout();
+            panel2.ResumeLayout(false);
+            panel2.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)pictureBox2).EndInit();
             pnlInfoStore.ResumeLayout(false);
             pnlInfoStore.PerformLayout();
             pnlHora.ResumeLayout(false);
             pnlHora.PerformLayout();
-            panel2.ResumeLayout(false);
-            panel2.PerformLayout();
             ResumeLayout(false);
         }
 
         #endregion
         private System.Windows.Forms.Label lblSisAsis;
-        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Label lblFecha;
         private System.Windows.Forms.Label lblTime;
         private System.Windows.Forms.Timer tmrTime;
         private LinkLabel lnkOpciones;

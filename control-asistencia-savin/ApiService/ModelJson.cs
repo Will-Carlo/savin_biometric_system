@@ -30,23 +30,23 @@ namespace control_asistencia_savin.ApiService
         public List<InvAlmacen> InvAlmacen {  get; set; }
 
 
-        public ModelJson()
-        {
-            RrhhTurno = new List<RrhhTurno>();
-            GenCiudad = new List<GenCiudad>();
-            RrhhPersonal = new List<RrhhPersonal>();
-            InvSucursal = new List<InvSucursal>();
-            RrhhFeriado = new List<RrhhFeriado>();
-            RrhhAsistencia = new List<RrhhAsistencia>();
-            RrhhPuntoAsistencia = new List<RrhhPuntoAsistencia>();
-            RrhhTurnoAsignado = new List<RrhhTurnoAsignado>();
-            InvAlmacen = new List<InvAlmacen>();
-        }
+        //public ModelJson()
+        //{
+        //    RrhhTurno = new List<RrhhTurno>();
+        //    GenCiudad = new List<GenCiudad>();
+        //    RrhhPersonal = new List<RrhhPersonal>();
+        //    InvSucursal = new List<InvSucursal>();
+        //    RrhhFeriado = new List<RrhhFeriado>();
+        //    RrhhAsistencia = new List<RrhhAsistencia>();
+        //    RrhhPuntoAsistencia = new List<RrhhPuntoAsistencia>();
+        //    RrhhTurnoAsignado = new List<RrhhTurnoAsignado>();
+        //    InvAlmacen = new List<InvAlmacen>();
+        //}
 
-        public static ModelJson FromJson(string jsonString)
-        {
-            return JsonConvert.DeserializeObject<ModelJson>(jsonString);
-        }
+        //public static ModelJson FromJson(string jsonString)
+        //{
+        //    return JsonConvert.DeserializeObject<ModelJson>(jsonString);
+        //}
     }
 
 
