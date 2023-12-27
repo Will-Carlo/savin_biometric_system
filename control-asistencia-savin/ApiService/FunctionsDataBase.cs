@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -14,15 +15,15 @@ namespace control_asistencia_savin.ApiService
         private readonly ApiService _apiService = new ApiService();
         public bool correctConection = false;
 
-        public async void verifyConection()
+        public void verifyConection()
         {
             try
             {
-                var data = await _apiService.GetDataAsync();
+                var data = _apiService.GetData();
 
                 if (data != null)
                 {
-                    MessageBox.Show("Conexión exitosa.", "Test de conexión", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    MessageBox.Show("Conexión al servidor exitosa.", "Test de conexión", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     this.correctConection = true;
                 }
             }
@@ -31,17 +32,36 @@ namespace control_asistencia_savin.ApiService
                 //MessageBox.Show($"No se pudo conectar al servidor: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
-        public async void loadDataBase()
+        //public async Task loadDataBase()
+        //{
+        //    try
+        //    {
+        //        var data = await _apiService.GetDataAsync();
+
+        //        if (data != null)
+        //        {
+        //            GuardarDatosEnBaseDeDatos(data);
+        //        }
+        //        MessageBox.Show("Datos guardados con éxito");
+
+        //    }   
+        //    catch (DbUpdateException ex)
+        //    {
+        //        MessageBox.Show("error bd reg: " + ex.InnerException.Message);
+        //    }
+        //}
+
+        public void loadDataBase()
         {
             try
             {
-                var data = await _apiService.GetDataAsync();
+                var data = _apiService.GetData();
 
                 if (data != null)
                 {
                     GuardarDatosEnBaseDeDatos(data);
                 }
-                MessageBox.Show("Datos guardados con éxito");
+                MessageBox.Show("Datos guardados con éxito.");
 
             }
             catch (DbUpdateException ex)
@@ -108,27 +128,59 @@ namespace control_asistencia_savin.ApiService
                     var existente = context.RrhhPersonals.Find(personal.Id);
                     if (existente == null)
                     {
-                        // Si la entidad no existe, simplemente la añade al contexto.
+                        //List<byte[]> FingerList = new List<byte[]>();
+                        //List<byte[]> FingerListPersonal = new List<byte[]>();
 
-                        string finger = Encoding.UTF8.GetString(personal.IndiceDerecho);
-                        byte[] datoPrueba = Convert.FromBase64String(finger);
-                        personal.IndiceDerecho = datoPrueba;
+                        //FingerList.Add(personal.IndiceDerecho);
+                        //FingerList.Add(personal.IndiceIzquierdo);
+                        //FingerList.Add(personal.PulgarDerecho);
+                        //FingerList.Add(personal.PulgarIzquierdo);
 
+                        //foreach (byte[] finger in FingerList)
+                        //{
+                            if (personal.IndiceDerecho != null)
+                            {
+                                string fingerAux = Encoding.UTF8.GetString(personal.IndiceDerecho);
+                                byte[] datoPrueba = Convert.FromBase64String(fingerAux);
+                                personal.IndiceDerecho = datoPrueba;
+                            }
 
+                            if (personal.IndiceIzquierdo != null)
+                            {
+                                string fingerAux = Encoding.UTF8.GetString(personal.IndiceIzquierdo);
+                                byte[] datoPrueba = Convert.FromBase64String(fingerAux);
+                                personal.IndiceIzquierdo = datoPrueba;
+                            }
+
+                            if (personal.PulgarDerecho != null)
+                            {
+                                string fingerAux = Encoding.UTF8.GetString(personal.PulgarDerecho);
+                                byte[] datoPrueba = Convert.FromBase64String(fingerAux);
+                                personal.PulgarDerecho = datoPrueba;
+                            }
+
+                            if (personal.PulgarIzquierdo != null)
+                            {
+                                string fingerAux = Encoding.UTF8.GetString(personal.PulgarIzquierdo);
+                                byte[] datoPrueba = Convert.FromBase64String(fingerAux);
+                                personal.PulgarIzquierdo = datoPrueba;
+                            }
+
+                        //}
                         context.RrhhPersonals.Add(personal);
                     }
                     else
                     {
                         // Si la entidad ya existe, podría ser necesario actualizar los datos.
                         // Copia los datos de las propiedades que quieres actualizar.
-                        existente.IdCiudad = personal.IdCiudad;
-                        existente.Paterno = personal.Paterno;
-                        existente.Materno = personal.Materno;
-                        existente.Nombres = personal.Nombres;
-                        existente.IndiceDerecho = personal.IndiceDerecho;
-                        existente.IndiceIzquierdo = personal.IndiceIzquierdo;
-                        existente.PulgarDerecho = personal.PulgarDerecho;
-                        existente.PulgarIzquierdo = personal.PulgarIzquierdo;
+                            //existente.IdCiudad = personal.IdCiudad;
+                            //existente.Paterno = personal.Paterno;
+                            //existente.Materno = personal.Materno;
+                            //existente.Nombres = personal.Nombres;
+                            //existente.IndiceDerecho = personal.IndiceDerecho;
+                            //existente.IndiceIzquierdo = personal.IndiceIzquierdo;
+                            //existente.PulgarDerecho = personal.PulgarDerecho;
+                            //existente.PulgarIzquierdo = personal.PulgarIzquierdo;
                         // No es necesario llamar a Update ya que el objeto ya está siendo rastreado por el contexto.
                     }
                 }
@@ -160,7 +212,7 @@ namespace control_asistencia_savin.ApiService
 
                     context.SaveChanges();
                 }
-                MessageBox.Show("Se ha borrado la base de datos con éxito.");
+                MessageBox.Show("La base de datos se ha limpiado con éxito.");
 
             }
             catch (Exception ex)

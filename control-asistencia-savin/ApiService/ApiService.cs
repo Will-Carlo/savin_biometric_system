@@ -20,24 +20,38 @@ namespace control_asistencia_savin.ApiService
 
         public ApiService()
         {
-            //dirMac = macAddress();
-            dirMac = "00-E0-4C-36-17-61";
+            dirMac = macAddress();
+            //dirMac = "00-E0-4C-36-17-61";
             nomTienda = GetNombreTienda();
             _httpClient.DefaultRequestHeaders.Add("Tkn", "SavinBio-23%");
             _httpClient.DefaultRequestHeaders.Add("DirMac", dirMac);
-
-   
         }
 
-        public async Task<ModelJson> GetDataAsync()
+        //public async Task<ModelJson> GetDataAsync()
+        //{
+        //    var response = await _httpClient.GetAsync(_getApiLink);
+
+        //    if (response.IsSuccessStatusCode)
+        //    {
+        //        var json = await response.Content.ReadAsStringAsync();
+        //        var data = JsonConvert.DeserializeObject<ModelJson>(json);
+
+        //        return data;
+        //    }
+        //    else
+        //    {
+        //        throw new HttpRequestException($"No se pudo conectar al servidor: {response.StatusCode}");
+        //    }
+        //}
+
+        public ModelJson GetData()
         {
-            var response = await _httpClient.GetAsync(_getApiLink);
+            var response = _httpClient.GetAsync(_getApiLink).GetAwaiter().GetResult();
 
             if (response.IsSuccessStatusCode)
             {
-                var json = await response.Content.ReadAsStringAsync();
+                var json = response.Content.ReadAsStringAsync().GetAwaiter().GetResult();
                 var data = JsonConvert.DeserializeObject<ModelJson>(json);
-
                 return data;
             }
             else
@@ -45,6 +59,7 @@ namespace control_asistencia_savin.ApiService
                 throw new HttpRequestException($"No se pudo conectar al servidor: {response.StatusCode}");
             }
         }
+
 
 
         public string macAddress()

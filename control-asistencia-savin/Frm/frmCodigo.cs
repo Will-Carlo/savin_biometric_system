@@ -1,4 +1,5 @@
-﻿using control_asistencia_savin.Frm;
+﻿using control_asistencia_savin.ApiService;
+using control_asistencia_savin.Frm;
 using control_asistencia_savin.Models;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -16,6 +17,7 @@ namespace control_asistencia_savin
     public partial class frmCodigo : VerifyForm
     {
         private MetodosAsistencia m = new MetodosAsistencia();
+        private readonly ApiService.ApiService _apiService;
 
         public frmCodigo()
         {
@@ -24,9 +26,9 @@ namespace control_asistencia_savin
             lblStatusProcess.Left = 850;
             txtCodigo.Enabled = true;
             //lblStatusProcess.Enabled = false;
+            _apiService = new ApiService.ApiService();
         }
 
-   
         private int BuscarIdPersonal(string codigo)
         {
             using (var context = new StoreContext())
@@ -95,6 +97,13 @@ namespace control_asistencia_savin
                             IndTipoMovimiento = m.capturaIndMov(IdPersonal)
                         };
                         m.AddAsistencia(regisAsis);
+
+                        // Enviando datos al API REST
+                        var response = _apiService.RegistrarAsistenciaAsync(regisAsis);
+                        //if (response != null)
+                        //{
+                        //    MessageBox.Show("Asistencia enviada al servidor con éxito: " + response.Status);
+                        //}
                     }
                     else
                     {

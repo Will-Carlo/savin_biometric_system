@@ -71,12 +71,11 @@ namespace control_asistencia_savin
 
                 foreach (var emp in contexto.RrhhPersonals)
                 {
-                    //List<byte[]> FingerList = new List<byte[]>();
-                    //FingerList.Add(emp.IndiceDerecho);
-                    //FingerList.Add(emp.IndiceIzquierdo);
-                    //FingerList.Add(emp.PulgarD
-                    //erecho);
-                    //FingerList.Add(emp.PulgarIzquierdo);
+                    List<byte[]> FingerList = new List<byte[]>();
+                    FingerList.Add(emp.IndiceDerecho);
+                    FingerList.Add(emp.IndiceIzquierdo);
+                    FingerList.Add(emp.PulgarDerecho);
+                    FingerList.Add(emp.PulgarIzquierdo);
 
 
                     //MessageBox.Show("1. " + emp.IndiceDerecho);
@@ -85,36 +84,36 @@ namespace control_asistencia_savin
                     //MessageBox.Show("4. " + emp.PulgarIzquierdo);
 
 
-                    //foreach (byte[] finger in FingerList)
-                    ////{
-                    //    if (finger != null)
-                    //    {
-                    //MessageBox.Show("ind: " + emp.IndiceDerecho);
-                    if (emp.IndiceDerecho != null)
+                    foreach (byte[] finger in FingerList)
                     {
-                        
-                    stream = new MemoryStream(emp.IndiceDerecho);
-                            template = new DPFP.Template(stream);
-                            Verificator.Verify(features, template, ref result);
-
-                            // Cuando el usuario es encontrado
-                            if (result.Verified)
-                            {
-                                SetPrompt("VERIFICADO");
-
-                                personalName = emp.Nombres + " " + emp.Paterno + " " + emp.Materno;
-                                idEncontrado = emp.Id;
-                                statusProcess = true;
-                                Stop();
-                                break;
-                            }
-                        //}
-                        else
+                        if (finger != null)
                         {
-                            statusProcess = false;
-                            SetPrompt("RECHAZADO");
+                            //MessageBox.Show("ind: " + emp.IndiceDerecho);
+                            //if (emp.IndiceDerecho != null)
+                            //{
+                        
+                                stream = new MemoryStream(finger);
+                                template = new DPFP.Template(stream);
+                                Verificator.Verify(features, template, ref result);
+
+                                // Cuando el usuario es encontrado
+                                if (result.Verified)
+                                {
+                                    SetPrompt("VERIFICADO");
+
+                                    personalName = emp.Nombres + " " + emp.Paterno + " " + emp.Materno;
+                                    idEncontrado = emp.Id;
+                                    statusProcess = true;
+                                    Stop();
+                                    break;
+                                }
+                            //}
+                            else
+                            {
+                                statusProcess = false;
+                                SetPrompt("RECHAZADO");
+                            }
                         }
-                    //}
                     }
                 }
             }

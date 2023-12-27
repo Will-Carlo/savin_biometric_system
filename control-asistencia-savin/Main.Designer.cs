@@ -310,6 +310,7 @@
             lblLogOut.Size = new Size(103, 21);
             lblLogOut.TabIndex = 27;
             lblLogOut.Text = "Cerrar seeión";
+            lblLogOut.Click += lblLogOut_Click;
             // 
             // pictureBox2
             // 
@@ -320,6 +321,7 @@
             pictureBox2.SizeMode = PictureBoxSizeMode.Zoom;
             pictureBox2.TabIndex = 26;
             pictureBox2.TabStop = false;
+            pictureBox2.Click += pictureBox2_Click;
             // 
             // pnlInfoStore
             // 

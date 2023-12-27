@@ -31,7 +31,6 @@ namespace control_asistencia_savin
 
             _functionsDataBase = new ApiService.FunctionsDataBase();
             _apiService = new ApiService.ApiService();
-            _functionsDataBase.verifyConection();
 
             loadSystem();
         }
@@ -39,17 +38,25 @@ namespace control_asistencia_savin
         private void loadSystem()
         {
 
+            _functionsDataBase.verifyConection();
 
             if (_functionsDataBase.correctConection)
             {
+
+                //MessageBox.Show("estado: " + _functionsDataBase.correctConection);
+
                 _functionsDataBase.LimpiarDB();
+
+                //this.Load += async (sender, e) => await _functionsDataBase.loadDataBase();
                 _functionsDataBase.loadDataBase();
+
+
                 // Pidiendo datos de la tienda por dirección MAC
                 lblPunto.Text = "Punto: " + _apiService.nomTienda;
             }
             else
             {
-                MessageBox.Show("Error de conexión al servidor. \nCerrando la aplicación.");  
+                MessageBox.Show("Error de conexión al servidor. \nCerrando la aplicación.");
                 Environment.Exit(0);
             }
 
@@ -74,7 +81,7 @@ namespace control_asistencia_savin
             f.Show();
         }
 
-        
+
 
         private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
@@ -120,6 +127,17 @@ namespace control_asistencia_savin
         private void lnkApiTest_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             AbrirForm(new frmTestApi());
+
+        }
+
+        private void lblLogOut_Click(object sender, EventArgs e)
+        {
+            Environment.Exit(0);
+        }
+
+        private void pictureBox2_Click(object sender, EventArgs e)
+        {
+            Environment.Exit(0);
 
         }
     }
