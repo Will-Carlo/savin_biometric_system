@@ -25,3 +25,5 @@
 .DS_Store
 Thumbs.db
 
+#Backups de la Base de Datos
+backup/

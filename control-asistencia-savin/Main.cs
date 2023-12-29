@@ -40,7 +40,6 @@ namespace control_asistencia_savin
             // Pidiendo datos de la tienda por dirección MAC
             lblPunto.Text = "Punto: " + _apiService.nomTienda;
         }
-
         private void loadSystem()
         {
             _functionsDataBase.verifyConection();
@@ -61,14 +60,12 @@ namespace control_asistencia_savin
                 Environment.Exit(0);
                 //this.Close();
             }
-
         }
         private void tmrTime_Tick(object sender, EventArgs e)
         {
             lblTime.Text = DateTime.Now.ToString("HH:mm:ss");
             lblFecha.Text = DateTime.Now.ToString("dd/MM/yyyy");
         }
-
         public void AbrirForm(object subForm)
         {
             if (this.pnlBase.Controls.Count > 0)
@@ -82,7 +79,6 @@ namespace control_asistencia_savin
             this.pnlBase.Tag = f;
             f.Show();
         }
-
         private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             if (this.lnkVerAtrasos.Visible)
