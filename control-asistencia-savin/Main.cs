@@ -18,6 +18,9 @@ namespace control_asistencia_savin
 
         private readonly ApiService.ApiService _apiService;
         private ApiService.FunctionsDataBase _functionsDataBase;
+        private string _hora;
+        private string _fecha;
+
 
         public Main()
         {
@@ -27,17 +30,19 @@ namespace control_asistencia_savin
             //this.FormBorderStyle = FormBorderStyle.None; // Remueve los bordes de la ventana
             this.WindowState = FormWindowState.Maximized; // Maximiza la ventana
             //this.TopMost = true;
-            AbrirForm(new frmAsistencia());
 
             _functionsDataBase = new ApiService.FunctionsDataBase();
             _apiService = new ApiService.ApiService();
 
-            loadSystem();
+            //loadSystem();
+            AbrirForm(new frmAsistencia());
+
+            // Pidiendo datos de la tienda por dirección MAC
+            lblPunto.Text = "Punto: " + _apiService.nomTienda;
         }
 
         private void loadSystem()
         {
-
             _functionsDataBase.verifyConection();
 
             if (_functionsDataBase.correctConection)
@@ -49,15 +54,12 @@ namespace control_asistencia_savin
 
                 //this.Load += async (sender, e) => await _functionsDataBase.loadDataBase();
                 _functionsDataBase.loadDataBase();
-
-
-                // Pidiendo datos de la tienda por dirección MAC
-                lblPunto.Text = "Punto: " + _apiService.nomTienda;
             }
             else
             {
                 MessageBox.Show("Error de conexión al servidor. \nCerrando la aplicación.");
                 Environment.Exit(0);
+                //this.Close();
             }
 
         }
@@ -81,8 +83,6 @@ namespace control_asistencia_savin
             f.Show();
         }
 
-
-
         private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             if (this.lnkVerAtrasos.Visible)
@@ -105,7 +105,6 @@ namespace control_asistencia_savin
 
             }
         }
-
         private void linkLabel2_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             AbrirForm(new frmAtrasos());
@@ -118,27 +117,39 @@ namespace control_asistencia_savin
         {
             AbrirForm(new frmAsistencia());
         }
-
         private void lnkMarcarCodigo_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             AbrirForm(new frmCodigo());
         }
-
         private void lnkApiTest_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             AbrirForm(new frmTestApi());
 
         }
-
         private void lblLogOut_Click(object sender, EventArgs e)
         {
-            Environment.Exit(0);
+            //Environment.Exit(0);
+            this.Close();
         }
-
         private void pictureBox2_Click(object sender, EventArgs e)
         {
-            Environment.Exit(0);
+            //Environment.Exit(0);
+            this.Close();
+        }
+        private void Main_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            var result = MessageBox.Show("¿Estás seguro de que quieres cerrar la aplicación?", "Confirmar salida", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
 
+            if (result == DialogResult.No)
+            {
+                e.Cancel = true;
+            }
+            else
+            {
+                _hora = DateTime.Now.ToString("HH:mm:ss");
+                _fecha = DateTime.Now.ToString("dd/MM/yyyy");
+                _functionsDataBase.BackUpDB(_fecha.Replace("/", "_")+"_"+_hora.Replace(":", "_"));
+            }
         }
     }
 }

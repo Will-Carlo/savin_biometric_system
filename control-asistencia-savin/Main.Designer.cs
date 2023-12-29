@@ -90,12 +90,12 @@
             // 
             lblTime.Anchor = AnchorStyles.Top;
             lblTime.AutoSize = true;
-            lblTime.Font = new Font("Tahoma", 18F, FontStyle.Bold);
+            lblTime.Font = new Font("Tahoma", 25F, FontStyle.Bold);
             lblTime.ForeColor = Color.FromArgb(10, 38, 102);
-            lblTime.Location = new Point(487, 57);
+            lblTime.Location = new Point(463, 55);
             lblTime.Margin = new Padding(4, 0, 4, 0);
             lblTime.Name = "lblTime";
-            lblTime.Size = new Size(121, 29);
+            lblTime.Size = new Size(174, 41);
             lblTime.TabIndex = 4;
             lblTime.Text = "18:42:02";
             // 
@@ -109,11 +109,11 @@
             // 
             label5.Anchor = AnchorStyles.Top;
             label5.AutoSize = true;
-            label5.Font = new Font("Tahoma", 18F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            label5.Font = new Font("Tahoma", 24.75F);
             label5.ForeColor = Color.FromArgb(10, 38, 102);
             label5.Location = new Point(358, 57);
             label5.Name = "label5";
-            label5.Size = new Size(72, 29);
+            label5.Size = new Size(98, 40);
             label5.TabIndex = 22;
             label5.Text = "Hora:";
             // 
@@ -295,17 +295,18 @@
             panel2.Controls.Add(lblLogOut);
             panel2.Controls.Add(pictureBox2);
             panel2.Dock = DockStyle.Bottom;
-            panel2.Location = new Point(0, 671);
+            panel2.Location = new Point(0, 654);
             panel2.Name = "panel2";
-            panel2.Size = new Size(225, 58);
+            panel2.Size = new Size(225, 75);
             panel2.TabIndex = 28;
             // 
             // lblLogOut
             // 
             lblLogOut.AutoSize = true;
+            lblLogOut.Cursor = Cursors.Hand;
             lblLogOut.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 0);
             lblLogOut.ForeColor = Color.FromArgb(241, 206, 0);
-            lblLogOut.Location = new Point(79, 19);
+            lblLogOut.Location = new Point(79, 21);
             lblLogOut.Name = "lblLogOut";
             lblLogOut.Size = new Size(103, 21);
             lblLogOut.TabIndex = 27;
@@ -314,6 +315,7 @@
             // 
             // pictureBox2
             // 
+            pictureBox2.Cursor = Cursors.Hand;
             pictureBox2.Image = (Image)resources.GetObject("pictureBox2.Image");
             pictureBox2.Location = new Point(42, 14);
             pictureBox2.Name = "pictureBox2";
@@ -372,6 +374,7 @@
             Margin = new Padding(4, 3, 4, 3);
             Name = "Main";
             Text = "Main";
+            FormClosing += Main_FormClosing;
             ((System.ComponentModel.ISupportInitialize)pictureBox1).EndInit();
             panel1.ResumeLayout(false);
             panel1.PerformLayout();

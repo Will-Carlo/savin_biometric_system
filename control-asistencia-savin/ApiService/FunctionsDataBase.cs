@@ -32,6 +32,7 @@ namespace control_asistencia_savin.ApiService
                 //MessageBox.Show($"No se pudo conectar al servidor: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
+
         //public async Task loadDataBase()
         //{
         //    try
@@ -200,15 +201,20 @@ namespace control_asistencia_savin.ApiService
                 using (var context = new StoreContext())
                 {
                     // Borrar todas las tablas.
-                    BorrarDatosDeTabla(context.GenCiudads);
-                    BorrarDatosDeTabla(context.InvAlmacens);
-                    BorrarDatosDeTabla(context.InvSucursals);
                     BorrarDatosDeTabla(context.RrhhAsistencia);
-                    BorrarDatosDeTabla(context.RrhhFeriados);
-                    BorrarDatosDeTabla(context.RrhhPersonals);
-                    BorrarDatosDeTabla(context.RrhhPuntoAsistencia);
-                    BorrarDatosDeTabla(context.RrhhTurnos);
+
                     BorrarDatosDeTabla(context.RrhhTurnoAsignados);
+                    BorrarDatosDeTabla(context.RrhhPuntoAsistencia);
+
+                    BorrarDatosDeTabla(context.RrhhFeriados);
+                    BorrarDatosDeTabla(context.InvSucursals);
+
+                    BorrarDatosDeTabla(context.RrhhPersonals);
+
+                    BorrarDatosDeTabla(context.InvAlmacens);
+                    BorrarDatosDeTabla(context.GenCiudads);
+                    BorrarDatosDeTabla(context.RrhhTurnos);
+
 
                     context.SaveChanges();
                 }
@@ -227,9 +233,9 @@ namespace control_asistencia_savin.ApiService
                 dbSet.Remove(entidad);
             }
         }
-        public void BackUpDB()
+        public void BackUpDB(String dateBackUp)
         {
-            string dateBackUp = "2023 12 27 15 56 12";
+            //string dateBackUp = "2023 12 27 15 56 12";
             var rutaBaseDeDatos = "store.db";
             var backupFolder = "backup";
             var rutaCopiaDeSeguridad = Path.Combine(backupFolder, "store_backup_" + dateBackUp + ".db");
@@ -240,6 +246,10 @@ namespace control_asistencia_savin.ApiService
 
             try
             {
+                if (!Directory.Exists(backupFolder))
+                {
+                    Directory.CreateDirectory(backupFolder);
+                }
                 // Copiar el archivo de la base de datos a la ruta de copia de seguridad
                 File.Copy(rutaBaseDeDatos, rutaCopiaDeSeguridad, overwrite: true);
 

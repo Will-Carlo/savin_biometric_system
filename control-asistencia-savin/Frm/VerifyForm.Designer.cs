@@ -66,7 +66,7 @@
             lblHora.AutoSize = true;
             lblHora.Font = new Font("Segoe UI", 27.75F);
             lblHora.ForeColor = Color.FromArgb(10, 38, 102);
-            lblHora.Location = new Point(357, 190);
+            lblHora.Location = new Point(302, 207);
             lblHora.Margin = new Padding(4, 0, 4, 0);
             lblHora.Name = "lblHora";
             lblHora.Size = new Size(142, 50);
@@ -80,7 +80,7 @@
             lblNombre.AutoSize = true;
             lblNombre.Font = new Font("Segoe UI", 27.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
             lblNombre.ForeColor = Color.FromArgb(10, 38, 102);
-            lblNombre.Location = new Point(357, 129);
+            lblNombre.Location = new Point(302, 146);
             lblNombre.Margin = new Padding(4, 0, 4, 0);
             lblNombre.Name = "lblNombre";
             lblNombre.Size = new Size(198, 50);
@@ -94,7 +94,7 @@
             lblTitHora.AutoSize = true;
             lblTitHora.Font = new Font("Segoe UI", 27.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
             lblTitHora.ForeColor = Color.FromArgb(10, 38, 102);
-            lblTitHora.Location = new Point(231, 190);
+            lblTitHora.Location = new Point(176, 207);
             lblTitHora.Margin = new Padding(4, 0, 4, 0);
             lblTitHora.Name = "lblTitHora";
             lblTitHora.Size = new Size(118, 50);
@@ -107,7 +107,7 @@
             lblTitPersonal.AutoSize = true;
             lblTitPersonal.Font = new Font("Segoe UI", 27.75F, FontStyle.Bold);
             lblTitPersonal.ForeColor = Color.FromArgb(10, 38, 102);
-            lblTitPersonal.Location = new Point(168, 129);
+            lblTitPersonal.Location = new Point(113, 146);
             lblTitPersonal.Margin = new Padding(4, 0, 4, 0);
             lblTitPersonal.Name = "lblTitPersonal";
             lblTitPersonal.Size = new Size(181, 50);
@@ -120,7 +120,7 @@
             lblTitOption.AutoSize = true;
             lblTitOption.Font = new Font("Segoe UI", 36F, FontStyle.Bold, GraphicsUnit.Point, 0);
             lblTitOption.ForeColor = Color.FromArgb(10, 38, 102);
-            lblTitOption.Location = new Point(129, 29);
+            lblTitOption.Location = new Point(74, 46);
             lblTitOption.Margin = new Padding(4, 0, 4, 0);
             lblTitOption.Name = "lblTitOption";
             lblTitOption.Size = new Size(395, 65);
@@ -133,6 +133,7 @@
             txtCodigo.BackColor = Color.Ivory;
             txtCodigo.BorderStyle = BorderStyle.FixedSingle;
             txtCodigo.Enabled = false;
+            txtCodigo.Font = new Font("Segoe UI", 21.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
             txtCodigo.Location = new Point(346, 58);
             txtCodigo.Margin = new Padding(4, 3, 4, 3);
             txtCodigo.Multiline = true;
@@ -182,7 +183,7 @@
             // 
             pictureBox1.Anchor = AnchorStyles.Top;
             pictureBox1.Image = (Image)resources.GetObject("pictureBox1.Image");
-            pictureBox1.Location = new Point(644, 67);
+            pictureBox1.Location = new Point(737, 59);
             pictureBox1.Margin = new Padding(0);
             pictureBox1.Name = "pictureBox1";
             pictureBox1.Size = new Size(275, 192);
