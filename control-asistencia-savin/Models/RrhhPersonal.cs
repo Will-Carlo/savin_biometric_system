@@ -23,10 +23,11 @@ public partial class RrhhPersonal
 
     public byte[]? PulgarIzquierdo { get; set; }
 
+    public virtual ICollection<AuxAsistencia> AuxAsistencia { get; set; } = new List<AuxAsistencia>();
+
     public virtual GenCiudad IdCiudadNavigation { get; set; } = null!;
 
     public virtual ICollection<RrhhAsistencia> RrhhAsistencia { get; set; } = new List<RrhhAsistencia>();
 
     public virtual ICollection<RrhhTurnoAsignado> RrhhTurnoAsignados { get; set; } = new List<RrhhTurnoAsignado>();
-
 }

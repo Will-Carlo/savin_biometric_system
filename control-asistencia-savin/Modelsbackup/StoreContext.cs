@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 
-namespace control_asistencia_savin.Models2;
+namespace control_asistencia_savin.Models;
 
 public partial class StoreContext : DbContext
 {
@@ -16,6 +16,8 @@ public partial class StoreContext : DbContext
     }
 
     public virtual DbSet<GenCiudad> GenCiudads { get; set; }
+
+    public virtual DbSet<InvAlmacen> InvAlmacens { get; set; }
 
     public virtual DbSet<InvSucursal> InvSucursals { get; set; }
 
@@ -32,7 +34,7 @@ public partial class StoreContext : DbContext
     public virtual DbSet<RrhhTurnoAsignado> RrhhTurnoAsignados { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-    // #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
         => optionsBuilder.UseSqlite("Data Source=store.db");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -47,6 +49,15 @@ public partial class StoreContext : DbContext
             entity.Property(e => e.Nombre).HasColumnName("nombre");
         });
 
+        modelBuilder.Entity<InvAlmacen>(entity =>
+        {
+            entity.ToTable("inv_almacen");
+
+            entity.HasIndex(e => e.Id, "IX_inv_almacen_id").IsUnique();
+
+            entity.Property(e => e.Id).HasColumnName("id");
+        });
+
         modelBuilder.Entity<InvSucursal>(entity =>
         {
             entity.ToTable("inv_sucursal");
@@ -56,9 +67,7 @@ public partial class StoreContext : DbContext
             entity.Property(e => e.Id).HasColumnName("id");
             entity.Property(e => e.IdCiudad).HasColumnName("id_ciudad");
 
-            entity.HasOne(d => d.IdCiudadNavigation).WithMany(p => p.InvSucursals)
-                .HasForeignKey(d => d.IdCiudad)
-                .OnDelete(DeleteBehavior.ClientSetNull);
+            entity.HasOne(d => d.IdCiudadNavigation).WithMany(p => p.InvSucursals).HasForeignKey(d => d.IdCiudad);
         });
 
         modelBuilder.Entity<RrhhAsistencia>(entity =>
@@ -94,9 +103,7 @@ public partial class StoreContext : DbContext
             entity.Property(e => e.IdCiudad).HasColumnName("id_ciudad");
             entity.Property(e => e.IndTipoFeriado).HasColumnName("ind_tipo_feriado");
 
-            entity.HasOne(d => d.IdCiudadNavigation).WithMany(p => p.RrhhFeriados)
-                .HasForeignKey(d => d.IdCiudad)
-                .OnDelete(DeleteBehavior.ClientSetNull);
+            entity.HasOne(d => d.IdCiudadNavigation).WithMany(p => p.RrhhFeriados).HasForeignKey(d => d.IdCiudad);
         });
 
         modelBuilder.Entity<RrhhPersonal>(entity =>
@@ -106,14 +113,14 @@ public partial class StoreContext : DbContext
             entity.HasIndex(e => e.Id, "IX_rrhh_personal_id").IsUnique();
 
             entity.Property(e => e.Id).HasColumnName("id");
-            entity.Property(e => e.HuellaIndDer).HasColumnName("huella_ind_der");
-            entity.Property(e => e.HuellaIndIzq).HasColumnName("huella_ind_izq");
-            entity.Property(e => e.HuellaPulgDer).HasColumnName("huella_pulg_der");
-            entity.Property(e => e.HuellaPulgIzq).HasColumnName("huella_pulg_izq");
             entity.Property(e => e.IdCiudad).HasColumnName("id_ciudad");
+            entity.Property(e => e.IndiceDerecho).HasColumnName("indice_derecho");
+            entity.Property(e => e.IndiceIzquierdo).HasColumnName("indice_izquierdo");
             entity.Property(e => e.Materno).HasColumnName("materno");
-            entity.Property(e => e.Nombre).HasColumnName("nombre");
+            entity.Property(e => e.Nombres).HasColumnName("nombres");
             entity.Property(e => e.Paterno).HasColumnName("paterno");
+            entity.Property(e => e.PulgarDerecho).HasColumnName("pulgar_derecho");
+            entity.Property(e => e.PulgarIzquierdo).HasColumnName("pulgar_izquierdo");
 
             entity.HasOne(d => d.IdCiudadNavigation).WithMany(p => p.RrhhPersonals)
                 .HasForeignKey(d => d.IdCiudad)
@@ -129,13 +136,14 @@ public partial class StoreContext : DbContext
             entity.Property(e => e.Id).HasColumnName("id");
             entity.Property(e => e.Direccion).HasColumnName("direccion");
             entity.Property(e => e.DireccionMac).HasColumnName("direccion_mac");
+            entity.Property(e => e.IdAlmacen).HasColumnName("id_almacen");
             entity.Property(e => e.IdSucursal).HasColumnName("id_sucursal");
             entity.Property(e => e.Nombre).HasColumnName("nombre");
             entity.Property(e => e.Responsable).HasColumnName("responsable");
 
-            entity.HasOne(d => d.IdSucursalNavigation).WithMany(p => p.RrhhPuntoAsistencia)
-                .HasForeignKey(d => d.IdSucursal)
-                .OnDelete(DeleteBehavior.ClientSetNull);
+            entity.HasOne(d => d.IdAlmacenNavigation).WithMany(p => p.RrhhPuntoAsistencia).HasForeignKey(d => d.IdAlmacen);
+
+            entity.HasOne(d => d.IdSucursalNavigation).WithMany(p => p.RrhhPuntoAsistencia).HasForeignKey(d => d.IdSucursal);
         });
 
         modelBuilder.Entity<RrhhTurno>(entity =>
@@ -157,13 +165,12 @@ public partial class StoreContext : DbContext
             entity.HasIndex(e => e.Id, "IX_rrhh_turno_asignado_id").IsUnique();
 
             entity.Property(e => e.Id).HasColumnName("id");
+            entity.Property(e => e.Codigo).HasColumnName("codigo");
             entity.Property(e => e.IdPersonal).HasColumnName("id_personal");
             entity.Property(e => e.IdPuntoAsistencia).HasColumnName("id_punto_asistencia");
             entity.Property(e => e.IdTurno).HasColumnName("id_turno");
             entity.Property(e => e.IndMarcadoFijoVariable).HasColumnName("ind_marcado_fijo_variable");
             entity.Property(e => e.IndTipoMarcado).HasColumnName("ind_tipo_marcado");
-            entity.Property(e => e.Codigo).HasColumnName("codigo");
-
 
             entity.HasOne(d => d.IdPersonalNavigation).WithMany(p => p.RrhhTurnoAsignados)
                 .HasForeignKey(d => d.IdPersonal)
@@ -182,8 +189,4 @@ public partial class StoreContext : DbContext
     }
 
     partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
-
- 
-
-
 }

@@ -7,6 +7,11 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
+//Comando para actualiza los modelos desde la base de datos
+//Scaffold - DbContext "Data Source=store.db" Microsoft.EntityFrameworkCore.Sqlite - OutputDir Models
+//Scaffold - DbContext "Data Source=store.db" Microsoft.EntityFrameworkCore.Sqlite - OutputDir Models
+
+
 namespace control_asistencia_savin.ApiService
 {
 
@@ -261,7 +266,86 @@ namespace control_asistencia_savin.ApiService
             }
         }
 
+        public async Task LoadDataBaseAsistenciaAsync(int idPersonal)
+        {
+            LimpiarAuxAsistencia();
+            try
+            {
+                var asistencias = await _apiService.GetDataAsistenciaAsync(idPersonal);
 
+                using (var context = new StoreContext())
+                {
+                    foreach (var asistencia in asistencias)
+                    {
+                        var existente = context.AuxAsistencia.Find(asistencia.Id);
+                        if (existente == null)
+                        {
+                            context.AuxAsistencia.Add(asistencia);
+                        }
+                        else
+                        {
+                            // Actualiza los datos si es necesario.
+                            context.Entry(existente).CurrentValues.SetValues(asistencia);
+                        }
+                    }
+                    await context.SaveChangesAsync();
+                    //MessageBox.Show("Asistencias guardadas con éxito.");
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error al cargar asistencias: " + ex.Message, "Error");
+            }
+        }
+        public void LoadDataBaseAsistencia(int idPersonal)
+        {
+            LimpiarAuxAsistencia();
+            try
+            {
+                var asistencias = _apiService.GetDataAsistencia(idPersonal);
 
+                using (var context = new StoreContext())
+                {
+                    foreach (var asistencia in asistencias)
+                    {
+                        var existente = context.AuxAsistencia.Find(asistencia.Id);
+                        if (existente == null)
+                        {
+                            context.AuxAsistencia.Add(asistencia);
+                        }
+                        else
+                        {
+                            // Actualiza los datos si es necesario.
+                            context.Entry(existente).CurrentValues.SetValues(asistencia);
+                        }
+                    }
+                    context.SaveChanges();
+                    //MessageBox.Show("Asistencias guardadas con éxito.");
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error al cargar asistencias: " + ex.Message, "Error");
+            }
+        }
+        public void LimpiarAuxAsistencia()
+        {
+            try
+            {
+                using (var context = new StoreContext())
+                {
+                    // Borrar todas las tablas.
+                    BorrarDatosDeTabla(context.AuxAsistencia);
+
+                    context.SaveChanges();
+                }
+                //MessageBox.Show("La tabla auxiliar se ha borrado con éxito.");
+
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error al limpiar la tabla auxiliar"+ ex.Message, "Error");
+            }
+        }
     }
 }

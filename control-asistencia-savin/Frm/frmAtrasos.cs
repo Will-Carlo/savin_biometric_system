@@ -26,7 +26,8 @@ namespace control_asistencia_savin
         private string _fecha;
         private int _idPersonal;
         private MetodosAsistencia m = new MetodosAsistencia();
-        private readonly ApiService.ApiService _apiService;
+        private ApiService.FunctionsDataBase _functionsDataBase;
+
         //private int _xStatus;
         public frmAtrasos()
         {
@@ -62,10 +63,18 @@ namespace control_asistencia_savin
                     lblStatusProcess.Visible = true;
                     // iniciando el evento de listado
                     _idPersonal = verificar.idEncontrado;
+
+
+                    _functionsDataBase = new ApiService.FunctionsDataBase();
+                    _functionsDataBase.LimpiarAuxAsistencia();
+                    _functionsDataBase.LoadDataBaseAsistencia(_idPersonal);
+
                     CargarMesesEnComboBox(_idPersonal);
                     //mostrar valores por defecto
-                    _fecha = DateTime.Now.ToString("MMMM/yyyy", new CultureInfo("es-ES"));
-                    CargarDatosEnDataGridView(_idPersonal, _fecha);
+                    if (cbxPersonalMonth.Items.Count > 0)
+                    {
+                        cbxPersonalMonth.SelectedIndex = 0;
+                    }
                 }
                 else
                 {
@@ -101,7 +110,8 @@ namespace control_asistencia_savin
 
                 // buscamos el id de la persona según su código
                 _idPersonal = BuscarIdPersonal(txtCod);
-                txtCodigo.Text = txtCod;
+
+                //txtCodigo.Text = txtCod;
 
                 if (txtCod != "")
                 {
@@ -115,7 +125,18 @@ namespace control_asistencia_savin
                         lblNombre.Text = PersonalName(_idPersonal);
                         //Muestra en pantalla los datos y hora
                         lblNombre.Visible = true;
+
+                        _functionsDataBase = new ApiService.FunctionsDataBase();
+                        _functionsDataBase.LimpiarAuxAsistencia();
+                        _functionsDataBase.LoadDataBaseAsistencia(_idPersonal);
+
+
                         CargarMesesEnComboBox(_idPersonal);
+                        if (cbxPersonalMonth.Items.Count > 0)
+                        {
+                            cbxPersonalMonth.SelectedIndex = 0; 
+                        }
+
                     }
                     else
                     {
@@ -156,7 +177,7 @@ namespace control_asistencia_savin
         {
             using (var context = new StoreContext())
             {
-                var mesesQuery = context.RrhhAsistencia
+                var mesesQuery = context.AuxAsistencia
                     .Where(a => a.IdPersonal == idPersonal)
                     .ToList() // Traer los datos a la memoria
                     .Select(a => DateTime.Parse(a.HoraMarcado)) // Parsear cada entrada como DateTime
@@ -244,7 +265,7 @@ namespace control_asistencia_savin
             //MessageBox.Show("year: " + dt.Year + "\nMonth: " + dt.Month);
             using (var context = new StoreContext())
             {
-                var asistencias = context.RrhhAsistencia
+                var asistencias = context.AuxAsistencia
                     .Where(a => a.IdPersonal == idPersonal &&
                                     a.HoraMarcado.Substring(0, 4) == yearUser &&
                                     a.HoraMarcado.Substring(5, 2) == monthUser)

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace control_asistencia_savin.Models2;
+namespace control_asistencia_savin.Models;
 
 public partial class RrhhTurnoAsignado
 {
@@ -11,9 +11,9 @@ public partial class RrhhTurnoAsignado
 
     public int IdPersonal { get; set; }
 
-    public int IndTipoMarcado { get; set; }
+    public int? IndTipoMarcado { get; set; }
 
-    public int IndMarcadoFijoVariable { get; set; }
+    public int? IndMarcadoFijoVariable { get; set; }
 
     public int IdPuntoAsistencia { get; set; }
 

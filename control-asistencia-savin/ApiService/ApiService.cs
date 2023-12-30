@@ -15,8 +15,10 @@ namespace control_asistencia_savin.ApiService
         private readonly HttpClient _httpClient = new HttpClient();
         private String _getApiLink = "http://200.105.183.173:8080/savin-rest/ws/biometrico/listar-estructura-biometrico";
         private String _postApiLink = "http://200.105.183.173:8080/savin-rest/ws/biometrico/registrar-asistencia";
+        private String _getAsistenciaLink = "http://200.105.183.173:8080/savin-rest/ws/biometrico/listar-asistencia-personal";
         private String dirMac = "";
         public String nomTienda = "";
+
 
         public ApiService()
         {
@@ -60,7 +62,56 @@ namespace control_asistencia_savin.ApiService
             }
         }
 
+        //public List<RrhhAsistencia> GetDataAsistencia()
+        //{
+        //    var response = _httpClient.GetAsync(_getAsistenciaLink).GetAwaiter().GetResult();
 
+        //    if (response.IsSuccessStatusCode)
+        //    {
+        //        var json = response.Content.ReadAsStringAsync().GetAwaiter().GetResult();
+        //        var data = JsonConvert.DeserializeObject<List<RrhhAsistencia>>(json);
+        //        return data;
+        //    }
+        //    else
+        //    {
+        //        throw new HttpRequestException($"No se pudo conectar al servidor: {response.StatusCode}");
+        //    }
+        //}
+
+        public async Task<List<AuxAsistencia>> GetDataAsistenciaAsync(int idPersonal)
+        {
+            var response = await _httpClient.GetAsync(_getAsistenciaLink);
+            _httpClient.DefaultRequestHeaders.Add("IdPersonal", idPersonal.ToString());
+
+            if (response.IsSuccessStatusCode)
+            {
+                var json = await response.Content.ReadAsStringAsync();
+                var asistencias = JsonConvert.DeserializeObject<List<AuxAsistencia>>(json);
+                return asistencias;
+            }
+            else
+            {
+                throw new HttpRequestException($"Error al obtener los datos de asistencia: {response.StatusCode}");
+            }
+        }
+
+        public List<AuxAsistencia> GetDataAsistencia(int idPersonal)
+        {
+            _httpClient.DefaultRequestHeaders.Add("IdPersonal", idPersonal.ToString());
+            var response = _httpClient.GetAsync(_getAsistenciaLink).Result;
+
+            if (response.IsSuccessStatusCode)
+            {
+                var json = response.Content.ReadAsStringAsync().Result;
+                var asistencias = JsonConvert.DeserializeObject<List<AuxAsistencia>>(json);
+                return asistencias;
+            }
+            else
+            {
+                throw new HttpRequestException($"Error al obtener los datos de asistencia: {response.StatusCode}");
+                //MessageBox.Show($"Error al obtener los datos de asistencia: {response.StatusCode}","error");
+            }
+        }
 
         public string macAddress()
         {

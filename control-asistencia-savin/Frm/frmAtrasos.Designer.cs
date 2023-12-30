@@ -130,7 +130,7 @@
             lblStatusProcess.FlatStyle = FlatStyle.System;
             lblStatusProcess.Font = new Font("Segoe UI", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
             lblStatusProcess.ForeColor = Color.FromArgb(10, 38, 102);
-            lblStatusProcess.Location = new Point(278, 21);
+            lblStatusProcess.Location = new Point(278, 22);
             lblStatusProcess.Name = "lblStatusProcess";
             lblStatusProcess.Size = new Size(134, 21);
             lblStatusProcess.TabIndex = 38;

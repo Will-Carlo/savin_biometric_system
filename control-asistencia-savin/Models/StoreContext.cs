@@ -15,6 +15,8 @@ public partial class StoreContext : DbContext
     {
     }
 
+    public virtual DbSet<AuxAsistencia> AuxAsistencia { get; set; }
+
     public virtual DbSet<GenCiudad> GenCiudads { get; set; }
 
     public virtual DbSet<InvAlmacen> InvAlmacens { get; set; }
@@ -39,6 +41,25 @@ public partial class StoreContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        modelBuilder.Entity<AuxAsistencia>(entity =>
+        {
+            entity.ToTable("aux_asistencia");
+
+            entity.HasIndex(e => e.Id, "IX_aux_asistencia_id").IsUnique();
+
+            entity.Property(e => e.Id).HasColumnName("id");
+            entity.Property(e => e.CapturaImagen).HasColumnName("capturaImagen");
+            entity.Property(e => e.HoraMarcado).HasColumnName("horaMarcado");
+            entity.Property(e => e.IdPersonal).HasColumnName("idPersonal");
+            entity.Property(e => e.IdTurno).HasColumnName("idTurno");
+            entity.Property(e => e.IndTipoMovimiento).HasColumnName("indTipoMovimiento");
+            entity.Property(e => e.MinutosAtraso).HasColumnName("minutosAtraso");
+
+            entity.HasOne(d => d.IdPersonalNavigation).WithMany(p => p.AuxAsistencia).HasForeignKey(d => d.IdPersonal);
+
+            entity.HasOne(d => d.IdTurnoNavigation).WithMany(p => p.AuxAsistencia).HasForeignKey(d => d.IdTurno);
+        });
+
         modelBuilder.Entity<GenCiudad>(entity =>
         {
             entity.ToTable("gen_ciudad");
