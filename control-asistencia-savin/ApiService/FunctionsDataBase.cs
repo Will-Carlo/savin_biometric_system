@@ -28,7 +28,7 @@ namespace control_asistencia_savin.ApiService
 
                 if (data != null)
                 {
-                    MessageBox.Show("Conexión al servidor exitosa.", "Test de conexión", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    //MessageBox.Show("Conexión al servidor exitosa.", "Test de conexión", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     this.correctConection = true;
                 }
             }
@@ -67,7 +67,7 @@ namespace control_asistencia_savin.ApiService
                 {
                     GuardarDatosEnBaseDeDatos(data);
                 }
-                MessageBox.Show("Datos guardados con éxito.");
+                //MessageBox.Show("Datos guardados con éxito.");
 
             }
             catch (DbUpdateException ex)
@@ -206,29 +206,30 @@ namespace control_asistencia_savin.ApiService
                 using (var context = new StoreContext())
                 {
                     // Borrar todas las tablas.
-                    BorrarDatosDeTabla(context.RrhhAsistencia);
-
-                    BorrarDatosDeTabla(context.RrhhTurnoAsignados);
-                    BorrarDatosDeTabla(context.RrhhPuntoAsistencia);
-
-                    BorrarDatosDeTabla(context.RrhhFeriados);
-                    BorrarDatosDeTabla(context.InvSucursals);
+                    BorrarDatosDeTabla(context.RrhhTurnos);
+                    BorrarDatosDeTabla(context.GenCiudads);
+                    BorrarDatosDeTabla(context.InvAlmacens);
 
                     BorrarDatosDeTabla(context.RrhhPersonals);
 
-                    BorrarDatosDeTabla(context.InvAlmacens);
-                    BorrarDatosDeTabla(context.GenCiudads);
-                    BorrarDatosDeTabla(context.RrhhTurnos);
+                    BorrarDatosDeTabla(context.InvSucursals);
+                    BorrarDatosDeTabla(context.RrhhFeriados);
+                    
+                    BorrarDatosDeTabla(context.RrhhPuntoAsistencia);
+                    BorrarDatosDeTabla(context.RrhhTurnoAsignados);
+                    
+                    BorrarDatosDeTabla(context.RrhhAsistencia);
+                    BorrarDatosDeTabla(context.AuxAsistencia);
 
 
                     context.SaveChanges();
                 }
-                MessageBox.Show("La base de datos se ha limpiado con éxito.");
+                //MessageBox.Show("La base de datos se ha limpiado con éxito.");
 
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Error al limpiar base de daros" + ex.Message, "Error");
+                MessageBox.Show("Error al limpiar base de datos: " + ex.Message, "Error");
             }
         }
         private void BorrarDatosDeTabla<T>(DbSet<T> dbSet) where T : class
@@ -258,14 +259,13 @@ namespace control_asistencia_savin.ApiService
                 // Copiar el archivo de la base de datos a la ruta de copia de seguridad
                 File.Copy(rutaBaseDeDatos, rutaCopiaDeSeguridad, overwrite: true);
 
-                MessageBox.Show("La copia de seguridad se ha creado con éxito.");
+                //MessageBox.Show("La copia de seguridad se ha creado con éxito.");
             }
             catch (IOException ex)
             {
                 MessageBox.Show("Error al crear la copia de seguridad: " + ex.Message);
             }
         }
-
         public async Task LoadDataBaseAsistenciaAsync(int idPersonal)
         {
             LimpiarAuxAsistencia();

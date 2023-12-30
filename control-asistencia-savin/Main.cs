@@ -34,7 +34,7 @@ namespace control_asistencia_savin
             _functionsDataBase = new ApiService.FunctionsDataBase();
             _apiService = new ApiService.ApiService();
 
-            //loadSystem();
+            loadSystem();
             AbrirForm(new frmAsistencia());
 
             // Pidiendo datos de la tienda por dirección MAC
