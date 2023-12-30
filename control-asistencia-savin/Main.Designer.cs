@@ -157,7 +157,7 @@
             lnkMarcarCodigo.Size = new Size(105, 15);
             lnkMarcarCodigo.TabIndex = 24;
             lnkMarcarCodigo.TabStop = true;
-            lnkMarcarCodigo.Text = "marcar por código";
+            lnkMarcarCodigo.Text = "Marcar por código";
             lnkMarcarCodigo.Visible = false;
             lnkMarcarCodigo.LinkClicked += lnkMarcarCodigo_LinkClicked;
             // 
@@ -168,7 +168,7 @@
             lnkApiTest.BackColor = Color.FromArgb(10, 38, 102);
             lnkApiTest.Font = new Font("Segoe UI", 9F);
             lnkApiTest.LinkColor = Color.FromArgb(241, 206, 0);
-            lnkApiTest.Location = new Point(66, 472);
+            lnkApiTest.Location = new Point(66, 456);
             lnkApiTest.Margin = new Padding(4, 0, 4, 0);
             lnkApiTest.Name = "lnkApiTest";
             lnkApiTest.Size = new Size(98, 15);
@@ -185,7 +185,7 @@
             lnkRegistrar.BackColor = Color.FromArgb(10, 38, 102);
             lnkRegistrar.Font = new Font("Segoe UI", 9F);
             lnkRegistrar.LinkColor = Color.FromArgb(241, 206, 0);
-            lnkRegistrar.Location = new Point(66, 440);
+            lnkRegistrar.Location = new Point(66, 429);
             lnkRegistrar.Margin = new Padding(4, 0, 4, 0);
             lnkRegistrar.Name = "lnkRegistrar";
             lnkRegistrar.Size = new Size(88, 15);
@@ -202,7 +202,7 @@
             lnkVerAtrasos.BackColor = Color.FromArgb(10, 38, 102);
             lnkVerAtrasos.Font = new Font("Segoe UI", 9F);
             lnkVerAtrasos.LinkColor = Color.FromArgb(241, 206, 0);
-            lnkVerAtrasos.Location = new Point(66, 376);
+            lnkVerAtrasos.Location = new Point(66, 372);
             lnkVerAtrasos.Margin = new Padding(4, 0, 4, 0);
             lnkVerAtrasos.Name = "lnkVerAtrasos";
             lnkVerAtrasos.Size = new Size(138, 15);
@@ -219,7 +219,7 @@
             lnkVerAtrasosMes.BackColor = Color.FromArgb(10, 38, 102);
             lnkVerAtrasosMes.Font = new Font("Segoe UI", 9F);
             lnkVerAtrasosMes.LinkColor = Color.FromArgb(241, 206, 0);
-            lnkVerAtrasosMes.Location = new Point(66, 410);
+            lnkVerAtrasosMes.Location = new Point(66, 400);
             lnkVerAtrasosMes.Margin = new Padding(4, 0, 4, 0);
             lnkVerAtrasosMes.Name = "lnkVerAtrasosMes";
             lnkVerAtrasosMes.Size = new Size(88, 15);
@@ -238,10 +238,10 @@
             lnkInicio.Location = new Point(66, 320);
             lnkInicio.Margin = new Padding(4, 0, 4, 0);
             lnkInicio.Name = "lnkInicio";
-            lnkInicio.Size = new Size(36, 15);
+            lnkInicio.Size = new Size(100, 15);
             lnkInicio.TabIndex = 18;
             lnkInicio.TabStop = true;
-            lnkInicio.Text = "Inicio";
+            lnkInicio.Text = "Marcar por huella";
             lnkInicio.Visible = false;
             lnkInicio.LinkClicked += lnkInicio_LinkClicked;
             // 

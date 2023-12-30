@@ -105,19 +105,19 @@ namespace control_asistencia_savin.Frm
 
             if (horaActual < medioDia)
             {
-                return 1;
+                return 461;
             }
             else if (horaActual >= medioDia && horaActual < tarde)
             {
-                return 2;
+                return 462;
             }
             else if (horaActual >= tarde && horaActual < noche)
             {
-                return 1;
+                return 461;
             }
             else
             {
-                return 2;
+                return 462;
             }
         }
 
@@ -132,7 +132,7 @@ namespace control_asistencia_savin.Frm
                     .FirstOrDefault(); // Devuelve el primer elemento o 0 si la secuencia está vacía.
 
                 // Si el valor es 1, devolver 2. Si el valor es 2 o no hay registros, devolver 1.
-                return ultimoRegistro == 1 ? 2 : 1;
+                return ultimoRegistro == 461 ? 462 : 461;
             }
         }
 

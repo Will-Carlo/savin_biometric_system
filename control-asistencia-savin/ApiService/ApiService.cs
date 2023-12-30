@@ -22,8 +22,8 @@ namespace control_asistencia_savin.ApiService
 
         public ApiService()
         {
-            //dirMac = macAddress();
-            dirMac = "00-E0-4C-36-17-C0";
+            dirMac = macAddress();
+            //dirMac = "00-E0-4C-36-17-C0";
             nomTienda = GetNombreTienda();
             _httpClient.DefaultRequestHeaders.Add("Tkn", "SavinBio-23%");
             _httpClient.DefaultRequestHeaders.Add("DirMac", dirMac);

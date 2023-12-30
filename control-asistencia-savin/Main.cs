@@ -56,7 +56,7 @@ namespace control_asistencia_savin
             }
             else
             {
-                MessageBox.Show("Error de conexión al servidor. \nCerrando la aplicación.");
+                MessageBox.Show("Tu dirección MAC no está registrada. \nCerrando la aplicación.");
                 Environment.Exit(0);
                 //this.Close();
             }
@@ -85,19 +85,19 @@ namespace control_asistencia_savin
             {
                 this.lnkInicio.Visible = false;
                 this.lnkMarcarCodigo.Visible = false;
-                this.lnkVerAtrasosMes.Visible = false;
                 this.lnkVerAtrasos.Visible = false;
-                this.lnkRegistrar.Visible = false;
-                this.lnkApiTest.Visible = false;
+                //this.lnkVerAtrasosMes.Visible = false;
+                //this.lnkRegistrar.Visible = false;
+                //this.lnkApiTest.Visible = false;
             }
             else
             {
                 this.lnkInicio.Visible = true;
                 this.lnkMarcarCodigo.Visible = true;
-                this.lnkVerAtrasosMes.Visible = true;
                 this.lnkVerAtrasos.Visible = true;
-                this.lnkRegistrar.Visible = true;
-                this.lnkApiTest.Visible = true;
+                //this.lnkVerAtrasosMes.Visible = true;
+                //this.lnkRegistrar.Visible = true;
+                //this.lnkApiTest.Visible = true;
 
             }
         }
