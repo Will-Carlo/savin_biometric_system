@@ -150,6 +150,7 @@
             txtCodigo.TabIndex = 33;
             txtCodigo.Tag = "";
             txtCodigo.Click += txtCodigo_Click;
+            txtCodigo.KeyDown += txtCodigo_KeyDown;
             // 
             // lblTitHora
             // 
@@ -171,6 +172,7 @@
             dgvListDelay.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             dgvListDelay.Location = new Point(135, 3);
             dgvListDelay.Name = "dgvListDelay";
+            dgvListDelay.RowHeadersVisible = false;
             dgvListDelay.Size = new Size(881, 140);
             dgvListDelay.TabIndex = 40;
             dgvListDelay.CellFormatting += dgvListDelay_CellFormatting;

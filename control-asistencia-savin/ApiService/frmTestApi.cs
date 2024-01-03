@@ -43,6 +43,9 @@ namespace control_asistencia_savin
         {
             _functionsDataBase.BackUpDB("fechadata");
         }
-
+        private void btnDeleteBackups_Click(object sender, EventArgs e)
+        {
+            _functionsDataBase.DeleteBackupFiles(10);
+        }
     }
 }

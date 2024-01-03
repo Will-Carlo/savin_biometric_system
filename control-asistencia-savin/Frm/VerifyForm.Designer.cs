@@ -136,7 +136,6 @@
             txtCodigo.Font = new Font("Segoe UI", 21.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
             txtCodigo.Location = new Point(346, 58);
             txtCodigo.Margin = new Padding(4, 3, 4, 3);
-            txtCodigo.Multiline = true;
             txtCodigo.Name = "txtCodigo";
             txtCodigo.Size = new Size(666, 46);
             txtCodigo.TabIndex = 25;
@@ -146,7 +145,7 @@
             btnVerificarHuellaCod.Anchor = AnchorStyles.Top;
             btnVerificarHuellaCod.Font = new Font("Segoe UI", 14.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
             btnVerificarHuellaCod.ForeColor = Color.FromArgb(10, 38, 102);
-            btnVerificarHuellaCod.Location = new Point(127, 58);
+            btnVerificarHuellaCod.Location = new Point(176, 58);
             btnVerificarHuellaCod.Margin = new Padding(4, 3, 4, 3);
             btnVerificarHuellaCod.Name = "btnVerificarHuellaCod";
             btnVerificarHuellaCod.Size = new Size(138, 46);

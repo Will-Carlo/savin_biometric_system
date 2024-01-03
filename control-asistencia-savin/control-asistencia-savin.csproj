@@ -7,17 +7,23 @@
     <Nullable>enable</Nullable>
     <UseWindowsForms>true</UseWindowsForms>
     <ImplicitUsings>enable</ImplicitUsings>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <Platforms>AnyCPU;x64</Platforms>
+    <ApplicationIcon>savin.ico</ApplicationIcon>
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="backup\**" />
     <Compile Remove="Models0.0\**" />
     <Compile Remove="Models2\**" />
     <Compile Remove="Models3\**" />
     <Compile Remove="Modelsbackup\**" />
+    <EmbeddedResource Remove="backup\**" />
     <EmbeddedResource Remove="Models0.0\**" />
     <EmbeddedResource Remove="Models2\**" />
     <EmbeddedResource Remove="Models3\**" />
     <EmbeddedResource Remove="Modelsbackup\**" />
+    <None Remove="backup\**" />
     <None Remove="Models0.0\**" />
     <None Remove="Models2\**" />
     <None Remove="Models3\**" />
@@ -26,6 +32,10 @@
 
   <ItemGroup>
     <Compile Remove="StoreContext.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="savin.ico" />
   </ItemGroup>
 
   <ItemGroup>

@@ -30,7 +30,7 @@ namespace control_asistencia_savin
             //this.FormBorderStyle = FormBorderStyle.None; // Remueve los bordes de la ventana
             this.WindowState = FormWindowState.Maximized; // Maximiza la ventana
             //this.TopMost = true;
-
+            
             _functionsDataBase = new ApiService.FunctionsDataBase();
             _apiService = new ApiService.ApiService();
 
@@ -53,10 +53,12 @@ namespace control_asistencia_savin
 
                 //this.Load += async (sender, e) => await _functionsDataBase.loadDataBase();
                 _functionsDataBase.loadDataBase();
+                int deleteBackups = int.Parse(DateTime.Now.ToString("MM")) - 2;
+                _functionsDataBase.DeleteBackupFiles(deleteBackups);
             }
             else
             {
-                MessageBox.Show("Tu dirección MAC no está registrada. \nCerrando la aplicación.");
+                MessageBox.Show("Tu dirección MAC no está registrada.\nDir mac:"+ _apiService.macAddress() + "\nCerrando la aplicación.");
                 Environment.Exit(0);
                 //this.Close();
             }
@@ -98,7 +100,6 @@ namespace control_asistencia_savin
                 //this.lnkVerAtrasosMes.Visible = true;
                 //this.lnkRegistrar.Visible = true;
                 //this.lnkApiTest.Visible = true;
-
             }
         }
         private void linkLabel2_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)

@@ -136,5 +136,13 @@ namespace control_asistencia_savin
 
             }
         }
+
+        private void txtCodigo_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+            {
+                btnVerificarHuellaCod.PerformClick();
+            }
+        }
     }
 }

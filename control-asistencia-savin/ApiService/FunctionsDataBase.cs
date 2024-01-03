@@ -92,7 +92,7 @@ namespace control_asistencia_savin.ApiService
                 GuardarEntidades(context, data.RrhhTurnoAsignado);
 
                 //recibimos datos de la tabla rrhh_asistencia
-                //GuardarEntidades(context, data.RrhhAsistencia);
+                GuardarEntidades(context, data.RrhhAsistencia);
 
                 context.SaveChanges();
             }
@@ -345,6 +345,40 @@ namespace control_asistencia_savin.ApiService
             catch (Exception ex)
             {
                 MessageBox.Show("Error al limpiar la tabla auxiliar"+ ex.Message, "Error");
+            }
+        }
+        public void DeleteBackupFiles(int monthBackups)
+        {
+            string backupDirectory = "backup";
+            string nameBackups = "store_backup_*_" + monthBackups + "*";
+            // Asegúrate de que el directorio existe
+            if (Directory.Exists(backupDirectory))
+            {
+                // Crea una instancia de DirectoryInfo para el directorio 'backup'
+                DirectoryInfo directoryInfo = new DirectoryInfo(backupDirectory);
+
+                // Encuentra todos los archivos que comienzan con 'store_backup_30_12'
+                //MessageBox.Show("test: " + nameBackups);
+                FileInfo[] files = directoryInfo.GetFiles(nameBackups);
+
+                // Itera sobre cada archivo y elimínalos
+                foreach (FileInfo file in files)
+                {
+                    try
+                    {
+                        file.Delete();
+                        //MessageBox.Show($"El archivo {file.Name} ha sido eliminado.");
+                    }
+                    catch (Exception ex)
+                    {
+                        // Puedes manejar errores aquí, si no puedes borrar un archivo por alguna razón
+                        MessageBox.Show($"Error al eliminar el archivo {file.Name}: {ex.Message}");
+                    }
+                }
+            }
+            else
+            {
+                //MessageBox.Show($"El directorio {backupDirectory} no existe.");
             }
         }
     }

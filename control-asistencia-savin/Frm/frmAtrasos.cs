@@ -134,7 +134,7 @@ namespace control_asistencia_savin
                         CargarMesesEnComboBox(_idPersonal);
                         if (cbxPersonalMonth.Items.Count > 0)
                         {
-                            cbxPersonalMonth.SelectedIndex = 0; 
+                            cbxPersonalMonth.SelectedIndex = 0;
                         }
 
                     }
@@ -404,6 +404,8 @@ namespace control_asistencia_savin
             _idPersonal = 0;
             txtCodigo.Text = "";
 
+            btnVerificarHuella.Visible = true;
+
         }
         private void TotalAtrasos()
         {
@@ -482,6 +484,14 @@ namespace control_asistencia_savin
         {
             GameOfClicks();
 
+        }
+
+        private void txtCodigo_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+            {
+                btnVerificarCode.PerformClick();
+            }
         }
     }
 }

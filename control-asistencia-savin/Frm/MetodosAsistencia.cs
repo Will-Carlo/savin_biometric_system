@@ -42,17 +42,17 @@ namespace control_asistencia_savin.Frm
             int indMov = capturaIndMov(IdPersonal);
 
             // Calculate the exceeded minutes according to the conditions
-            if (idTurno == 1 && indMov == 1)
+            if (idTurno == 1 && indMov == 461)
             {
                 // For the first condition, compare with 08:30:00
                 return horaMarcada > tiempoInicioTurno1 ? (int)(horaMarcada - tiempoInicioTurno1).TotalMinutes : 0;
             }
-            else if (idTurno == 2 && indMov == 1)
+            else if (idTurno == 2 && indMov == 461)
             {
                 // For the second condition, compare with 14:30:00
                 return horaMarcada > tiempoInicioTurno2 ? (int)(horaMarcada - tiempoInicioTurno2).TotalMinutes : 0;
             }
-            else if (idTurno == 3 && indMov == 1)
+            else if (idTurno == 3 && indMov == 461)
             {
                 return horaMarcada > tiempoInicioTurno3 ? (int)(horaMarcada - tiempoInicioTurno3).TotalMinutes : 0;
             }
@@ -61,65 +61,62 @@ namespace control_asistencia_savin.Frm
             return 0;
         }
 
-        public int capturaMinAtraso()
-        {
-            // Parse the captured time string to a DateTime object
-            DateTime horaMarcada = DateTime.Parse(_capturaHoraMarcado);
+        //public int capturaMinAtraso()
+        //{
+        //    // Parse the captured time string to a DateTime object
+        //    DateTime horaMarcada = DateTime.Parse(_capturaHoraMarcado);
 
-            // Define the comparison times
-            var tiempoInicioTurno1 = new DateTime(horaMarcada.Year, horaMarcada.Month, horaMarcada.Day, 8, 30, 0);
-            var tiempoInicioTurno2 = new DateTime(horaMarcada.Year, horaMarcada.Month, horaMarcada.Day, 14, 30, 0);
-            var tiempoInicioTurno3 = new DateTime(horaMarcada.Year, horaMarcada.Month, horaMarcada.Day, 9, 00, 0);
+        //    // Define the comparison times
+        //    var tiempoInicioTurno1 = new DateTime(horaMarcada.Year, horaMarcada.Month, horaMarcada.Day, 8, 30, 0);
+        //    var tiempoInicioTurno2 = new DateTime(horaMarcada.Year, horaMarcada.Month, horaMarcada.Day, 14, 30, 0);
+        //    var tiempoInicioTurno3 = new DateTime(horaMarcada.Year, horaMarcada.Month, horaMarcada.Day, 9, 00, 0);
 
 
-            // Get the values from the other functions
-            int idTurno = capturaIdTurno();
-            int indMov = capturaIndMov();
+        //    // Get the values from the other functions
+        //    int idTurno = capturaIdTurno();
+        //    int indMov = capturaIndMov();
 
-            // Calculate the exceeded minutes according to the conditions
-            if (idTurno == 1 && indMov == 1)
-            {
-                // For the first condition, compare with 08:30:00
-                return horaMarcada > tiempoInicioTurno1 ? (int)(horaMarcada - tiempoInicioTurno1).TotalMinutes : 0;
-            }
-            else if (idTurno == 2 && indMov == 1)
-            {
-                // For the second condition, compare with 14:30:00
-                return horaMarcada > tiempoInicioTurno2 ? (int)(horaMarcada - tiempoInicioTurno2).TotalMinutes : 0;
-            }
-            else if (idTurno == 3 && indMov == 1)
-            {
-                return horaMarcada > tiempoInicioTurno3 ? (int)(horaMarcada - tiempoInicioTurno3).TotalMinutes : 0;
-            }
+        //    // Calculate the exceeded minutes according to the conditions
+        //    if (idTurno == 1 && indMov == 461)
+        //    {
+        //        return horaMarcada > tiempoInicioTurno1 ? (int)(horaMarcada - tiempoInicioTurno1).TotalMinutes : 0;
+        //    }
+        //    else if (idTurno == 2 && indMov == 461)
+        //    {
+        //        return horaMarcada > tiempoInicioTurno2 ? (int)(horaMarcada - tiempoInicioTurno2).TotalMinutes : 0;
+        //    }
+        //    else if (idTurno == 3 && indMov == 461)
+        //    {
+        //        return horaMarcada > tiempoInicioTurno3 ? (int)(horaMarcada - tiempoInicioTurno3).TotalMinutes : 0;
+        //    }
 
-            // If none of the conditions are met, return 0
-            return 0;
-        }
+        //    return 0;
+        //}
 
-        public int capturaIndMov()
-        {
-            var horaActual = DateTime.Now;
-            var medioDia = new DateTime(horaActual.Year, horaActual.Month, horaActual.Day, 12, 0, 0);
-            var tarde = new DateTime(horaActual.Year, horaActual.Month, horaActual.Day, 13, 20, 0);
-            var noche = new DateTime(horaActual.Year, horaActual.Month, horaActual.Day, 18, 0, 0);
+        //public int capturaIndMov()
+        //{
+        //    var horaActual = DateTime.Now;
+        //    var medioDia = new DateTime(horaActual.Year, horaActual.Month, horaActual.Day, 12, 0, 0);
+        //    var tarde = new DateTime(horaActual.Year, horaActual.Month, horaActual.Day, 13, 20, 0);
+        //    var noche = new DateTime(horaActual.Year, horaActual.Month, horaActual.Day, 18, 0, 0);
 
-            if (horaActual < medioDia)
-            {
-                return 461;
-            }
-            else if (horaActual >= medioDia && horaActual < tarde)
-            {
-                return 462;
-            }
-            else if (horaActual >= tarde && horaActual < noche)
-            {
-                return 461;
-            }
-            else
-            {
-                return 462;
-            }
-        }
+        //    if (horaActual < medioDia)
+        //    {
+        //        return 461;
+        //    }
+        //    else if (horaActual >= medioDia && horaActual < tarde)
+        //    {
+        //        return 462;
+        //    }
+        //    else if (horaActual >= tarde && horaActual < noche)
+        //    {
+        //        return 461;
+        //    }
+        //    else
+        //    {
+        //        return 462;
+        //    }
+        //}
 
         public int capturaIndMov(int idPersonal)
         {

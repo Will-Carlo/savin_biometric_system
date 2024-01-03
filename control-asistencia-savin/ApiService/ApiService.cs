@@ -19,7 +19,6 @@ namespace control_asistencia_savin.ApiService
         private String dirMac = "";
         public String nomTienda = "";
 
-
         public ApiService()
         {
             dirMac = macAddress();
@@ -45,8 +44,7 @@ namespace control_asistencia_savin.ApiService
         //        throw new HttpRequestException($"No se pudo conectar al servidor: {response.StatusCode}");
         //    }
         //}
-
-        public ModelJson GetData()
+        public ModelJson? GetData()
         {
             var response = _httpClient.GetAsync(_getApiLink).GetAwaiter().GetResult();
 
@@ -61,7 +59,6 @@ namespace control_asistencia_savin.ApiService
                 throw new HttpRequestException($"No se pudo conectar al servidor: {response.StatusCode}");
             }
         }
-
         //public List<RrhhAsistencia> GetDataAsistencia()
         //{
         //    var response = _httpClient.GetAsync(_getAsistenciaLink).GetAwaiter().GetResult();
@@ -77,7 +74,6 @@ namespace control_asistencia_savin.ApiService
         //        throw new HttpRequestException($"No se pudo conectar al servidor: {response.StatusCode}");
         //    }
         //}
-
         public async Task<List<AuxAsistencia>> GetDataAsistenciaAsync(int idPersonal)
         {
             var response = await _httpClient.GetAsync(_getAsistenciaLink);
@@ -94,7 +90,6 @@ namespace control_asistencia_savin.ApiService
                 throw new HttpRequestException($"Error al obtener los datos de asistencia: {response.StatusCode}");
             }
         }
-
         public List<AuxAsistencia> GetDataAsistencia(int idPersonal)
         {
             _httpClient.DefaultRequestHeaders.Add("IdPersonal", idPersonal.ToString());
@@ -112,7 +107,6 @@ namespace control_asistencia_savin.ApiService
                 //MessageBox.Show($"Error al obtener los datos de asistencia: {response.StatusCode}","error");
             }
         }
-
         public string macAddress()
         {
             try
@@ -136,8 +130,6 @@ namespace control_asistencia_savin.ApiService
 
             return "Dirección MAC no encontrada";
         }
-
-
         public string GetNombreTienda()
         {
             using (var context = new StoreContext())
@@ -147,8 +139,6 @@ namespace control_asistencia_savin.ApiService
                 return puntoAsistencia?.Nombre;
             }
         }
-
-
         public async Task<HttpResponseMessage> RegistrarAsistenciaAsync(RrhhAsistencia asistencia)
         {
             var regAsistencia = new

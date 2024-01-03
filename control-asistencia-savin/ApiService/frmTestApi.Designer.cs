@@ -36,11 +36,12 @@
             flowLayoutPanel1 = new FlowLayoutPanel();
             btnDeleteBD = new Button();
             btnMakeBackUp = new Button();
+            btnDeleteBackups = new Button();
             SuspendLayout();
             // 
             // btnVerificarApi
             // 
-            btnVerificarApi.Location = new Point(195, 97);
+            btnVerificarApi.Location = new Point(195, 56);
             btnVerificarApi.Name = "btnVerificarApi";
             btnVerificarApi.Size = new Size(125, 23);
             btnVerificarApi.TabIndex = 0;
@@ -50,21 +51,21 @@
             // 
             // pgrVerificarApi
             // 
-            pgrVerificarApi.Location = new Point(360, 97);
+            pgrVerificarApi.Location = new Point(360, 56);
             pgrVerificarApi.Name = "pgrVerificarApi";
             pgrVerificarApi.Size = new Size(100, 23);
             pgrVerificarApi.TabIndex = 1;
             // 
             // pgrCargarDB
             // 
-            pgrCargarDB.Location = new Point(360, 160);
+            pgrCargarDB.Location = new Point(360, 119);
             pgrCargarDB.Name = "pgrCargarDB";
             pgrCargarDB.Size = new Size(100, 23);
             pgrCargarDB.TabIndex = 3;
             // 
             // btnCargarDB
             // 
-            btnCargarDB.Location = new Point(195, 160);
+            btnCargarDB.Location = new Point(195, 106);
             btnCargarDB.Name = "btnCargarDB";
             btnCargarDB.Size = new Size(125, 23);
             btnCargarDB.TabIndex = 2;
@@ -94,9 +95,9 @@
             // 
             // btnDeleteBD
             // 
-            btnDeleteBD.Location = new Point(215, 208);
+            btnDeleteBD.Location = new Point(195, 156);
             btnDeleteBD.Name = "btnDeleteBD";
-            btnDeleteBD.Size = new Size(75, 23);
+            btnDeleteBD.Size = new Size(125, 23);
             btnDeleteBD.TabIndex = 6;
             btnDeleteBD.Text = "borrar bd";
             btnDeleteBD.UseVisualStyleBackColor = true;
@@ -104,13 +105,23 @@
             // 
             // btnMakeBackUp
             // 
-            btnMakeBackUp.Location = new Point(223, 251);
+            btnMakeBackUp.Location = new Point(195, 205);
             btnMakeBackUp.Name = "btnMakeBackUp";
-            btnMakeBackUp.Size = new Size(75, 23);
+            btnMakeBackUp.Size = new Size(125, 23);
             btnMakeBackUp.TabIndex = 7;
             btnMakeBackUp.Text = "make copy";
             btnMakeBackUp.UseVisualStyleBackColor = true;
             btnMakeBackUp.Click += btnMakeBackUp_Click;
+            // 
+            // btnDeleteBackups
+            // 
+            btnDeleteBackups.Location = new Point(195, 251);
+            btnDeleteBackups.Name = "btnDeleteBackups";
+            btnDeleteBackups.Size = new Size(125, 23);
+            btnDeleteBackups.TabIndex = 8;
+            btnDeleteBackups.Text = "delete backups";
+            btnDeleteBackups.UseVisualStyleBackColor = true;
+            btnDeleteBackups.Click += btnDeleteBackups_Click;
             // 
             // frmTestApi
             // 
@@ -118,6 +129,7 @@
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.White;
             ClientSize = new Size(688, 295);
+            Controls.Add(btnDeleteBackups);
             Controls.Add(btnMakeBackUp);
             Controls.Add(btnDeleteBD);
             Controls.Add(flowLayoutPanel1);
@@ -134,13 +146,14 @@
 
         #endregion
 
-        private Button btnVerificarApi;
         private ProgressBar pgrVerificarApi;
         private ProgressBar pgrCargarDB;
-        private Button btnCargarDB;
         private TableLayoutPanel tableLayoutPanel1;
         private FlowLayoutPanel flowLayoutPanel1;
+        private Button btnVerificarApi;
+        private Button btnCargarDB;
         private Button btnDeleteBD;
         private Button btnMakeBackUp;
+        private Button btnDeleteBackups;
     }
 }

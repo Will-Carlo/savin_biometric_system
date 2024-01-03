@@ -34,6 +34,10 @@
             // 
             btnVerificarHuellaCod.Click += btnVerificarHuellaCod_Click;
             // 
+            // txtCodigo
+            // 
+            txtCodigo.KeyDown += txtCodigo_KeyDown;
+            // 
             // frmCodigo
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
