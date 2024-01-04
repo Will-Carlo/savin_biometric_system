@@ -30,14 +30,11 @@ namespace control_asistencia_savin
         {
             DatosCapturados?.Invoke(this, EventArgs.Empty);
         }
-
-
         public void Verify(DPFP.Template template)
         {
             Template = template;
             ShowDialog();
         }
-
         protected override void Init()
         {
             base.Init();
@@ -45,13 +42,11 @@ namespace control_asistencia_savin
             Verificator = new DPFP.Verification.Verification();     // Create a fingerprint template verificator
             //UpdateStatus(0);
         }
-
         //private void UpdateStatus(int FAR)
         //{
         //    // Show "False accept rate" value
         //    SetStatus(String.Format("False Accept Rate (FAR) = {0}", FAR));
         //}
-
         protected override void Process(DPFP.Sample Sample)
         {
             base.Process(Sample);

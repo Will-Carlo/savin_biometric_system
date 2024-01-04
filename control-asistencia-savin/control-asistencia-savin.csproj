@@ -8,7 +8,7 @@
     <UseWindowsForms>true</UseWindowsForms>
     <ImplicitUsings>enable</ImplicitUsings>
     <PlatformTarget>AnyCPU</PlatformTarget>
-    <Platforms>AnyCPU;x64</Platforms>
+    <Platforms>AnyCPU;x64;x86</Platforms>
     <ApplicationIcon>savin.ico</ApplicationIcon>
   </PropertyGroup>
 

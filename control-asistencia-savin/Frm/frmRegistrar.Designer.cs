@@ -30,10 +30,10 @@
         {
             label1 = new Label();
             label2 = new Label();
-            btnAgregar = new Button();
+            btnGuardarUsuario = new Button();
             txtPaterno = new TextBox();
-            txtHuella = new TextBox();
-            btnRegistrarHuella = new Button();
+            txtIndiceDerecho = new TextBox();
+            btnRegIndDer = new Button();
             dgvListar = new DataGridView();
             txtId_ciudad = new TextBox();
             label3 = new Label();
@@ -43,14 +43,14 @@
             label5 = new Label();
             label6 = new Label();
             label7 = new Label();
-            textBox1 = new TextBox();
+            txtIndiceIzquierdo = new TextBox();
             label8 = new Label();
-            textBox2 = new TextBox();
+            txtPulgarDerecho = new TextBox();
             label9 = new Label();
-            textBox3 = new TextBox();
-            button1 = new Button();
-            button2 = new Button();
-            button3 = new Button();
+            txtPulgarIzquierdo = new TextBox();
+            btnRegIndIzq = new Button();
+            btnRegPulDer = new Button();
+            btnRegPulIzq = new Button();
             ((System.ComponentModel.ISupportInitialize)dgvListar).BeginInit();
             SuspendLayout();
             // 
@@ -74,17 +74,17 @@
             label2.TabIndex = 1;
             label2.Text = "Huella:";
             // 
-            // btnAgregar
+            // btnGuardarUsuario
             // 
-            btnAgregar.Enabled = false;
-            btnAgregar.Location = new Point(955, 418);
-            btnAgregar.Margin = new Padding(4, 3, 4, 3);
-            btnAgregar.Name = "btnAgregar";
-            btnAgregar.Size = new Size(157, 27);
-            btnAgregar.TabIndex = 2;
-            btnAgregar.Text = "Guardar Usuario";
-            btnAgregar.UseVisualStyleBackColor = true;
-            btnAgregar.Click += btnAgregar_Click;
+            btnGuardarUsuario.Enabled = false;
+            btnGuardarUsuario.Location = new Point(955, 418);
+            btnGuardarUsuario.Margin = new Padding(4, 3, 4, 3);
+            btnGuardarUsuario.Name = "btnGuardarUsuario";
+            btnGuardarUsuario.Size = new Size(157, 27);
+            btnGuardarUsuario.TabIndex = 2;
+            btnGuardarUsuario.Text = "Guardar Usuario";
+            btnGuardarUsuario.UseVisualStyleBackColor = true;
+            btnGuardarUsuario.Click += btnAgregar_Click;
             // 
             // txtPaterno
             // 
@@ -94,28 +94,29 @@
             txtPaterno.Size = new Size(224, 23);
             txtPaterno.TabIndex = 3;
             // 
-            // txtHuella
+            // txtIndiceDerecho
             // 
-            txtHuella.Enabled = false;
-            txtHuella.Location = new Point(114, 238);
-            txtHuella.Margin = new Padding(4, 3, 4, 3);
-            txtHuella.Name = "txtHuella";
-            txtHuella.Size = new Size(131, 23);
-            txtHuella.TabIndex = 4;
+            txtIndiceDerecho.Enabled = false;
+            txtIndiceDerecho.Location = new Point(114, 238);
+            txtIndiceDerecho.Margin = new Padding(4, 3, 4, 3);
+            txtIndiceDerecho.Name = "txtIndiceDerecho";
+            txtIndiceDerecho.Size = new Size(131, 23);
+            txtIndiceDerecho.TabIndex = 4;
             // 
-            // btnRegistrarHuella
+            // btnRegIndDer
             // 
-            btnRegistrarHuella.Location = new Point(259, 234);
-            btnRegistrarHuella.Margin = new Padding(4, 3, 4, 3);
-            btnRegistrarHuella.Name = "btnRegistrarHuella";
-            btnRegistrarHuella.Size = new Size(79, 27);
-            btnRegistrarHuella.TabIndex = 5;
-            btnRegistrarHuella.Text = "Registrar Huella";
-            btnRegistrarHuella.UseVisualStyleBackColor = true;
-            btnRegistrarHuella.Click += btnRegistrarHuella_Click;
+            btnRegIndDer.Location = new Point(259, 234);
+            btnRegIndDer.Margin = new Padding(4, 3, 4, 3);
+            btnRegIndDer.Name = "btnRegIndDer";
+            btnRegIndDer.Size = new Size(79, 27);
+            btnRegIndDer.TabIndex = 5;
+            btnRegIndDer.Text = "Registrar Huella";
+            btnRegIndDer.UseVisualStyleBackColor = true;
+            btnRegIndDer.Click += btnRegIndDer_Click;
             // 
             // dgvListar
             // 
+            dgvListar.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
             dgvListar.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             dgvListar.Location = new Point(355, 12);
             dgvListar.Margin = new Padding(4, 3, 4, 3);
@@ -197,14 +198,14 @@
             label7.TabIndex = 15;
             label7.Text = "Ind Izq";
             // 
-            // textBox1
+            // txtIndiceIzquierdo
             // 
-            textBox1.Enabled = false;
-            textBox1.Location = new Point(114, 277);
-            textBox1.Margin = new Padding(4, 3, 4, 3);
-            textBox1.Name = "textBox1";
-            textBox1.Size = new Size(131, 23);
-            textBox1.TabIndex = 14;
+            txtIndiceIzquierdo.Enabled = false;
+            txtIndiceIzquierdo.Location = new Point(114, 277);
+            txtIndiceIzquierdo.Margin = new Padding(4, 3, 4, 3);
+            txtIndiceIzquierdo.Name = "txtIndiceIzquierdo";
+            txtIndiceIzquierdo.Size = new Size(131, 23);
+            txtIndiceIzquierdo.TabIndex = 14;
             // 
             // label8
             // 
@@ -216,14 +217,14 @@
             label8.TabIndex = 17;
             label8.Text = "Pul Der";
             // 
-            // textBox2
+            // txtPulgarDerecho
             // 
-            textBox2.Enabled = false;
-            textBox2.Location = new Point(114, 319);
-            textBox2.Margin = new Padding(4, 3, 4, 3);
-            textBox2.Name = "textBox2";
-            textBox2.Size = new Size(131, 23);
-            textBox2.TabIndex = 16;
+            txtPulgarDerecho.Enabled = false;
+            txtPulgarDerecho.Location = new Point(114, 319);
+            txtPulgarDerecho.Margin = new Padding(4, 3, 4, 3);
+            txtPulgarDerecho.Name = "txtPulgarDerecho";
+            txtPulgarDerecho.Size = new Size(131, 23);
+            txtPulgarDerecho.TabIndex = 16;
             // 
             // label9
             // 
@@ -231,63 +232,66 @@
             label9.Location = new Point(51, 364);
             label9.Margin = new Padding(4, 0, 4, 0);
             label9.Name = "label9";
-            label9.Size = new Size(45, 15);
+            label9.Size = new Size(42, 15);
             label9.TabIndex = 19;
-            label9.Text = "Pul Der";
+            label9.Text = "Pul izq";
             // 
-            // textBox3
+            // txtPulgarIzquierdo
             // 
-            textBox3.Enabled = false;
-            textBox3.Location = new Point(114, 361);
-            textBox3.Margin = new Padding(4, 3, 4, 3);
-            textBox3.Name = "textBox3";
-            textBox3.Size = new Size(131, 23);
-            textBox3.TabIndex = 18;
+            txtPulgarIzquierdo.Enabled = false;
+            txtPulgarIzquierdo.Location = new Point(114, 361);
+            txtPulgarIzquierdo.Margin = new Padding(4, 3, 4, 3);
+            txtPulgarIzquierdo.Name = "txtPulgarIzquierdo";
+            txtPulgarIzquierdo.Size = new Size(131, 23);
+            txtPulgarIzquierdo.TabIndex = 18;
             // 
-            // button1
+            // btnRegIndIzq
             // 
-            button1.Location = new Point(259, 277);
-            button1.Margin = new Padding(4, 3, 4, 3);
-            button1.Name = "button1";
-            button1.Size = new Size(79, 27);
-            button1.TabIndex = 20;
-            button1.Text = "Registrar Huella";
-            button1.UseVisualStyleBackColor = true;
+            btnRegIndIzq.Location = new Point(259, 277);
+            btnRegIndIzq.Margin = new Padding(4, 3, 4, 3);
+            btnRegIndIzq.Name = "btnRegIndIzq";
+            btnRegIndIzq.Size = new Size(79, 27);
+            btnRegIndIzq.TabIndex = 20;
+            btnRegIndIzq.Text = "Registrar Huella";
+            btnRegIndIzq.UseVisualStyleBackColor = true;
+            btnRegIndIzq.Click += btnRegIndIzq_Click;
             // 
-            // button2
+            // btnRegPulDer
             // 
-            button2.Location = new Point(259, 316);
-            button2.Margin = new Padding(4, 3, 4, 3);
-            button2.Name = "button2";
-            button2.Size = new Size(79, 27);
-            button2.TabIndex = 21;
-            button2.Text = "Registrar Huella";
-            button2.UseVisualStyleBackColor = true;
+            btnRegPulDer.Location = new Point(259, 316);
+            btnRegPulDer.Margin = new Padding(4, 3, 4, 3);
+            btnRegPulDer.Name = "btnRegPulDer";
+            btnRegPulDer.Size = new Size(79, 27);
+            btnRegPulDer.TabIndex = 21;
+            btnRegPulDer.Text = "Registrar Huella";
+            btnRegPulDer.UseVisualStyleBackColor = true;
+            btnRegPulDer.Click += btnRegPulDer_Click;
             // 
-            // button3
+            // btnRegPulIzq
             // 
-            button3.Location = new Point(259, 357);
-            button3.Margin = new Padding(4, 3, 4, 3);
-            button3.Name = "button3";
-            button3.Size = new Size(79, 27);
-            button3.TabIndex = 22;
-            button3.Text = "Registrar Huella";
-            button3.UseVisualStyleBackColor = true;
+            btnRegPulIzq.Location = new Point(259, 357);
+            btnRegPulIzq.Margin = new Padding(4, 3, 4, 3);
+            btnRegPulIzq.Name = "btnRegPulIzq";
+            btnRegPulIzq.Size = new Size(79, 27);
+            btnRegPulIzq.TabIndex = 22;
+            btnRegPulIzq.Text = "Registrar Huella";
+            btnRegPulIzq.UseVisualStyleBackColor = true;
+            btnRegPulIzq.Click += btnRegPulIzq_Click;
             // 
             // frmRegistrar
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(1125, 457);
-            Controls.Add(button3);
-            Controls.Add(button2);
-            Controls.Add(button1);
+            Controls.Add(btnRegPulIzq);
+            Controls.Add(btnRegPulDer);
+            Controls.Add(btnRegIndIzq);
             Controls.Add(label9);
-            Controls.Add(textBox3);
+            Controls.Add(txtPulgarIzquierdo);
             Controls.Add(label8);
-            Controls.Add(textBox2);
+            Controls.Add(txtPulgarDerecho);
             Controls.Add(label7);
-            Controls.Add(textBox1);
+            Controls.Add(txtIndiceIzquierdo);
             Controls.Add(label6);
             Controls.Add(txtNombre);
             Controls.Add(label5);
@@ -296,10 +300,10 @@
             Controls.Add(txtId_ciudad);
             Controls.Add(label3);
             Controls.Add(dgvListar);
-            Controls.Add(btnRegistrarHuella);
-            Controls.Add(txtHuella);
+            Controls.Add(btnRegIndDer);
+            Controls.Add(txtIndiceDerecho);
             Controls.Add(txtPaterno);
-            Controls.Add(btnAgregar);
+            Controls.Add(btnGuardarUsuario);
             Controls.Add(label2);
             Controls.Add(label1);
             FormBorderStyle = FormBorderStyle.None;
@@ -316,10 +320,10 @@
 
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.Button btnAgregar;
+        private System.Windows.Forms.Button btnGuardarUsuario;
         private System.Windows.Forms.TextBox txtPaterno;
-        private System.Windows.Forms.TextBox txtHuella;
-        private System.Windows.Forms.Button btnRegistrarHuella;
+        private System.Windows.Forms.TextBox txtIndiceDerecho;
+        private System.Windows.Forms.Button btnRegIndDer;
         private System.Windows.Forms.DataGridView dgvListar;
         private System.Windows.Forms.TextBox txtId_ciudad;
         private System.Windows.Forms.Label label3;
@@ -329,13 +333,13 @@
         private Label label5;
         private Label label6;
         private Label label7;
-        private TextBox textBox1;
+        private TextBox txtIndiceIzquierdo;
         private Label label8;
-        private TextBox textBox2;
+        private TextBox txtPulgarDerecho;
         private Label label9;
-        private TextBox textBox3;
-        private Button button1;
-        private Button button2;
-        private Button button3;
+        private TextBox txtPulgarIzquierdo;
+        private Button btnRegIndIzq;
+        private Button btnRegPulDer;
+        private Button btnRegPulIzq;
     }
 }

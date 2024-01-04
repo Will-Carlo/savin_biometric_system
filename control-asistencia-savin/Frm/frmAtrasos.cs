@@ -55,7 +55,7 @@ namespace control_asistencia_savin
             {
                 lblNombre.Text = verificar.personalName;
 
-                if (lblNombre.Text != "")
+                if (verificar.statusProcess)
                 {
                     //lblStatusProcess.Left = _xStatus;
                     lblStatusProcess.Text = "Verficado.";
