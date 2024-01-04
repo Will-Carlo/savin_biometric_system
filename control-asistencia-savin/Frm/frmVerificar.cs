@@ -81,30 +81,30 @@ namespace control_asistencia_savin
 
                     foreach (byte[] finger in FingerList)
                     {
-                        if (finger != null)
+                        if (finger != null && !statusProcess)
                         {
-                            //MessageBox.Show("ind: " + emp.IndiceDerecho);
-                            //if (emp.IndiceDerecho != null)
-                            //{
-                        
-                                stream = new MemoryStream(finger);
-                                template = new DPFP.Template(stream);
-                                Verificator.Verify(features, template, ref result);
+                            //MessageBox.Show("ind: " + finger);
+                            stream = new MemoryStream(finger);
+                            template = new DPFP.Template(stream);
+                            Verificator.Verify(features, template, ref result);
 
-                                // Cuando el usuario es encontrado
-                                if (result.Verified)
-                                {
-                                    SetPrompt("VERIFICADO");
+                            // Cuando el usuario es encontrado
+                            if (result.Verified)
+                            {
+                                SetPrompt("VERIFICADO");
 
-                                    personalName = emp.Nombres + " " + emp.Paterno + " " + emp.Materno;
-                                    idEncontrado = emp.Id;
-                                    statusProcess = true;
-                                    Stop();
-                                    break;
-                                }
-                            //}
+                                personalName = emp.Nombres + " " + emp.Paterno + " " + emp.Materno;
+                                idEncontrado = emp.Id;
+                                statusProcess = true;
+                                //MessageBox.Show("stt: " + statusProcess);
+
+                                Stop();
+                                //break;
+                            }
                             else
                             {
+                                //MessageBox.Show("stt: " + statusProcess);
+
                                 statusProcess = false;
                                 SetPrompt("RECHAZADO");
                             }
@@ -119,5 +119,6 @@ namespace control_asistencia_savin
             contexto = new StoreContext();
             InitializeComponent();
         }
+
     }
 }

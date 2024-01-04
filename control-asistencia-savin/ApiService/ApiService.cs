@@ -76,22 +76,23 @@ namespace control_asistencia_savin.ApiService
         //        throw new HttpRequestException($"No se pudo conectar al servidor: {response.StatusCode}");
         //    }
         //}
-        public async Task<List<AuxAsistencia>> GetDataAsistenciaAsync(int idPersonal)
-        {
-            var response = await _httpClient.GetAsync(_getAsistenciaLink);
-            _httpClient.DefaultRequestHeaders.Add("IdPersonal", idPersonal.ToString());
+        //public async Task<List<AuxAsistencia>> GetDataAsistenciaAsync(int idPersonal)
+        //{
+        //    var response = await _httpClient.GetAsync(_getAsistenciaLink);
+        //    _httpClient.DefaultRequestHeaders.Add("IdPersonal", idPersonal.ToString());
 
-            if (response.IsSuccessStatusCode)
-            {
-                var json = await response.Content.ReadAsStringAsync();
-                var asistencias = JsonConvert.DeserializeObject<List<AuxAsistencia>>(json);
-                return asistencias;
-            }
-            else
-            {
-                throw new HttpRequestException($"Error al obtener los datos de asistencia: {response.StatusCode}");
-            }
-        }
+        //    if (response.IsSuccessStatusCode)
+        //    {
+        //        var json = await response.Content.ReadAsStringAsync();
+        //        var asistencias = JsonConvert.DeserializeObject<List<AuxAsistencia>>(json);
+        //        return asistencias;
+        //    }
+        //    else
+        //    {
+        //        throw new HttpRequestException($"Error al obtener los datos de asistencia: {response.StatusCode}");
+        //    }
+        //}
+
         public List<AuxAsistencia> GetDataAsistencia(int idPersonal)
         {
             _httpClient.DefaultRequestHeaders.Add("IdPersonal", idPersonal.ToString());
@@ -101,7 +102,15 @@ namespace control_asistencia_savin.ApiService
             {
                 var json = response.Content.ReadAsStringAsync().Result;
                 var asistencias = JsonConvert.DeserializeObject<List<AuxAsistencia>>(json);
-                return asistencias;
+                if (asistencias != null && asistencias.Any())
+                {
+                    return asistencias;
+                }
+                else
+                {
+                    // Devuelve una lista vacía si no hay asistencias
+                    return new List<AuxAsistencia>();
+                }
             }
             else
             {
@@ -132,7 +141,7 @@ namespace control_asistencia_savin.ApiService
 
             return "Dirección MAC no encontrada";
         }
-        public string GetNombreTienda()
+        public string? GetNombreTienda()
         {
             using (var context = new StoreContext())
             {

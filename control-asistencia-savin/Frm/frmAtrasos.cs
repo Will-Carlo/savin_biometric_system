@@ -53,28 +53,36 @@ namespace control_asistencia_savin
 
             try
             {
-                lblNombre.Text = verificar.personalName;
 
                 if (verificar.statusProcess)
                 {
                     //lblStatusProcess.Left = _xStatus;
-                    lblStatusProcess.Text = "Verficado.";
+                    lblStatusProcess.Text = "Verificado.";
                     lblStatusProcess.ForeColor = Color.Green;
                     lblStatusProcess.Visible = true;
                     // iniciando el evento de listado
                     _idPersonal = verificar.idEncontrado;
 
+                    lblNombre.Text = verificar.personalName;
 
                     _functionsDataBase = new ApiService.FunctionsDataBase();
                     _functionsDataBase.LimpiarAuxAsistencia();
                     _functionsDataBase.LoadDataBaseAsistencia(_idPersonal);
 
-                    CargarMesesEnComboBox(_idPersonal);
-                    //mostrar valores por defecto
-                    if (cbxPersonalMonth.Items.Count > 0)
+                    if (ExisteDatos())
                     {
-                        cbxPersonalMonth.SelectedIndex = 0;
+                        CargarMesesEnComboBox(_idPersonal);
+                        //mostrar valores por defecto
+                        if (cbxPersonalMonth.Items.Count > 0)
+                        {
+                            cbxPersonalMonth.SelectedIndex = 0;
+                        }
                     }
+                    else
+                    {
+                        MessageBox.Show("El personal no tiene datos de asistencia registrados");
+                    }
+
                 }
                 else
                 {
@@ -126,15 +134,23 @@ namespace control_asistencia_savin
                         //Muestra en pantalla los datos y hora
                         lblNombre.Visible = true;
 
+
                         _functionsDataBase = new ApiService.FunctionsDataBase();
                         _functionsDataBase.LimpiarAuxAsistencia();
                         _functionsDataBase.LoadDataBaseAsistencia(_idPersonal);
 
-
-                        CargarMesesEnComboBox(_idPersonal);
-                        if (cbxPersonalMonth.Items.Count > 0)
+                       if (ExisteDatos())
                         {
-                            cbxPersonalMonth.SelectedIndex = 0;
+                            CargarMesesEnComboBox(_idPersonal);
+                            //mostrar valores por defecto
+                            if (cbxPersonalMonth.Items.Count > 0)
+                            {
+                                cbxPersonalMonth.SelectedIndex = 0;
+                            }
+                        }
+                        else
+                        {
+                            MessageBox.Show("El personal no tiene datos de asistencia registrados");
                         }
 
                     }
@@ -485,7 +501,6 @@ namespace control_asistencia_savin
             GameOfClicks();
 
         }
-
         private void txtCodigo_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Enter)
@@ -493,6 +508,14 @@ namespace control_asistencia_savin
                 btnVerificarCode.PerformClick();
             }
         }
+        public bool ExisteDatos()
+        {
+            using (var context = new StoreContext()) 
+            {
+                return context.AuxAsistencia.Any();
+            }
+        }
+
     }
 }
 

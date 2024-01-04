@@ -36,14 +36,15 @@ namespace control_asistencia_savin
             try
             {
                 // si la verificación es correcta muestra en verde 'VERIFICADO'
+                //if (verificar.statusProcess)
                 if (verificar.statusProcess)
                 {
                     lblStatusProcess.Text = "VERIFICADO...";
                     lblStatusProcess.ForeColor = Color.Green;
                     lblStatusProcess.Visible = true;
                     // carga los datos del empleado en el label
-                    lblNombre.Text = verificar.personalName;
                     lblHora.Text = m.getHora();
+                    lblNombre.Text = verificar.personalName;
                     //Muestra en pantalla los datos y hora
                     lblNombre.Visible = true;
                     lblHora.Visible = true;

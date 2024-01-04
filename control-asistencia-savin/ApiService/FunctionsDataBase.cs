@@ -266,37 +266,37 @@ namespace control_asistencia_savin.ApiService
                 MessageBox.Show("Error al crear la copia de seguridad: " + ex.Message);
             }
         }
-        public async Task LoadDataBaseAsistenciaAsync(int idPersonal)
-        {
-            LimpiarAuxAsistencia();
-            try
-            {
-                var asistencias = await _apiService.GetDataAsistenciaAsync(idPersonal);
+        //public async Task LoadDataBaseAsistenciaAsync(int idPersonal)
+        //{
+        //    LimpiarAuxAsistencia();
+        //    try
+        //    {
+        //        var asistencias = await _apiService.GetDataAsistenciaAsync(idPersonal);
 
-                using (var context = new StoreContext())
-                {
-                    foreach (var asistencia in asistencias)
-                    {
-                        var existente = context.AuxAsistencia.Find(asistencia.Id);
-                        if (existente == null)
-                        {
-                            context.AuxAsistencia.Add(asistencia);
-                        }
-                        else
-                        {
-                            // Actualiza los datos si es necesario.
-                            context.Entry(existente).CurrentValues.SetValues(asistencia);
-                        }
-                    }
-                    await context.SaveChangesAsync();
-                    //MessageBox.Show("Asistencias guardadas con éxito.");
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Error al cargar asistencias: " + ex.Message, "Error");
-            }
-        }
+        //        using (var context = new StoreContext())
+        //        {
+        //            foreach (var asistencia in asistencias)
+        //            {
+        //                var existente = context.AuxAsistencia.Find(asistencia.Id);
+        //                if (existente == null)
+        //                {
+        //                    context.AuxAsistencia.Add(asistencia);
+        //                }
+        //                else
+        //                {
+        //                    // Actualiza los datos si es necesario.
+        //                    context.Entry(existente).CurrentValues.SetValues(asistencia);
+        //                }
+        //            }
+        //            await context.SaveChangesAsync();
+        //            //MessageBox.Show("Asistencias guardadas con éxito.");
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        MessageBox.Show("Error al cargar asistencias: " + ex.Message, "Error");
+        //    }
+        //}
         public void LoadDataBaseAsistencia(int idPersonal)
         {
             LimpiarAuxAsistencia();
