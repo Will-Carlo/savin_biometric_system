@@ -23,7 +23,7 @@ namespace control_asistencia_savin
         {
             InitializeComponent();
             btnVerificarHuellaCod.Text = "Leer Código";
-            lblStatusProcess.Left = 850;
+            lblStatusProcess.Left = 770;
             txtCodigo.Enabled = true;
             //lblStatusProcess.Enabled = false;
             _apiService = new ApiService.ApiService();
@@ -78,7 +78,8 @@ namespace control_asistencia_savin
                 {
                     if (PersonalName(IdPersonal) != null)
                     {
-                        lblStatusProcess.Text = "VERIFICADO...";
+                        string tipoMov = m.capturaIndMov(IdPersonal) == 461 ? "ENTRADA" : "SALIDA";
+                        lblStatusProcess.Text = tipoMov + " VERIFICADA";
                         lblStatusProcess.ForeColor = Color.Green;
                         lblStatusProcess.Visible = true;
                         // carga los datos del empleado en el label
@@ -107,7 +108,7 @@ namespace control_asistencia_savin
                     }
                     else
                     {
-                        lblStatusProcess.Text = "RECHAZADO...";
+                        lblStatusProcess.Text = "RECHAZADO";
                         lblStatusProcess.ForeColor = Color.Red;
                         lblStatusProcess.Visible = true;
                         MessageBox.Show("Código incorrecto.", "Error");

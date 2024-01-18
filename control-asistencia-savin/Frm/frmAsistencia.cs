@@ -39,7 +39,8 @@ namespace control_asistencia_savin
                 //if (verificar.statusProcess)
                 if (verificar.statusProcess)
                 {
-                    lblStatusProcess.Text = "VERIFICADO...";
+                    string tipoMov = m.capturaIndMov(verificar.idEncontrado) == 461 ? "ENTRADA" : "SALIDA";
+                    lblStatusProcess.Text = tipoMov + " VERIFICADA";
                     lblStatusProcess.ForeColor = Color.Green;
                     lblStatusProcess.Visible = true;
                     // carga los datos del empleado en el label
@@ -68,7 +69,7 @@ namespace control_asistencia_savin
                 }
                 else
                 {
-                    lblStatusProcess.Text = "RECHAZADO...";
+                    lblStatusProcess.Text = "ENTRADA "+"RECHAZADO...";
                     lblStatusProcess.ForeColor = Color.Red;
                     lblStatusProcess.Visible = true;
                     // No muestra en pantalla los datos y hora por el rechazo

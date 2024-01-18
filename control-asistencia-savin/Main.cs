@@ -87,7 +87,7 @@ namespace control_asistencia_savin
             {
                 this.lnkInicio.Visible = false;
                 this.lnkMarcarCodigo.Visible = false;
-                this.lnkVerAtrasos.Visible = false;
+                //this.lnkVerAtrasos.Visible = false;
                 //this.lnkVerAtrasosMes.Visible = false;
                 //this.lnkRegistrar.Visible = false;
                 //this.lnkApiTest.Visible = false;
@@ -96,7 +96,7 @@ namespace control_asistencia_savin
             {
                 this.lnkInicio.Visible = true;
                 this.lnkMarcarCodigo.Visible = true;
-                this.lnkVerAtrasos.Visible = true;
+                //this.lnkVerAtrasos.Visible = true;
                 //this.lnkVerAtrasosMes.Visible = true;
                 //this.lnkRegistrar.Visible = true;
                 //this.lnkApiTest.Visible = true;

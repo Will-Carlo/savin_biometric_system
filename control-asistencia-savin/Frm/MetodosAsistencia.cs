@@ -14,18 +14,15 @@ namespace control_asistencia_savin.Frm
         {
             _capturaHoraMarcado = capturaHoraMarcado;
         }
-
         public string getCapturaHoraMarcado()
         {
             return _capturaHoraMarcado;
         }
-
         public string getHora()
         {
             DateTime getDateToString = DateTime.Parse(_capturaHoraMarcado);
             return getDateToString.ToString("HH:mm:ss");
         }
-
         public int capturaMinAtraso(int IdPersonal)
         {
             // Parse the captured time string to a DateTime object
@@ -60,7 +57,6 @@ namespace control_asistencia_savin.Frm
             // If none of the conditions are met, return 0
             return 0;
         }
-
         //public int capturaMinAtraso()
         //{
         //    // Parse the captured time string to a DateTime object
@@ -117,7 +113,6 @@ namespace control_asistencia_savin.Frm
         //        return 462;
         //    }
         //}
-
         public int capturaIndMov(int idPersonal)
         {
             using (var context = new StoreContext())
@@ -132,8 +127,6 @@ namespace control_asistencia_savin.Frm
                 return ultimoRegistro == 461 ? 462 : 461;
             }
         }
-
-
         public int capturaIdTurno()
         {
             if (!EsSabado())
@@ -145,8 +138,6 @@ namespace control_asistencia_savin.Frm
             }
             return 3;
         }
-
-
         public bool validarTurno(int idPersonal, int idTurno)
         {
             using (var context = new StoreContext())
@@ -158,7 +149,6 @@ namespace control_asistencia_savin.Frm
                 return asignacion; // True si existe la asignación, False de lo contrario
             }
         }
-
         public int getIdTurno(int idPersonal)
         {
             int idTurno = this.capturaIdTurno();
@@ -172,16 +162,14 @@ namespace control_asistencia_savin.Frm
                 return 0;
             }
         }
-
-        public string turnoNombre(int idTurno)
-        {
-            using (var context = new StoreContext())
-            {
-                var turno = context.RrhhTurnos.Find(idTurno);
-                return turno?.Nombre; // Devuelve el nombre si se encuentra el turno, o null si no se encuentra
-            }
-        }
-
+        //public string turnoNombre(int idTurno)
+        //{
+        //    using (var context = new StoreContext())
+        //    {
+        //        var turno = context.RrhhTurnos.Find(idTurno);
+        //        return turno?.Nombre; // Devuelve el nombre si se encuentra el turno, o null si no se encuentra
+        //    }
+        //}
         public string turnoNombre2(int idTurno)
         {
             switch (idTurno)
@@ -192,12 +180,10 @@ namespace control_asistencia_savin.Frm
             }
             return "";
         }
-
         public bool EsSabado()
         {
             return DateTime.Today.DayOfWeek == DayOfWeek.Saturday;
         }
-
         public void AddAsistencia(RrhhAsistencia item)
         {
             using (var db = new StoreContext())
@@ -206,6 +192,5 @@ namespace control_asistencia_savin.Frm
                 db.SaveChanges();
             }
         }
-
     }
 }

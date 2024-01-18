@@ -10,6 +10,7 @@
     <PlatformTarget>AnyCPU</PlatformTarget>
     <Platforms>AnyCPU;x64;x86</Platforms>
     <ApplicationIcon>savin.ico</ApplicationIcon>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
   </PropertyGroup>
 
   <ItemGroup>
