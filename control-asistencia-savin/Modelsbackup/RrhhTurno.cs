@@ -13,6 +13,8 @@ public partial class RrhhTurno
 
     public TimeSpan? HoraSalida { get; set; }
 
+    public virtual ICollection<AuxAsistencia> AuxAsistencia { get; set; } = new List<AuxAsistencia>();
+
     public virtual ICollection<RrhhAsistencia> RrhhAsistencia { get; set; } = new List<RrhhAsistencia>();
 
     public virtual ICollection<RrhhTurnoAsignado> RrhhTurnoAsignados { get; set; } = new List<RrhhTurnoAsignado>();

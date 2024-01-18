@@ -73,7 +73,7 @@ namespace control_asistencia_savin
                 int IdPersonal = BuscarIdPersonal(txtCodigo.Text);
                 // guardamos el código en una variaable
                 String txtCod = txtCodigo.Text;
-
+                txtCodigo.Text = "";
                 if (txtCod != "")
                 {
                     if (PersonalName(IdPersonal) != null)

@@ -69,7 +69,7 @@ namespace control_asistencia_savin
                 }
                 else
                 {
-                    lblStatusProcess.Text = "ENTRADA "+"RECHAZADO...";
+                    lblStatusProcess.Text = "RECHAZADO...";
                     lblStatusProcess.ForeColor = Color.Red;
                     lblStatusProcess.Visible = true;
                     // No muestra en pantalla los datos y hora por el rechazo

@@ -165,6 +165,10 @@ public partial class StoreContext : DbContext
             entity.HasOne(d => d.IdAlmacenNavigation).WithMany(p => p.RrhhPuntoAsistencia).HasForeignKey(d => d.IdAlmacen);
 
             entity.HasOne(d => d.IdSucursalNavigation).WithMany(p => p.RrhhPuntoAsistencia).HasForeignKey(d => d.IdSucursal);
+
+            entity.HasOne(d => d.ResponsableNavigation).WithMany(p => p.RrhhPuntoAsistencia)
+                .HasForeignKey(d => d.Responsable)
+                .OnDelete(DeleteBehavior.ClientSetNull);
         });
 
         modelBuilder.Entity<RrhhTurno>(entity =>

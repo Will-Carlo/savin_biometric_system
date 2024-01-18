@@ -9,7 +9,7 @@ public partial class RrhhFeriado
 
     public int? IdCiudad { get; set; }
 
-    public string? Fecha { get; set; }
+    public DateOnly? Fecha { get; set; }
 
     public int? IndTipoFeriado { get; set; }
 
