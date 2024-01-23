@@ -25,6 +25,14 @@
 .DS_Store
 Thumbs.db
 
-#Backups de la Base de Datos
+# Backups de la Base de Datos
 backup/
 control-asistencia-savin/backup/
+
+# Archivo ApiService
+control-asistencia-savin/ApiService/ApiService.cs
+
+
+
+
+
