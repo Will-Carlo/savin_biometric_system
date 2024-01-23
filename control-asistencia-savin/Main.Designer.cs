@@ -328,8 +328,8 @@
             // pnlInfoStore
             // 
             pnlInfoStore.BackColor = Color.White;
-            pnlInfoStore.Controls.Add(lblSisAsis);
             pnlInfoStore.Controls.Add(lblPunto);
+            pnlInfoStore.Controls.Add(lblSisAsis);
             pnlInfoStore.Dock = DockStyle.Top;
             pnlInfoStore.Location = new Point(225, 0);
             pnlInfoStore.Name = "pnlInfoStore";

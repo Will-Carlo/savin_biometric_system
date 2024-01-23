@@ -9,9 +9,9 @@ public partial class RrhhTurno
 
     public string? Nombre { get; set; }
 
-    public TimeSpan? HoraIngreso { get; set; }
+    public string? HoraIngreso { get; set; }
 
-    public TimeSpan? HoraSalida { get; set; }
+    public string? HoraSalida { get; set; }
 
     public virtual ICollection<AuxAsistencia> AuxAsistencia { get; set; } = new List<AuxAsistencia>();
 

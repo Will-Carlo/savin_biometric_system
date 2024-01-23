@@ -6,6 +6,7 @@ using System.Data;
 using System.Drawing;
 using System.Linq;
 using System.Net.NetworkInformation;
+using System.Reflection.Emit;
 using System.Text;
 using System.Windows.Forms;
 
@@ -37,8 +38,20 @@ namespace control_asistencia_savin
             loadSystem();
             AbrirForm(new frmAsistencia());
 
+
             // Pidiendo datos de la tienda por dirección MAC
             lblPunto.Text = "Punto: " + _apiService.nomTienda;
+
+            //CENTRANDO TÍTULOS
+            lblSisAsis.AutoSize = true;
+            lblPunto.AutoSize = true;
+            int x1 = (this.pnlInfoStore.Width - lblSisAsis.Width) / 2;
+            int x2 = (this.pnlInfoStore.Width - lblPunto.Width) / 2;
+            int y1 = lblSisAsis.Location.Y;
+            int y2 = lblPunto.Location.Y;
+
+            lblSisAsis.Location = new System.Drawing.Point(x1, y1);
+            lblPunto.Location = new System.Drawing.Point(x2, y2);
         }
         private void loadSystem()
         {
@@ -67,6 +80,15 @@ namespace control_asistencia_savin
         {
             lblTime.Text = DateTime.Now.ToString("HH:mm:ss");
             lblFecha.Text = DateTime.Now.ToString("dd/MM/yyyy");
+
+            int x1 = (this.pnlHora.Width - lblTime.Width) / 2;
+            int y1 = lblTime.Location.Y;
+
+            int x2 = (this.pnlHora.Width - lblFecha.Width) / 2;
+            int y2 = lblFecha.Location.Y;
+
+            lblTime.Location = new System.Drawing.Point(x1, y1);
+            lblFecha.Location = new System.Drawing.Point(x2, y2);
         }
         public void AbrirForm(object subForm)
         {
@@ -87,8 +109,8 @@ namespace control_asistencia_savin
             {
                 this.lnkInicio.Visible = false;
                 this.lnkMarcarCodigo.Visible = false;
-                this.lnkVerAtrasos.Visible = false;
-                this.lnkVerAtrasosMes.Visible = false;
+                //this.lnkVerAtrasos.Visible = false;
+                //this.lnkVerAtrasosMes.Visible = false;
                 this.lnkRegistrar.Visible = false;
                 this.lnkApiTest.Visible = false;
             }
@@ -96,8 +118,8 @@ namespace control_asistencia_savin
             {
                 this.lnkInicio.Visible = true;
                 this.lnkMarcarCodigo.Visible = true;
-                this.lnkVerAtrasos.Visible = true;
-                this.lnkVerAtrasosMes.Visible = true;
+                //this.lnkVerAtrasos.Visible = true;
+                //this.lnkVerAtrasosMes.Visible = true;
                 this.lnkRegistrar.Visible = true;
                 this.lnkApiTest.Visible = true;
             }
@@ -148,5 +170,6 @@ namespace control_asistencia_savin
                 _functionsDataBase.BackUpDB(_fecha.Replace("/", "_")+"_"+_hora.Replace(":", "_"));
             }
         }
+
     }
 }

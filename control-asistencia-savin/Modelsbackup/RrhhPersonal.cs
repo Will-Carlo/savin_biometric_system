@@ -29,5 +29,7 @@ public partial class RrhhPersonal
 
     public virtual ICollection<RrhhAsistencia> RrhhAsistencia { get; set; } = new List<RrhhAsistencia>();
 
+    public virtual ICollection<RrhhPuntoAsistencia> RrhhPuntoAsistencia { get; set; } = new List<RrhhPuntoAsistencia>();
+
     public virtual ICollection<RrhhTurnoAsignado> RrhhTurnoAsignados { get; set; } = new List<RrhhTurnoAsignado>();
 }

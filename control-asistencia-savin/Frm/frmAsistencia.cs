@@ -62,6 +62,7 @@ namespace control_asistencia_savin
 
                     // Enviando datos al API REST
                     var response = _apiService.RegistrarAsistenciaAsync(regisAsis);
+
                     //if (response != null)
                     //{
                     //    MessageBox.Show("Asistencia enviada al servidor con éxito: " + response.Status);
@@ -69,28 +70,39 @@ namespace control_asistencia_savin
                 }
                 else
                 {
-                    lblStatusProcess.Text = "RECHAZADO...";
-                    lblStatusProcess.ForeColor = Color.Red;
-                    lblStatusProcess.Visible = true;
-                    // No muestra en pantalla los datos y hora por el rechazo
-                    lblNombre.Visible = false;
-                    lblHora.Visible = false;
+                    CleanLabels();
                 }
             }
             catch (DbUpdateException ex)
             {
                 // Si hay una excepción interna, muestra su mensaje; de lo contrario, muestra el mensaje de la excepción principal.
                 MessageBox.Show(ex.InnerException?.Message ?? ex.Message, "Error al guardar datos");
+                CleanLabels();
+
             }
             catch (HttpRequestException ex)
             {
                 MessageBox.Show("Error: "+ex.Message);
+                CleanLabels();
+
             }
             catch (Exception ex)
             {
                 MessageBox.Show("error: " + ex.Message, "Error");
+                CleanLabels();
+
             }
 
+        }
+
+        private void CleanLabels()
+        {
+            lblStatusProcess.Text = "RECHAZADO...";
+            lblStatusProcess.ForeColor = Color.Red;
+            lblStatusProcess.Visible = true;
+            // No muestra en pantalla los datos y hora por el rechazo
+            lblNombre.Visible = false;
+            lblHora.Visible = false;
         }
 
         //private void btnVerificar_Click_1(object sender, EventArgs e)

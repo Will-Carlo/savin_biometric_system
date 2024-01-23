@@ -8,8 +8,8 @@ using System.Text;
 using System.Threading.Tasks;
 
 //Comando para actualiza los modelos desde la base de datos
-//Scaffold - DbContext "Data Source=store.db" Microsoft.EntityFrameworkCore.Sqlite -OutputDir Models
-//Scaffold - DbContext "Data Source=store.db" Microsoft.EntityFrameworkCore.Sqlite -OutputDir Models
+//Scaffold-DbContext "Data Source=store.db" Microsoft.EntityFrameworkCore.Sqlite -OutputDir Models
+//Scaffold-DbContext "Data Source=store.db" Microsoft.EntityFrameworkCore.Sqlite -OutputDir Models
 
 
 namespace control_asistencia_savin.ApiService
@@ -34,7 +34,7 @@ namespace control_asistencia_savin.ApiService
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"No se pudo conectar al servidor: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                //MessageBox.Show($"No se pudo conectar al servidor: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 

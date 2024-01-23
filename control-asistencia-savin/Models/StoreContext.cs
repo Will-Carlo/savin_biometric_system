@@ -158,17 +158,15 @@ public partial class StoreContext : DbContext
             entity.Property(e => e.Direccion).HasColumnName("direccion");
             entity.Property(e => e.DireccionMac).HasColumnName("direccion_mac");
             entity.Property(e => e.IdAlmacen).HasColumnName("id_almacen");
+            entity.Property(e => e.IdPersonal).HasColumnName("id_personal");
             entity.Property(e => e.IdSucursal).HasColumnName("id_sucursal");
             entity.Property(e => e.Nombre).HasColumnName("nombre");
-            entity.Property(e => e.Responsable).HasColumnName("responsable");
 
             entity.HasOne(d => d.IdAlmacenNavigation).WithMany(p => p.RrhhPuntoAsistencia).HasForeignKey(d => d.IdAlmacen);
 
-            entity.HasOne(d => d.IdSucursalNavigation).WithMany(p => p.RrhhPuntoAsistencia).HasForeignKey(d => d.IdSucursal);
+            entity.HasOne(d => d.IdPersonalNavigation).WithMany(p => p.RrhhPuntoAsistencia).HasForeignKey(d => d.IdPersonal);
 
-            entity.HasOne(d => d.ResponsableNavigation).WithMany(p => p.RrhhPuntoAsistencia)
-                .HasForeignKey(d => d.Responsable)
-                .OnDelete(DeleteBehavior.ClientSetNull);
+            entity.HasOne(d => d.IdSucursalNavigation).WithMany(p => p.RrhhPuntoAsistencia).HasForeignKey(d => d.IdSucursal);
         });
 
         modelBuilder.Entity<RrhhTurno>(entity =>
