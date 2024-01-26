@@ -51,6 +51,7 @@
             btnRegIndIzq = new Button();
             btnRegPulDer = new Button();
             btnRegPulIzq = new Button();
+            btnReportTxt = new Button();
             ((System.ComponentModel.ISupportInitialize)dgvListar).BeginInit();
             SuspendLayout();
             // 
@@ -278,11 +279,22 @@
             btnRegPulIzq.UseVisualStyleBackColor = true;
             btnRegPulIzq.Click += btnRegPulIzq_Click;
             // 
+            // btnReportTxt
+            // 
+            btnReportTxt.Location = new Point(355, 420);
+            btnReportTxt.Name = "btnReportTxt";
+            btnReportTxt.Size = new Size(138, 23);
+            btnReportTxt.TabIndex = 23;
+            btnReportTxt.Text = "Generar Reporte";
+            btnReportTxt.UseVisualStyleBackColor = true;
+            btnReportTxt.Click += btnReportTxt_Click;
+            // 
             // frmRegistrar
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(1125, 457);
+            Controls.Add(btnReportTxt);
             Controls.Add(btnRegPulIzq);
             Controls.Add(btnRegPulDer);
             Controls.Add(btnRegIndIzq);
@@ -341,5 +353,6 @@
         private Button btnRegIndIzq;
         private Button btnRegPulDer;
         private Button btnRegPulIzq;
+        private Button btnReportTxt;
     }
 }

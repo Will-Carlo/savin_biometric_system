@@ -1,5 +1,6 @@
 ﻿using control_asistencia_savin;
 using control_asistencia_savin.Models;
+using Newtonsoft.Json;
 using System;
 
 using System.Collections.Generic;
@@ -144,6 +145,7 @@ namespace control_asistencia_savin
                 byte[]? streamHuella2 = TemplateIndIzq != null ? TemplateIndIzq.Bytes : null;
                 byte[]? streamHuella3 = TemplatePulDer != null ? TemplatePulDer.Bytes : null;
                 byte[]? streamHuella4 = TemplatePulIzq != null ? TemplatePulIzq.Bytes : null;
+
                 RrhhPersonal personal = new RrhhPersonal()
                 {
                     //Id = 1,
@@ -162,7 +164,7 @@ namespace control_asistencia_savin
                 Listar();
                 TemplateIndDer = null;
                 TemplateIndIzq = null;
-                TemplatePulDer  = null;
+                TemplatePulDer = null;
                 TemplatePulIzq = null;
                 btnGuardarUsuario.Enabled = false;
             }
@@ -174,7 +176,189 @@ namespace control_asistencia_savin
                 MessageBox.Show(errorMessage, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
-        void AddPersonal(RrhhPersonal item)
+
+        private void SaveFingerText()
+        {
+            try
+            {
+                string filePath = "fingers.js";
+                string name = txtNombre.Text + " " + txtPaterno.Text + " " + txtMaterno.Text;
+
+
+                byte[]? streamHuella1 = TemplateIndDer != null ? TemplateIndDer.Bytes : null;
+                byte[]? streamHuella2 = TemplateIndIzq != null ? TemplateIndIzq.Bytes : null;
+                byte[]? streamHuella3 = TemplatePulDer != null ? TemplatePulDer.Bytes : null;
+                byte[]? streamHuella4 = TemplatePulIzq != null ? TemplatePulIzq.Bytes : null;
+
+                string IndiceDerecho = "";
+                string IndiceIzquierdo = "";
+                string PulgarDerecho = "";
+                string PulgarIzquierdo = "";
+
+
+                string currentContent = File.Exists(filePath) ? File.ReadAllText(filePath) : "";
+
+                if (streamHuella1 != null)
+                {
+                    byte[] datoPrueba = streamHuella1;
+                    IndiceDerecho = Convert.ToBase64String(datoPrueba);
+                }
+
+                if (streamHuella2 != null)
+                {
+                    byte[] datoPrueba = streamHuella2;
+                    IndiceIzquierdo = Convert.ToBase64String(datoPrueba);
+                }
+
+                if (streamHuella3 != null)
+                {
+                    byte[] datoPrueba = streamHuella3;
+                    PulgarDerecho = Convert.ToBase64String(datoPrueba);
+                }
+
+                if (streamHuella4 != null)
+                {
+                    byte[] datoPrueba = streamHuella4;
+                    PulgarIzquierdo = Convert.ToBase64String(datoPrueba);
+                }
+
+
+                var regFinger = new
+                {
+                    Nombre = name,
+                    Indice_Derecho = IndiceDerecho,
+                    Indice_Izquierdo = IndiceIzquierdo,
+                    Pulgar_Derecho = PulgarDerecho,
+                    Pulgar_Izquierdo = PulgarIzquierdo
+                };
+
+                string json = JsonConvert.SerializeObject(regFinger);
+
+                // Agregar un salto de línea si el archivo ya contiene datos
+                if (!string.IsNullOrEmpty(currentContent))
+                {
+                    json = Environment.NewLine + json;
+                }
+
+                // Concatenar el nuevo registro al contenido actual y escribir en el archivo
+                File.AppendAllText(filePath, json);
+
+                MessageBox.Show("Datos guardados en personal.js correctamente.", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error al guardar en el archivo: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void SaveFingerInArray(string name, byte[] f1, byte[] f2, byte[] f3, byte[] f4)
+        {
+            try
+            {
+                string filePath = "fingers.js";
+                //string name = item.Nombres + " " + item.Paterno + " " + item.Materno;
+
+
+                byte[]? streamHuella1 = f1 != null ? f1 : null;
+                byte[]? streamHuella2 = f2 != null ? f2 : null;
+                byte[]? streamHuella3 = f3 != null ? f3 : null;
+                byte[]? streamHuella4 = f4 != null ? f4 : null;
+
+                string IndiceDerecho = "";
+                string IndiceIzquierdo = "";
+                string PulgarDerecho = "";
+                string PulgarIzquierdo = "";
+
+
+                string currentContent = File.Exists(filePath) ? File.ReadAllText(filePath) : "";
+
+                if (streamHuella1 != null)
+                {
+                    byte[] datoPrueba = streamHuella1;
+                    IndiceDerecho = Convert.ToBase64String(datoPrueba);
+                }
+
+                if (streamHuella2 != null)
+                {
+                    byte[] datoPrueba = streamHuella2;
+                    IndiceIzquierdo = Convert.ToBase64String(datoPrueba);
+                }
+
+                if (streamHuella3 != null)
+                {
+                    byte[] datoPrueba = streamHuella3;
+                    PulgarDerecho = Convert.ToBase64String(datoPrueba);
+                }
+
+                if (streamHuella4 != null)
+                {
+                    byte[] datoPrueba = streamHuella4;
+                    PulgarIzquierdo = Convert.ToBase64String(datoPrueba);
+                }
+
+
+                var regFinger = new
+                {
+                    Nombre = name,
+                    Indice_Derecho = IndiceDerecho,
+                    Indice_Izquierdo = IndiceIzquierdo,
+                    Pulgar_Derecho = PulgarDerecho,
+                    Pulgar_Izquierdo = PulgarIzquierdo
+                };
+
+                string json = JsonConvert.SerializeObject(regFinger);
+
+                // Agregar un salto de línea si el archivo ya contiene datos
+                if (!string.IsNullOrEmpty(currentContent))
+                {
+                    json = Environment.NewLine + json;
+                }
+
+                // Concatenar el nuevo registro al contenido actual y escribir en el archivo
+                File.AppendAllText(filePath, json);
+
+                MessageBox.Show("Datos guardados en personal.js correctamente.", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error al guardar en el archivo: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void SaveReportJS()
+        {
+            try
+            {
+                var personal = from emp in contexto.RrhhPersonals
+                               select new
+                               {
+                                   Name = emp.Nombres + " " + emp.Paterno + " " + emp.Materno,
+                                   RightIndexFinger = emp.IndiceDerecho != null ? emp.IndiceDerecho : null,
+                                   LeftIndexFinger = emp.IndiceIzquierdo != null ? emp.IndiceIzquierdo : null,
+                                   RightThumb = emp.PulgarDerecho != null ? emp.PulgarDerecho : null,
+                                   LeftThumb= emp.PulgarIzquierdo != null ? emp.PulgarIzquierdo : null,
+                               };
+                foreach (var item in personal)
+                {
+                    SaveFingerInArray(item.Name, item.RightIndexFinger, item.LeftIndexFinger, item.RightThumb, item.LeftThumb);
+                }
+
+
+                //if (personal != null)
+                //{
+                //    dgvListar.DataSource = personal.ToList();
+                //}
+            }
+            catch (Exception ex)
+            {
+
+                MessageBox.Show(ex.Message);
+
+            }
+        }
+        private void AddPersonal(RrhhPersonal item)
         {
             using (var db = new StoreContext())
             {
@@ -204,7 +388,11 @@ namespace control_asistencia_savin
         {
             CapturarHuella capturar = new CapturarHuella();
             capturar.OnTemplate += this.OnTemplatePulIzq;
-            capturar.ShowDialog(); 
+            capturar.ShowDialog();
+        }
+        private void btnReportTxt_Click(object sender, EventArgs e)
+        {
+            SaveReportJS();
         }
     }
 }

@@ -13,25 +13,30 @@ namespace control_asistencia_savin.ApiService
     public class ApiService
     {
         private readonly HttpClient _httpClient = new HttpClient();
-        //private String _getApiLink = "http://200.105.183.173:8080/savin-rest/ws/biometrico/listar-estructura-biometrico";
-        //private String _postApiLink = "http://200.105.183.173:8080/savin-rest/ws/biometrico/registrar-asistencia";
-        //private String _getAsistenciaLink = "http://200.105.183.173:8080/savin-rest/ws/biometrico/listar-asistencia-personal";
+        private String _getApiLink = "http://200.105.183.173:8080/savin-rest/ws/biometrico/listar-estructura-biometrico";
+        private String _postApiLink = "http://200.105.183.173:8080/savin-rest/ws/biometrico/registrar-asistencia";
+        private String _getAsistenciaLink = "http://200.105.183.173:8080/savin-rest/ws/biometrico/listar-asistencia-personal";
 
-        private String _getApiLink = "http://54.177.210.26:8080/savin-rest/ws/biometrico/listar-estructura-biometrico";
-        private String _postApiLink = "http://54.177.210.26:8080/savin-rest/ws/biometrico/registrar-asistencia";
-        private String _getAsistenciaLink = "http://54.177.210.26:8080/savin-rest/ws/biometrico/listar-asistencia-personal";
+        //private String _getApiLink = "http://54.177.210.26:8080/savin-rest/ws/biometrico/listar-estructura-biometrico";
+        //private String _postApiLink = "http://54.177.210.26:8080/savin-rest/ws/biometrico/registrar-asistencia";
+        //private String _getAsistenciaLink = "http://54.177.210.26:8080/savin-rest/ws/biometrico/listar-asistencia-personal";
         private String dirMac = "";
         public String nomTienda = "";
 
         public ApiService()
         {
-            dirMac = macAddress();
+            //dirMac = macAddress();
             //dirMac = "20-16-B9-42-9F-CD";
             // GOITIA
-            //dirMac = "14-B3-1F-11-AB-CF";
+            dirMac = "14-B3-1F-11-AB-CF";
             nomTienda = GetNombreTienda();
             _httpClient.DefaultRequestHeaders.Add("Tkn", "SavinBio-23%");
             _httpClient.DefaultRequestHeaders.Add("DirMac", dirMac);
+        }
+
+        public String getDirMac()
+        {
+            return this.dirMac;
         }
 
         //public async Task<ModelJson> GetDataAsync()
