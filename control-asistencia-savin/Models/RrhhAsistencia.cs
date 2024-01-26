@@ -17,7 +17,11 @@ public partial class RrhhAsistencia
 
     public int? IndTipoMovimiento { get; set; }
 
+    public int IdPuntoAsistencia { get; set; }
+
     public virtual RrhhPersonal IdPersonalNavigation { get; set; } = null!;
+
+    public virtual RrhhPuntoAsistencia IdPuntoAsistenciaNavigation { get; set; } = null!;
 
     public virtual RrhhTurno IdTurnoNavigation { get; set; } = null!;
 }

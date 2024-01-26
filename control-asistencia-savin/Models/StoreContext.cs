@@ -100,12 +100,17 @@ public partial class StoreContext : DbContext
             entity.Property(e => e.Id).HasColumnName("id");
             entity.Property(e => e.HoraMarcado).HasColumnName("hora_marcado");
             entity.Property(e => e.IdPersonal).HasColumnName("id_personal");
+            entity.Property(e => e.IdPuntoAsistencia).HasColumnName("id_punto_asistencia");
             entity.Property(e => e.IdTurno).HasColumnName("id_turno");
             entity.Property(e => e.IndTipoMovimiento).HasColumnName("ind_tipo_movimiento");
             entity.Property(e => e.MinutosAtraso).HasColumnName("minutos_atraso");
 
             entity.HasOne(d => d.IdPersonalNavigation).WithMany(p => p.RrhhAsistencia)
                 .HasForeignKey(d => d.IdPersonal)
+                .OnDelete(DeleteBehavior.ClientSetNull);
+
+            entity.HasOne(d => d.IdPuntoAsistenciaNavigation).WithMany(p => p.RrhhAsistencia)
+                .HasForeignKey(d => d.IdPuntoAsistencia)
                 .OnDelete(DeleteBehavior.ClientSetNull);
 
             entity.HasOne(d => d.IdTurnoNavigation).WithMany(p => p.RrhhAsistencia)
@@ -160,6 +165,7 @@ public partial class StoreContext : DbContext
             entity.Property(e => e.IdAlmacen).HasColumnName("id_almacen");
             entity.Property(e => e.IdPersonal).HasColumnName("id_personal");
             entity.Property(e => e.IdSucursal).HasColumnName("id_sucursal");
+            entity.Property(e => e.MinutosTolerancia).HasColumnName("minutos_tolerancia");
             entity.Property(e => e.Nombre).HasColumnName("nombre");
 
             entity.HasOne(d => d.IdAlmacenNavigation).WithMany(p => p.RrhhPuntoAsistencia).HasForeignKey(d => d.IdAlmacen);

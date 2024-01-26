@@ -381,5 +381,27 @@ namespace control_asistencia_savin.ApiService
                 //MessageBox.Show($"El directorio {backupDirectory} no existe.");
             }
         }
+
+        public void ModificarHoraMarcado(int IdPersonal, string HoraAnterior, int IdPuntoAsistencia)
+        {
+            using (var dbContext = new StoreContext())
+            {
+                // Buscar el registro que cumple con los criterios de búsqueda
+                var registro = dbContext.RrhhAsistencia
+                    .FirstOrDefault(a => a.IdPersonal == IdPersonal &&
+                                         a.HoraMarcado == HoraAnterior &&
+                                         a.IdPuntoAsistencia == IdPuntoAsistencia);
+
+                // Verificar si se encontró el registro
+                if (registro != null)
+                {
+                    // Modificar los minutos_atraso a 0
+                    registro.MinutosAtraso = 0;
+
+                    // Guardar los cambios en la base de datos
+                    dbContext.SaveChanges();
+                }
+            }
+        }
     }
 }

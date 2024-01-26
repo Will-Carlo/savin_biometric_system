@@ -78,7 +78,7 @@ namespace control_asistencia_savin
                 {
                     if (PersonalName(IdPersonal) != null)
                     {
-                        string tipoMov = m.capturaIndMov(IdPersonal) == 461 ? "ENTRADA" : "SALIDA";
+                        string tipoMov = m.capturaTipoMovimiento(IdPersonal) == 461 ? "ENTRADA" : "SALIDA";
                         lblStatusProcess.Text = tipoMov + " VERIFICADA";
                         lblStatusProcess.ForeColor = Color.Green;
                         lblStatusProcess.Visible = true;
@@ -91,13 +91,14 @@ namespace control_asistencia_savin
 
                         RrhhAsistencia regisAsis = new RrhhAsistencia()
                         {
-                            IdTurno = m.capturaIdTurno(),
+                            IdTurno = m.getIdTurno(IdPersonal),
                             IdPersonal = IdPersonal,
-                            HoraMarcado = m.getCapturaHoraMarcado(),
-                            MinutosAtraso = m.capturaMinAtraso(IdPersonal),
-                            IndTipoMovimiento = m.capturaIndMov(IdPersonal)
+                            HoraMarcado = m.getHoraMarcado(),
+                            MinutosAtraso = m.getMinutosAtraso(IdPersonal),
+                            IndTipoMovimiento = m.getIndTipoMovimiento(IdPersonal),
+                            IdPuntoAsistencia = m.getIdPuntoAsistencia()
                         };
-                        m.AddAsistencia(regisAsis);
+                        m.setAddAsistencia(regisAsis);
 
                         // Enviando datos al API REST
                         var response = _apiService.RegistrarAsistenciaAsync(regisAsis);

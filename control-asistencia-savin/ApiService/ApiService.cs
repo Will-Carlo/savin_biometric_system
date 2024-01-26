@@ -167,7 +167,8 @@ namespace control_asistencia_savin.ApiService
                 idPersonal = asistencia.IdPersonal,
                 horaMarcado = asistencia.HoraMarcado,
                 minutosAtraso = asistencia.MinutosAtraso,
-                indTipoMovimiento = asistencia.IndTipoMovimiento
+                indTipoMovimiento = asistencia.IndTipoMovimiento,
+                idPuntoAsistencia = asistencia.IdPuntoAsistencia
             };
 
             string jsonContent = JsonConvert.SerializeObject(regAsistencia);
