@@ -12,6 +12,8 @@ namespace control_asistencia_savin.Frm
     internal class MetodosAsistencia
     {
         private ApiService.FunctionsDataBase _functionsDataBase = new FunctionsDataBase();
+        private readonly ApiService.ApiService _apiService = new ApiService.ApiService();
+
 
         private string _capturaHoraMarcado = "";
         // PROCEDIMIENTOS PARA EL REGISTRO DE ASISTENCIA
@@ -221,8 +223,11 @@ namespace control_asistencia_savin.Frm
             DateTime horaMarcada = DateTime.Parse(this._capturaHoraMarcado); // 16:00:00
             DateTime horaAnterior = DateTime.Parse(this.getAnteriorHora(IdPersonal)); // 15:00:00
 
-            // comparamos y hacemos la sumatoria de minutos
+            // Hacemos las modificaciones en la base de datos local y en la API
             _functionsDataBase.ModificarHoraMarcado(IdPersonal, this.getAnteriorHora(IdPersonal), this.capturaIdPuntoAsistencia());
+            _apiService.ModificarAsistenciaAsync(IdPersonal, this.getAnteriorHora(IdPersonal), this.capturaIdPuntoAsistencia());
+            
+            // comparamos y hacemos la sumatoria de minutos
             return  (int)(horaMarcada - horaAnterior).TotalMinutes;
             
             //return 69;
@@ -255,11 +260,12 @@ namespace control_asistencia_savin.Frm
             // reconvertirmos la hora capturada del personal
             DateTime horaMarcada = DateTime.Parse(this._capturaHoraMarcado);
             int idTurno = capturaIdTurno();
+            int MinTol = _functionsDataBase.MinutosDeTolerancia();
 
             // definimos los hoarios de entrada
-            var tiempoInicioTurno1 = new DateTime(horaMarcada.Year, horaMarcada.Month, horaMarcada.Day, 8, 30, 0);
-            var tiempoInicioTurno2 = new DateTime(horaMarcada.Year, horaMarcada.Month, horaMarcada.Day, 14, 30, 0);
-            var tiempoInicioTurno3 = new DateTime(horaMarcada.Year, horaMarcada.Month, horaMarcada.Day, 9, 00, 0);
+            var tiempoInicioTurno1 = new DateTime(horaMarcada.Year, horaMarcada.Month, horaMarcada.Day, 8, 30 + MinTol, 0);
+            var tiempoInicioTurno2 = new DateTime(horaMarcada.Year, horaMarcada.Month, horaMarcada.Day, 14, 30 + MinTol, 0);
+            var tiempoInicioTurno3 = new DateTime(horaMarcada.Year, horaMarcada.Month, horaMarcada.Day, 9, 00 + MinTol, 0);
 
 
             // comparamos y hacemos la sumatoria de minutos

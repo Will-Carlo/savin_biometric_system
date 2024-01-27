@@ -403,5 +403,18 @@ namespace control_asistencia_savin.ApiService
                 }
             }
         }
+
+        public int MinutosDeTolerancia()
+        {
+            using (var dbContext = new StoreContext())
+            {
+                // Consulta para obtener el primer registro de rrhh_punto_asistencia y extraer minutos_tolerancia
+                var minutosTolerancia = dbContext.RrhhPuntoAsistencia
+                    .Select(pa => pa.MinutosTolerancia)
+                    .FirstOrDefault();
+
+                return (int)minutosTolerancia;
+            }
+        }
     }
 }

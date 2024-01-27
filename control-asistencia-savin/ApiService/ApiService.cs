@@ -16,6 +16,7 @@ namespace control_asistencia_savin.ApiService
         private String _getApiLink = "http://200.105.183.173:8080/savin-rest/ws/biometrico/listar-estructura-biometrico";
         private String _postApiLink = "http://200.105.183.173:8080/savin-rest/ws/biometrico/registrar-asistencia";
         private String _getAsistenciaLink = "http://200.105.183.173:8080/savin-rest/ws/biometrico/listar-asistencia-personal";
+        private string _putSalidasLink = "http://200.105.183.173:8080/savin-rest/ws/biometrico/modificar-minutos-atraso";
 
         //private String _getApiLink = "http://54.177.210.26:8080/savin-rest/ws/biometrico/listar-estructura-biometrico";
         //private String _postApiLink = "http://54.177.210.26:8080/savin-rest/ws/biometrico/registrar-asistencia";
@@ -203,6 +204,33 @@ namespace control_asistencia_savin.ApiService
             return response;
         }
 
+        public async Task<HttpResponseMessage> ModificarAsistenciaAsync(int IdPersonal, string HoraMarcado, int IdPuntoAsistencia)
+        {
+            try
+            {
+                // Asignar los datos al encabezado de la solicitud
+                _httpClient.DefaultRequestHeaders.Add("IdPersonal", IdPersonal.ToString());
+                _httpClient.DefaultRequestHeaders.Add("HoraMarcado", HoraMarcado);
+                // _httpClient.DefaultRequestHeaders.Add("IdPuntoAsistencia", IdPuntoAsistencia.ToString());
+
+                // Realizar la solicitud PUT a la API
+                var response = await _httpClient.PutAsync(_putSalidasLink, null);
+
+                // Verificar si la solicitud fue exitosa
+                if (!response.IsSuccessStatusCode)
+                {
+                    var responseBody = await response.Content.ReadAsStringAsync();
+                    MessageBox.Show("Error al modificar el registro: " + response.StatusCode + "\nDetalles: " + responseBody + "\nContactar con el administrador.");
+                }
+
+                return response;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error al realizar la solicitud PUT: " + ex.Message);
+                return null;
+            }
+        }
     }
 
 
