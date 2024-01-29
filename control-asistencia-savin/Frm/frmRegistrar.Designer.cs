@@ -35,7 +35,6 @@
             txtIndiceDerecho = new TextBox();
             btnRegIndDer = new Button();
             dgvListar = new DataGridView();
-            txtId_ciudad = new TextBox();
             label3 = new Label();
             txtMaterno = new TextBox();
             label4 = new Label();
@@ -52,13 +51,15 @@
             btnRegPulDer = new Button();
             btnRegPulIzq = new Button();
             btnReportTxt = new Button();
+            label10 = new Label();
+            cbxCiudad = new ComboBox();
             ((System.ComponentModel.ISupportInitialize)dgvListar).BeginInit();
             SuspendLayout();
             // 
             // label1
             // 
             label1.AutoSize = true;
-            label1.Location = new Point(51, 59);
+            label1.Location = new Point(54, 122);
             label1.Margin = new Padding(4, 0, 4, 0);
             label1.Name = "label1";
             label1.Size = new Size(51, 15);
@@ -68,28 +69,28 @@
             // label2
             // 
             label2.AutoSize = true;
-            label2.Location = new Point(55, 199);
+            label2.Location = new Point(13, 209);
             label2.Margin = new Padding(4, 0, 4, 0);
             label2.Name = "label2";
-            label2.Size = new Size(44, 15);
+            label2.Size = new Size(109, 15);
             label2.TabIndex = 1;
-            label2.Text = "Huella:";
+            label2.Text = "Registro de huellas:";
             // 
             // btnGuardarUsuario
             // 
             btnGuardarUsuario.Enabled = false;
-            btnGuardarUsuario.Location = new Point(955, 418);
+            btnGuardarUsuario.Location = new Point(51, 402);
             btnGuardarUsuario.Margin = new Padding(4, 3, 4, 3);
             btnGuardarUsuario.Name = "btnGuardarUsuario";
-            btnGuardarUsuario.Size = new Size(157, 27);
+            btnGuardarUsuario.Size = new Size(287, 41);
             btnGuardarUsuario.TabIndex = 2;
-            btnGuardarUsuario.Text = "Guardar Usuario";
+            btnGuardarUsuario.Text = "Guardar Personal";
             btnGuardarUsuario.UseVisualStyleBackColor = true;
             btnGuardarUsuario.Click += btnAgregar_Click;
             // 
             // txtPaterno
             // 
-            txtPaterno.Location = new Point(114, 59);
+            txtPaterno.Location = new Point(114, 117);
             txtPaterno.Margin = new Padding(4, 3, 4, 3);
             txtPaterno.Name = "txtPaterno";
             txtPaterno.Size = new Size(224, 23);
@@ -121,31 +122,26 @@
             dgvListar.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             dgvListar.Location = new Point(355, 12);
             dgvListar.Margin = new Padding(4, 3, 4, 3);
+            dgvListar.MultiSelect = false;
             dgvListar.Name = "dgvListar";
+            dgvListar.ReadOnly = true;
+            dgvListar.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             dgvListar.Size = new Size(757, 400);
             dgvListar.TabIndex = 6;
-            // 
-            // txtId_ciudad
-            // 
-            txtId_ciudad.Location = new Point(114, 14);
-            txtId_ciudad.Margin = new Padding(4, 3, 4, 3);
-            txtId_ciudad.Name = "txtId_ciudad";
-            txtId_ciudad.Size = new Size(224, 23);
-            txtId_ciudad.TabIndex = 8;
             // 
             // label3
             // 
             label3.AutoSize = true;
-            label3.Location = new Point(51, 14);
+            label3.Location = new Point(57, 47);
             label3.Margin = new Padding(4, 0, 4, 0);
             label3.Name = "label3";
-            label3.Size = new Size(61, 15);
+            label3.Size = new Size(48, 15);
             label3.TabIndex = 7;
-            label3.Text = "Id_ciudad:";
+            label3.Text = "Ciudad:";
             // 
             // txtMaterno
             // 
-            txtMaterno.Location = new Point(114, 102);
+            txtMaterno.Location = new Point(114, 154);
             txtMaterno.Margin = new Padding(4, 3, 4, 3);
             txtMaterno.Name = "txtMaterno";
             txtMaterno.Size = new Size(224, 23);
@@ -154,7 +150,7 @@
             // label4
             // 
             label4.AutoSize = true;
-            label4.Location = new Point(51, 102);
+            label4.Location = new Point(50, 160);
             label4.Margin = new Padding(4, 0, 4, 0);
             label4.Name = "label4";
             label4.Size = new Size(55, 15);
@@ -163,7 +159,7 @@
             // 
             // txtNombre
             // 
-            txtNombre.Location = new Point(114, 145);
+            txtNombre.Location = new Point(114, 79);
             txtNombre.Margin = new Padding(4, 3, 4, 3);
             txtNombre.Name = "txtNombre";
             txtNombre.Size = new Size(224, 23);
@@ -172,7 +168,7 @@
             // label5
             // 
             label5.AutoSize = true;
-            label5.Location = new Point(51, 145);
+            label5.Location = new Point(51, 84);
             label5.Margin = new Padding(4, 0, 4, 0);
             label5.Name = "label5";
             label5.Size = new Size(54, 15);
@@ -281,7 +277,7 @@
             // 
             // btnReportTxt
             // 
-            btnReportTxt.Location = new Point(355, 420);
+            btnReportTxt.Location = new Point(974, 418);
             btnReportTxt.Name = "btnReportTxt";
             btnReportTxt.Size = new Size(138, 23);
             btnReportTxt.TabIndex = 23;
@@ -289,11 +285,32 @@
             btnReportTxt.UseVisualStyleBackColor = true;
             btnReportTxt.Click += btnReportTxt_Click;
             // 
+            // label10
+            // 
+            label10.AutoSize = true;
+            label10.Location = new Point(13, 12);
+            label10.Margin = new Padding(4, 0, 4, 0);
+            label10.Name = "label10";
+            label10.Size = new Size(107, 15);
+            label10.TabIndex = 24;
+            label10.Text = "Datos del personal:";
+            // 
+            // cbxCiudad
+            // 
+            cbxCiudad.FormattingEnabled = true;
+            cbxCiudad.Location = new Point(114, 40);
+            cbxCiudad.Name = "cbxCiudad";
+            cbxCiudad.Size = new Size(224, 23);
+            cbxCiudad.TabIndex = 25;
+            // 
             // frmRegistrar
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
+            BackColor = SystemColors.InactiveCaption;
             ClientSize = new Size(1125, 457);
+            Controls.Add(cbxCiudad);
+            Controls.Add(label10);
             Controls.Add(btnReportTxt);
             Controls.Add(btnRegPulIzq);
             Controls.Add(btnRegPulDer);
@@ -309,7 +326,6 @@
             Controls.Add(label5);
             Controls.Add(txtMaterno);
             Controls.Add(label4);
-            Controls.Add(txtId_ciudad);
             Controls.Add(label3);
             Controls.Add(dgvListar);
             Controls.Add(btnRegIndDer);
@@ -337,7 +353,6 @@
         private System.Windows.Forms.TextBox txtIndiceDerecho;
         private System.Windows.Forms.Button btnRegIndDer;
         private System.Windows.Forms.DataGridView dgvListar;
-        private System.Windows.Forms.TextBox txtId_ciudad;
         private System.Windows.Forms.Label label3;
         private TextBox txtMaterno;
         private Label label4;
@@ -354,5 +369,7 @@
         private Button btnRegPulDer;
         private Button btnRegPulIzq;
         private Button btnReportTxt;
+        private Label label10;
+        private ComboBox cbxCiudad;
     }
 }

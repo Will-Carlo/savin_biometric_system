@@ -13,14 +13,16 @@ namespace control_asistencia_savin.ApiService
     public class ApiService
     {
         private readonly HttpClient _httpClient = new HttpClient();
-        private String _getApiLink = "http://200.105.183.173:8080/savin-rest/ws/biometrico/listar-estructura-biometrico";
-        private String _postApiLink = "http://200.105.183.173:8080/savin-rest/ws/biometrico/registrar-asistencia";
-        private String _getAsistenciaLink = "http://200.105.183.173:8080/savin-rest/ws/biometrico/listar-asistencia-personal";
+        private string _getApiLink = "http://200.105.183.173:8080/savin-rest/ws/biometrico/listar-estructura-biometrico";
+        private string _postApiLink = "http://200.105.183.173:8080/savin-rest/ws/biometrico/registrar-asistencia";
+        private string _getAsistenciaLink = "http://200.105.183.173:8080/savin-rest/ws/biometrico/listar-asistencia-personal";
         private string _putSalidasLink = "http://200.105.183.173:8080/savin-rest/ws/biometrico/modificar-minutos-atraso";
 
         //private String _getApiLink = "http://54.177.210.26:8080/savin-rest/ws/biometrico/listar-estructura-biometrico";
         //private String _postApiLink = "http://54.177.210.26:8080/savin-rest/ws/biometrico/registrar-asistencia";
         //private String _getAsistenciaLink = "http://54.177.210.26:8080/savin-rest/ws/biometrico/listar-asistencia-personal";
+        //private string _putSalidasLink = "http://54.177.210.26:8080/savin-rest/ws/biometrico/modificar-minutos-atraso";
+
         private String dirMac = "";
         public String nomTienda = "";
 

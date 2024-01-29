@@ -108,20 +108,20 @@ namespace control_asistencia_savin
             if (this.lnkVerAtrasos.Visible)
             {
                 this.lnkInicio.Visible = false;
-                this.lnkMarcarCodigo.Visible = false;
-                this.lnkVerAtrasos.Visible = false;
-                this.lnkVerAtrasosMes.Visible = false;
+                //this.lnkMarcarCodigo.Visible = false;
+                //this.lnkVerAtrasos.Visible = false;
+                //this.lnkVerAtrasosMes.Visible = false;
                 this.lnkRegistrar.Visible = false;
-                this.lnkApiTest.Visible = false;
+                //this.lnkApiTest.Visible = false;
             }
             else
             {
                 this.lnkInicio.Visible = true;
-                this.lnkMarcarCodigo.Visible = true;
-                this.lnkVerAtrasos.Visible = true;
-                this.lnkVerAtrasosMes.Visible = true;
+                //this.lnkMarcarCodigo.Visible = true;
+                //this.lnkVerAtrasos.Visible = true;
+                //this.lnkVerAtrasosMes.Visible = true;
                 this.lnkRegistrar.Visible = true;
-                this.lnkApiTest.Visible = true;
+                //this.lnkApiTest.Visible = true;
             }
         }
         private void linkLabel2_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)

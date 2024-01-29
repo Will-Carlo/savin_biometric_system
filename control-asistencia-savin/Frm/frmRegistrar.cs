@@ -7,9 +7,11 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 namespace control_asistencia_savin
 {
@@ -23,6 +25,17 @@ namespace control_asistencia_savin
         public frmRegistrar()
         {
             InitializeComponent();
+        }
+        private void frmRegistrar_Load(object sender, EventArgs e)
+        {
+            contexto = new Models.StoreContext();
+            Listar();
+
+            CargarCiudadesEnComboBox();
+            if (cbxCiudad.Items.Count > 0)
+            {
+                cbxCiudad.SelectedIndex = 0;
+            }
         }
         private void OnTemplateIndDer(DPFP.Template template)
         {
@@ -92,14 +105,9 @@ namespace control_asistencia_savin
                 }
             }));
         }
-        private void frmRegistrar_Load(object sender, EventArgs e)
-        {
-            contexto = new Models.StoreContext();
-            Listar();
-        }
         private void Limpiar()
         {
-            txtId_ciudad.Text = "";
+            //txtId_ciudad.Text = "";
             txtPaterno.Text = "";
             txtMaterno.Text = "";
             txtNombre.Text = "";
@@ -133,9 +141,11 @@ namespace control_asistencia_savin
             }
             catch (Exception ex)
             {
-
                 MessageBox.Show(ex.Message);
             }
+
+            dgvListar.RowHeadersVisible = false;
+
         }
         private void btnAgregar_Click(object sender, EventArgs e)
         {
@@ -149,7 +159,8 @@ namespace control_asistencia_savin
                 RrhhPersonal personal = new RrhhPersonal()
                 {
                     //Id = 1,
-                    IdCiudad = int.Parse(txtId_ciudad.Text),
+                    //IdCiudad = int.Parse(txtId_ciudad.Text),
+                    IdCiudad = getIdCiudad(),
                     Paterno = txtPaterno.Text,
                     Materno = txtMaterno.Text,
                     Nombres = txtNombre.Text,
@@ -159,7 +170,7 @@ namespace control_asistencia_savin
                     PulgarIzquierdo = streamHuella4,
                 };
                 AddPersonal(personal);
-                MessageBox.Show("Registro agregado a la BD correctamente.");
+                //MessageBox.Show("Registro agregado a la BD correctamente.");
                 Limpiar();
                 Listar();
                 TemplateIndDer = null;
@@ -176,7 +187,6 @@ namespace control_asistencia_savin
                 MessageBox.Show(errorMessage, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
-
         private void SaveFingerText()
         {
             try
@@ -251,13 +261,17 @@ namespace control_asistencia_savin
                 MessageBox.Show($"Error al guardar en el archivo: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
-
         private void SaveFingerInArray(string name, byte[] f1, byte[] f2, byte[] f3, byte[] f4)
         {
             try
             {
-                string filePath = "fingers.js";
+                string fileName = "huellas.js";
                 //string name = item.Nombres + " " + item.Paterno + " " + item.Materno;
+                // Obtener la ruta del escritorio del usuario actual
+                string desktopPath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
+
+                // Combinar la ruta del escritorio con el nombre del archivo
+                string filePath = Path.Combine(desktopPath, fileName);
 
 
                 byte[]? streamHuella1 = f1 != null ? f1 : null;
@@ -318,7 +332,7 @@ namespace control_asistencia_savin
                 // Concatenar el nuevo registro al contenido actual y escribir en el archivo
                 File.AppendAllText(filePath, json);
 
-                MessageBox.Show("Datos guardados en personal.js correctamente.", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                //MessageBox.Show("Datos guardados en personal.js correctamente.", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
             }
             catch (Exception ex)
@@ -326,7 +340,6 @@ namespace control_asistencia_savin
                 MessageBox.Show($"Error al guardar en el archivo: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
-
         private void SaveReportJS()
         {
             try
@@ -338,7 +351,7 @@ namespace control_asistencia_savin
                                    RightIndexFinger = emp.IndiceDerecho != null ? emp.IndiceDerecho : null,
                                    LeftIndexFinger = emp.IndiceIzquierdo != null ? emp.IndiceIzquierdo : null,
                                    RightThumb = emp.PulgarDerecho != null ? emp.PulgarDerecho : null,
-                                   LeftThumb= emp.PulgarIzquierdo != null ? emp.PulgarIzquierdo : null,
+                                   LeftThumb = emp.PulgarIzquierdo != null ? emp.PulgarIzquierdo : null,
                                };
                 foreach (var item in personal)
                 {
@@ -393,6 +406,48 @@ namespace control_asistencia_savin
         private void btnReportTxt_Click(object sender, EventArgs e)
         {
             SaveReportJS();
+        }
+        
+        // PARA CARGAR DATOS EN COMBO BOX
+        public bool ExisteDatos()
+        {
+            using (var context = new StoreContext())
+            {
+                return context.GenCiudads.Any();
+            }
+        }
+        public void CargarCiudadesEnComboBox()
+        {
+            // Limpiamos el ComboBox antes de agregar los elementos
+            cbxCiudad.Items.Clear();
+            // Hacemos que no sea editable
+            cbxCiudad.DropDownStyle = ComboBoxStyle.DropDownList;
+
+            // Agregamos los departamentos uno por uno con valores del 1 al 9
+            cbxCiudad.Items.Add(new { Value = 1, Text = "Zapata (La Paz)" });
+            cbxCiudad.Items.Add(new { Value = 1, Text = "Loayza (La Paz)" });
+            cbxCiudad.Items.Add(new { Value = 1, Text = "Oficina (La Paz)" });
+            cbxCiudad.Items.Add(new { Value = 1, Text = "Ceibo (El Alto)" });
+            cbxCiudad.Items.Add(new { Value = 1, Text = "Satélite (El Alto)" });
+            cbxCiudad.Items.Add(new { Value = 1, Text = "Almacén (El Alto)" });
+            cbxCiudad.Items.Add(new { Value = 1, Text = "Cochabamba" });
+            cbxCiudad.Items.Add(new { Value = 1, Text = "Santa Cruz" });
+            cbxCiudad.Items.Add(new { Value = 1, Text = "Oruro" });
+            cbxCiudad.Items.Add(new { Value = 1, Text = "Potosí" });
+            cbxCiudad.Items.Add(new { Value = 1, Text = "Chuquisaca" });
+            cbxCiudad.Items.Add(new { Value = 1, Text = "Tarija" });
+            
+
+
+
+            // Establecemos DisplayMember en "Text" para mostrar solo el nombre del departamento
+            cbxCiudad.DisplayMember = "Text";
+        }
+        public int getIdCiudad()
+        {
+            var selectedItem = (dynamic)cbxCiudad.SelectedItem;
+            //string selectedText = selectedItem.Text;
+            return selectedItem.Value;
         }
     }
 }
