@@ -41,7 +41,6 @@
             lnkApiTest = new LinkLabel();
             lnkRegistrar = new LinkLabel();
             lnkVerAtrasos = new LinkLabel();
-            lnkVerAtrasosMes = new LinkLabel();
             lnkInicio = new LinkLabel();
             lnkOpciones = new LinkLabel();
             pictureBox1 = new PictureBox();
@@ -168,7 +167,7 @@
             lnkApiTest.BackColor = Color.FromArgb(10, 38, 102);
             lnkApiTest.Font = new Font("Segoe UI", 9F);
             lnkApiTest.LinkColor = Color.FromArgb(241, 206, 0);
-            lnkApiTest.Location = new Point(66, 456);
+            lnkApiTest.Location = new Point(66, 426);
             lnkApiTest.Margin = new Padding(4, 0, 4, 0);
             lnkApiTest.Name = "lnkApiTest";
             lnkApiTest.Size = new Size(98, 15);
@@ -185,7 +184,7 @@
             lnkRegistrar.BackColor = Color.FromArgb(10, 38, 102);
             lnkRegistrar.Font = new Font("Segoe UI", 9F);
             lnkRegistrar.LinkColor = Color.FromArgb(241, 206, 0);
-            lnkRegistrar.Location = new Point(66, 429);
+            lnkRegistrar.Location = new Point(66, 399);
             lnkRegistrar.Margin = new Padding(4, 0, 4, 0);
             lnkRegistrar.Name = "lnkRegistrar";
             lnkRegistrar.Size = new Size(88, 15);
@@ -211,22 +210,6 @@
             lnkVerAtrasos.Text = "Ver minutos acumulados";
             lnkVerAtrasos.Visible = false;
             lnkVerAtrasos.LinkClicked += linkLabel2_LinkClicked;
-            // 
-            // lnkVerAtrasosMes
-            // 
-            lnkVerAtrasosMes.Anchor = AnchorStyles.Left;
-            lnkVerAtrasosMes.AutoSize = true;
-            lnkVerAtrasosMes.BackColor = Color.FromArgb(10, 38, 102);
-            lnkVerAtrasosMes.Font = new Font("Segoe UI", 9F);
-            lnkVerAtrasosMes.LinkColor = Color.FromArgb(241, 206, 0);
-            lnkVerAtrasosMes.Location = new Point(66, 400);
-            lnkVerAtrasosMes.Margin = new Padding(4, 0, 4, 0);
-            lnkVerAtrasosMes.Name = "lnkVerAtrasosMes";
-            lnkVerAtrasosMes.Size = new Size(88, 15);
-            lnkVerAtrasosMes.TabIndex = 23;
-            lnkVerAtrasosMes.TabStop = true;
-            lnkVerAtrasosMes.Text = "ver atrasos mes";
-            lnkVerAtrasosMes.Visible = false;
             // 
             // lnkInicio
             // 
@@ -283,7 +266,6 @@
             panel1.Controls.Add(lnkRegistrar);
             panel1.Controls.Add(lnkInicio);
             panel1.Controls.Add(lnkVerAtrasos);
-            panel1.Controls.Add(lnkVerAtrasosMes);
             panel1.Dock = DockStyle.Left;
             panel1.Location = new Point(0, 0);
             panel1.Name = "panel1";

@@ -261,11 +261,20 @@ namespace control_asistencia_savin.Frm
             DateTime horaMarcada = DateTime.Parse(this._capturaHoraMarcado);
             int idTurno = capturaIdTurno();
             int MinTol = _functionsDataBase.MinutosDeTolerancia();
+            MessageBox.Show("MinTol:" + MinTol);
+            //int MinTol = 0;
+
 
             // definimos los hoarios de entrada
-            var tiempoInicioTurno1 = new DateTime(horaMarcada.Year, horaMarcada.Month, horaMarcada.Day, 8, 30 + MinTol, 0);
-            var tiempoInicioTurno2 = new DateTime(horaMarcada.Year, horaMarcada.Month, horaMarcada.Day, 14, 30 + MinTol, 0);
-            var tiempoInicioTurno3 = new DateTime(horaMarcada.Year, horaMarcada.Month, horaMarcada.Day, 9, 00 + MinTol, 0);
+            var tiempoInicioTurno1 = new DateTime(horaMarcada.Year, horaMarcada.Month, horaMarcada.Day, 8, 30, 0);
+            tiempoInicioTurno1 = tiempoInicioTurno1.AddMinutes(MinTol);
+            var tiempoInicioTurno2 = new DateTime(horaMarcada.Year, horaMarcada.Month, horaMarcada.Day, 14, 30, 0);
+            tiempoInicioTurno2 = tiempoInicioTurno2.AddMinutes(MinTol);
+            MessageBox.Show("entrada tarde:" + tiempoInicioTurno2);
+
+            var tiempoInicioTurno3 = new DateTime(horaMarcada.Year, horaMarcada.Month, horaMarcada.Day, 9, 00, 0);
+            tiempoInicioTurno3 = tiempoInicioTurno3.AddMinutes(MinTol);
+
 
 
             // comparamos y hacemos la sumatoria de minutos

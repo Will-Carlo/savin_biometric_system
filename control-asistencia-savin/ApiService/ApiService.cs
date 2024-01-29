@@ -13,35 +13,28 @@ namespace control_asistencia_savin.ApiService
     public class ApiService
     {
         private readonly HttpClient _httpClient = new HttpClient();
-        private string _getApiLink = "http://200.105.183.173:8080/savin-rest/ws/biometrico/listar-estructura-biometrico";
-        private string _postApiLink = "http://200.105.183.173:8080/savin-rest/ws/biometrico/registrar-asistencia";
-        private string _getAsistenciaLink = "http://200.105.183.173:8080/savin-rest/ws/biometrico/listar-asistencia-personal";
-        private string _putSalidasLink = "http://200.105.183.173:8080/savin-rest/ws/biometrico/modificar-minutos-atraso";
 
-        //private String _getApiLink = "http://54.177.210.26:8080/savin-rest/ws/biometrico/listar-estructura-biometrico";
-        //private String _postApiLink = "http://54.177.210.26:8080/savin-rest/ws/biometrico/registrar-asistencia";
-        //private String _getAsistenciaLink = "http://54.177.210.26:8080/savin-rest/ws/biometrico/listar-asistencia-personal";
-        //private string _putSalidasLink = "http://54.177.210.26:8080/savin-rest/ws/biometrico/modificar-minutos-atraso";
+        private string _getApiLink;
+        private string _postApiLink;
+        private string _getAsistenciaLink;
+        private string _putSalidasLink;
 
         private String dirMac = "";
         public String nomTienda = "";
-
+        public bool esProduction = false;
         public ApiService()
         {
-            //dirMac = macAddress();
-            //dirMac = "20-16-B9-42-9F-CD";
-            // GOITIA
-            dirMac = "14-B3-1F-11-AB-CF";
+            //this.Development();
+            this.Production();
+
             nomTienda = GetNombreTienda();
-            _httpClient.DefaultRequestHeaders.Add("Tkn", "SavinBio-23%");
-            _httpClient.DefaultRequestHeaders.Add("DirMac", dirMac);
+            this.CleanHeaders();
         }
 
         public String getDirMac()
         {
             return this.dirMac;
         }
-
         //public async Task<ModelJson> GetDataAsync()
         //{
         //    var response = await _httpClient.GetAsync(_getApiLink);
@@ -60,6 +53,7 @@ namespace control_asistencia_savin.ApiService
         //}
         public ModelJson? GetData()
         {
+            this.CleanHeaders();
             var response = _httpClient.GetAsync(_getApiLink).GetAwaiter().GetResult();
 
             if (response.IsSuccessStatusCode)
@@ -104,9 +98,9 @@ namespace control_asistencia_savin.ApiService
         //        throw new HttpRequestException($"Error al obtener los datos de asistencia: {response.StatusCode}");
         //    }
         //}
-
         public List<AuxAsistencia> GetDataAsistencia(int idPersonal)
         {
+            this.CleanHeaders();
             _httpClient.DefaultRequestHeaders.Add("IdPersonal", idPersonal.ToString());
             var response = _httpClient.GetAsync(_getAsistenciaLink).Result;
 
@@ -164,6 +158,8 @@ namespace control_asistencia_savin.ApiService
         }
         public async Task<HttpResponseMessage> RegistrarAsistenciaAsync(RrhhAsistencia asistencia)
         {
+            this.CleanHeaders();
+
             var regAsistencia = new
             {
                 idTurno = asistencia.IdTurno,
@@ -205,11 +201,12 @@ namespace control_asistencia_savin.ApiService
 
             return response;
         }
-
         public async Task<HttpResponseMessage> ModificarAsistenciaAsync(int IdPersonal, string HoraMarcado, int IdPuntoAsistencia)
         {
             try
             {
+                this.CleanHeaders();
+
                 // Asignar los datos al encabezado de la solicitud
                 _httpClient.DefaultRequestHeaders.Add("IdPersonal", IdPersonal.ToString());
                 _httpClient.DefaultRequestHeaders.Add("HoraMarcado", HoraMarcado);
@@ -232,6 +229,38 @@ namespace control_asistencia_savin.ApiService
                 MessageBox.Show("Error al realizar la solicitud PUT: " + ex.Message);
                 return null;
             }
+        }
+        private void CleanHeaders()
+        {
+            // Limpiar los encabezados antes de agregarlos nuevamente
+            _httpClient.DefaultRequestHeaders.Clear();
+            _httpClient.DefaultRequestHeaders.Add("Tkn", "SavinBio-23%");
+            _httpClient.DefaultRequestHeaders.Add("DirMac", dirMac);
+        }
+        private void Development()
+        {
+            // GOITIA
+            this.dirMac = "14-B3-1F-11-AB-CF";
+
+            this.esProduction = false;
+            this._getApiLink = "http://200.105.183.173:8080/savin-rest/ws/biometrico/listar-estructura-biometrico";
+            this._postApiLink = "http://200.105.183.173:8080/savin-rest/ws/biometrico/registrar-asistencia";
+            this._getAsistenciaLink = "http://200.105.183.173:8080/savin-rest/ws/biometrico/listar-asistencia-personal";
+            this._putSalidasLink = "http://200.105.183.173:8080/savin-rest/ws/biometrico/modificar-minutos-atraso";
+        }
+        private void Production()
+        {
+            this.dirMac = macAddress();
+
+            this.esProduction = true;
+            this._getApiLink = "http://54.177.210.26:8080/savin-rest/ws/biometrico/listar-estructura-biometrico";
+            this._postApiLink = "http://54.177.210.26:8080/savin-rest/ws/biometrico/registrar-asistencia";
+            this._getAsistenciaLink = "http://54.177.210.26:8080/savin-rest/ws/biometrico/listar-asistencia-personal";
+            this._putSalidasLink = "http://54.177.210.26:8080/savin-rest/ws/biometrico/modificar-minutos-atraso";
+        }
+        public bool getEsProduction()
+        {
+            return this.esProduction;
         }
     }
 

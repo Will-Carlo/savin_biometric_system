@@ -413,7 +413,7 @@ namespace control_asistencia_savin.ApiService
                     .Select(pa => pa.MinutosTolerancia)
                     .FirstOrDefault();
 
-                return (int)minutosTolerancia;
+                return minutosTolerancia != null ? (int)minutosTolerancia: 0;
             }
         }
     }

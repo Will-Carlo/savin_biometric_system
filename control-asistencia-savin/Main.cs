@@ -105,23 +105,27 @@ namespace control_asistencia_savin
         }
         private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            if (this.lnkVerAtrasos.Visible)
+            if (this.lnkInicio.Visible)
             {
-                this.lnkInicio.Visible = false;
-                //this.lnkMarcarCodigo.Visible = false;
-                //this.lnkVerAtrasos.Visible = false;
-                //this.lnkVerAtrasosMes.Visible = false;
-                this.lnkRegistrar.Visible = false;
-                //this.lnkApiTest.Visible = false;
+                if (_apiService.getEsProduction())
+                {
+                    this.LinksProduction(false);
+                }
+                else
+                {
+                    this.LinksDevelopment(false);
+                }
             }
             else
             {
-                this.lnkInicio.Visible = true;
-                //this.lnkMarcarCodigo.Visible = true;
-                //this.lnkVerAtrasos.Visible = true;
-                //this.lnkVerAtrasosMes.Visible = true;
-                this.lnkRegistrar.Visible = true;
-                //this.lnkApiTest.Visible = true;
+                if (_apiService.getEsProduction())
+                {
+                    this.LinksProduction(true);
+                }
+                else
+                {
+                    this.LinksDevelopment(true);
+                }
             }
         }
         private void linkLabel2_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
@@ -170,6 +174,21 @@ namespace control_asistencia_savin
                 _functionsDataBase.BackUpDB(_fecha.Replace("/", "_")+"_"+_hora.Replace(":", "_"));
             }
         }
-
+        private void LinksDevelopment(bool actionLink)
+        {
+            this.lnkInicio.Visible = actionLink;
+            this.lnkMarcarCodigo.Visible = actionLink;
+            this.lnkVerAtrasos.Visible = actionLink;
+            this.lnkRegistrar.Visible = actionLink;
+            this.lnkApiTest.Visible = actionLink;
+        }
+        private void LinksProduction(bool actionLink)
+        {
+            this.lnkInicio.Visible = actionLink;
+            //this.lnkMarcarCodigo.Visible = actionLink;
+            //this.lnkVerAtrasos.Visible = actionLink;
+            this.lnkRegistrar.Visible = actionLink;
+            //this.lnkApiTest.Visible = actionLink;
+        }
     }
 }
