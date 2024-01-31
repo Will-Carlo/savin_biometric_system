@@ -18,9 +18,9 @@ namespace control_asistencia_savin.ApiService
     internal class FunctionsDataBase
     {
         private readonly ApiService _apiService = new ApiService();
-        public bool correctConection = false;
+        //public bool correctConection = false;
 
-        public void verifyConection()
+        public bool verifyConection()
         {
             try
             {
@@ -29,13 +29,15 @@ namespace control_asistencia_savin.ApiService
                 if (data != null)
                 {
                     //MessageBox.Show("Conexión al servidor exitosa.", "Test de conexión", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    this.correctConection = true;
+                    //this.correctConection = true;
+                    return true;
                 }
             }
             catch (Exception ex)
             {
                 //MessageBox.Show($"No se pudo conectar al servidor: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
+            return false;
         }
 
         public async Task loadDataBase()

@@ -282,9 +282,12 @@ namespace control_asistencia_savin.ApiService
             //this.dirMac = macAddress();
 
             // GOITIA
-            this.dirMac = "14-B3-1F-11-AB-CF";
+            //this.dirMac = "14-B3-1F-11-AB-CF";
             // OFICINA LOAYZA
             //this.dirMac = "14-B3-1F-0F-D3-AF";
+            // TIENDA
+            this.dirMac = "34-17-EB-9D-8F-97";
+
 
 
             this.esProduction = true;

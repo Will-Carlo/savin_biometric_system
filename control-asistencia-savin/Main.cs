@@ -55,9 +55,8 @@ namespace control_asistencia_savin
         }
         private void loadSystem()
         {
-            _functionsDataBase.verifyConection();
 
-            if (_functionsDataBase.correctConection)
+            if (_functionsDataBase.verifyConection())
             {
 
                 //MessageBox.Show("estado: " + _functionsDataBase.correctConection);
