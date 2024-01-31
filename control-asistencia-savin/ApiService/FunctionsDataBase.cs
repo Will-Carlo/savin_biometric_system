@@ -24,7 +24,7 @@ namespace control_asistencia_savin.ApiService
         {
             try
             {
-                var data = _apiService.GetData();
+                var data = _apiService.GetDataAsync();
 
                 if (data != null)
                 {
@@ -38,43 +38,45 @@ namespace control_asistencia_savin.ApiService
             }
         }
 
-        //public async Task loadDataBase()
-        //{
-        //    try
-        //    {
-        //        var data = await _apiService.GetDataAsync();
-
-        //        if (data != null)
-        //        {
-        //            GuardarDatosEnBaseDeDatos(data);
-        //        }
-        //        MessageBox.Show("Datos guardados con éxito");
-
-        //    }   
-        //    catch (DbUpdateException ex)
-        //    {
-        //        MessageBox.Show("error bd reg: " + ex.InnerException.Message);
-        //    }
-        //}
-
-        public void loadDataBase()
+        public async Task loadDataBase()
         {
             try
             {
-                var data = _apiService.GetData();
+                var data = await _apiService.GetDataAsync();
 
                 if (data != null)
                 {
                     GuardarDatosEnBaseDeDatos(data);
                 }
-                //MessageBox.Show("Datos guardados con éxito.");
+                // MessageBox.Show("Datos guardados con éxito");
 
             }
             catch (DbUpdateException ex)
             {
                 MessageBox.Show("error bd reg: " + ex.InnerException.Message);
+                Environment.Exit(0);
+
             }
         }
+
+        //public void loadDataBase()
+        //{
+        //    try
+        //    {
+        //        var data = _apiService.GetData();
+
+        //        if (data != null)
+        //        {
+        //            GuardarDatosEnBaseDeDatos(data);
+        //        }
+        //        //MessageBox.Show("Datos guardados con éxito.");
+
+        //    }
+        //    catch (DbUpdateException ex)
+        //    {
+        //        MessageBox.Show("error bd reg: " + ex.InnerException.Message);
+        //    }
+        //}
         private void GuardarDatosEnBaseDeDatos(ModelJson data)
         {
             using (var context = new StoreContext())

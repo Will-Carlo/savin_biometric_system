@@ -270,8 +270,7 @@ namespace control_asistencia_savin.Frm
             tiempoInicioTurno1 = tiempoInicioTurno1.AddMinutes(MinTol);
             var tiempoInicioTurno2 = new DateTime(horaMarcada.Year, horaMarcada.Month, horaMarcada.Day, 14, 30, 0);
             tiempoInicioTurno2 = tiempoInicioTurno2.AddMinutes(MinTol);
-            MessageBox.Show("entrada tarde:" + tiempoInicioTurno2);
-
+            //MessageBox.Show("entrada tarde:" + tiempoInicioTurno2);
             var tiempoInicioTurno3 = new DateTime(horaMarcada.Year, horaMarcada.Month, horaMarcada.Day, 9, 00, 0);
             tiempoInicioTurno3 = tiempoInicioTurno3.AddMinutes(MinTol);
 
@@ -303,8 +302,8 @@ namespace control_asistencia_savin.Frm
             DateTime horaMarcada = DateTime.Parse(this._capturaHoraMarcado);
             int idTurno = capturaIdTurno();
 
-            // definimos los hoarios de entrada
-            var tiempoInicioTurno1 = new DateTime(horaMarcada.Year, horaMarcada.Month, horaMarcada.Day, 14, 30, 0);
+            // definimos los hoarios de salida
+            var tiempoInicioTurno1 = new DateTime(horaMarcada.Year, horaMarcada.Month, horaMarcada.Day, 12, 30, 0);
             var tiempoInicioTurno2 = new DateTime(horaMarcada.Year, horaMarcada.Month, horaMarcada.Day, 19, 00, 0);
             var tiempoInicioTurno3 = new DateTime(horaMarcada.Year, horaMarcada.Month, horaMarcada.Day, 13, 00, 0);
 

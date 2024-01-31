@@ -51,6 +51,33 @@ namespace control_asistencia_savin.ApiService
         //        throw new HttpRequestException($"No se pudo conectar al servidor: {response.StatusCode}");
         //    }
         //}
+        public async Task<ModelJson?> GetDataAsync()
+        {
+            var response = await _httpClient.GetAsync(_getApiLink);
+
+            if (response.IsSuccessStatusCode)
+            {
+                var json = await response.Content.ReadAsStringAsync();
+
+                // Verificar si el JSON contiene datos válidos
+                if (!string.IsNullOrEmpty(json))
+                {
+                    var data = JsonConvert.DeserializeObject<ModelJson>(json);
+                    return data;
+                }
+                else
+                {
+                    // No hay datos válidos para mostrar
+                    return null;
+                }
+            }
+            else
+            {
+                throw new HttpRequestException($"No se pudo conectar al servidor: {response.StatusCode}");
+            }
+        }
+
+
         public ModelJson? GetData()
         {
             this.CleanHeaders();
@@ -241,6 +268,8 @@ namespace control_asistencia_savin.ApiService
         {
             // GOITIA
             this.dirMac = "14-B3-1F-11-AB-CF";
+            // OFICINA LOAYZA
+            //this.dirMac = "14-B3-1F-0F-D3-AF";
 
             this.esProduction = false;
             this._getApiLink = "http://200.105.183.173:8080/savin-rest/ws/biometrico/listar-estructura-biometrico";
@@ -250,7 +279,13 @@ namespace control_asistencia_savin.ApiService
         }
         private void Production()
         {
-            this.dirMac = macAddress();
+            //this.dirMac = macAddress();
+
+            // GOITIA
+            this.dirMac = "14-B3-1F-11-AB-CF";
+            // OFICINA LOAYZA
+            //this.dirMac = "14-B3-1F-0F-D3-AF";
+
 
             this.esProduction = true;
             this._getApiLink = "http://54.177.210.26:8080/savin-rest/ws/biometrico/listar-estructura-biometrico";
