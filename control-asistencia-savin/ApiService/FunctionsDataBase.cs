@@ -25,7 +25,7 @@ namespace control_asistencia_savin.ApiService
             try
             {
                 var data = _apiService.GetDataAsync();
-
+                //MessageBox.Show(data.ToString());
                 if (data != null)
                 {
                     //MessageBox.Show("Conexión al servidor exitosa.", "Test de conexión", MessageBoxButtons.OK, MessageBoxIcon.Information);

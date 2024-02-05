@@ -1,8 +1,10 @@
 ﻿using control_asistencia_savin.Models;
 using Newtonsoft.Json;
+using RestSharp;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Net.Http.Headers;
 using System.Net.NetworkInformation;
 using System.Text;
@@ -53,29 +55,45 @@ namespace control_asistencia_savin.ApiService
         //}
         public async Task<ModelJson?> GetDataAsync()
         {
-            var response = await _httpClient.GetAsync(_getApiLink);
-
-            if (response.IsSuccessStatusCode)
+            try
             {
-                var json = await response.Content.ReadAsStringAsync();
+                var response = await _httpClient.GetAsync(_getApiLink);
 
-                // Verificar si el JSON contiene datos válidos
-                if (!string.IsNullOrEmpty(json))
+                if (response.StatusCode == HttpStatusCode.BadRequest)
                 {
-                    var data = JsonConvert.DeserializeObject<ModelJson>(json);
-                    return data;
+                    MessageBox.Show("Tu dirección MAC no está registrada.\nDir mac: " + this.getDirMac() + "\nCerrando la aplicación.");
+                    Environment.Exit(0);
+                    return null;
+                }
+                else if (response.IsSuccessStatusCode)
+                {
+                    var json = await response.Content.ReadAsStringAsync();
+
+                    if (!string.IsNullOrEmpty(json))
+                    {
+                        var data = JsonConvert.DeserializeObject<ModelJson>(json);
+                        return data;
+                    }
+                    else
+                    {
+                        return null;
+                    }
                 }
                 else
                 {
-                    // No hay datos válidos para mostrar
-                    return null;
+                    throw new HttpRequestException($"No se pudo conectar al servidor: {response.StatusCode}");
                 }
             }
-            else
+            catch (HttpRequestException ex)
             {
-                throw new HttpRequestException($"No se pudo conectar al servidor: {response.StatusCode}");
+                // Captura la excepción y maneja el error aquí
+                MessageBox.Show("Error al conectar al servidor: " + ex.Message+ "\nContacte con el administrador.");
+                //Environment.Exit(0);
+                return null;
             }
         }
+
+
 
 
         public ModelJson? GetData()
@@ -285,8 +303,10 @@ namespace control_asistencia_savin.ApiService
             //this.dirMac = "14-B3-1F-11-AB-CF";
             // OFICINA LOAYZA
             //this.dirMac = "14-B3-1F-0F-D3-AF";
-            // TIENDA
+            // TIENDA LOAYZA
             this.dirMac = "34-17-EB-9D-8F-97";
+            // TIENDA COCHA
+            //this.dirMac = "44-ED-57-00-16-D6";
 
 
 

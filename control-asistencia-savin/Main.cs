@@ -1,4 +1,5 @@
-﻿using control_asistencia_savin.Models;
+﻿using control_asistencia_savin.Frm;
+using control_asistencia_savin.Models;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -30,8 +31,8 @@ namespace control_asistencia_savin
 
             //this.FormBorderStyle = FormBorderStyle.None; // Remueve los bordes de la ventana
             this.WindowState = FormWindowState.Maximized; // Maximiza la ventana
-            //this.TopMost = true;
-            
+                                                          //this.TopMost = true;
+
             _functionsDataBase = new ApiService.FunctionsDataBase();
             _apiService = new ApiService.ApiService();
 
@@ -56,6 +57,7 @@ namespace control_asistencia_savin
         private void loadSystem()
         {
 
+            // MessageBox.Show(_functionsDataBase.verifyConection().ToString());
             if (_functionsDataBase.verifyConection())
             {
 
@@ -70,7 +72,7 @@ namespace control_asistencia_savin
             }
             else
             {
-                MessageBox.Show("Tu dirección MAC no está registrada.\nDir mac: "+ _apiService.getDirMac() + "\nCerrando la aplicación.");
+                MessageBox.Show("Tu dirección MAC no está registrada.\nDir mac: " + _apiService.getDirMac() + "\nCerrando la aplicación.");
                 Environment.Exit(0);
                 //this.Close();
             }
@@ -170,7 +172,7 @@ namespace control_asistencia_savin
             {
                 _hora = DateTime.Now.ToString("HH:mm:ss");
                 _fecha = DateTime.Now.ToString("dd/MM/yyyy");
-                _functionsDataBase.BackUpDB(_fecha.Replace("/", "_")+"_"+_hora.Replace(":", "_"));
+                _functionsDataBase.BackUpDB(_fecha.Replace("/", "_") + "_" + _hora.Replace(":", "_"));
             }
         }
         private void LinksDevelopment(bool actionLink)
@@ -180,6 +182,7 @@ namespace control_asistencia_savin
             this.lnkVerAtrasos.Visible = actionLink;
             this.lnkRegistrar.Visible = actionLink;
             this.lnkApiTest.Visible = actionLink;
+            this.lnkFakeRegister.Visible = actionLink;
         }
         private void LinksProduction(bool actionLink)
         {
@@ -188,6 +191,12 @@ namespace control_asistencia_savin
             //this.lnkVerAtrasos.Visible = actionLink;
             this.lnkRegistrar.Visible = actionLink;
             //this.lnkApiTest.Visible = actionLink;
+            //this.lnkFakeRegister.Visible = actionLink;
+        }
+
+        private void lnkFakeRegister_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            AbrirForm(new frmAsistenciaSimulation());
         }
     }
 }

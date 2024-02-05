@@ -51,6 +51,7 @@
             pnlInfoStore = new Panel();
             pnlHora = new Panel();
             pnlBase = new Panel();
+            lnkFakeRegister = new LinkLabel();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
             panel1.SuspendLayout();
             panel2.SuspendLayout();
@@ -258,6 +259,7 @@
             // panel1
             // 
             panel1.BackColor = Color.FromArgb(0, 37, 105);
+            panel1.Controls.Add(lnkFakeRegister);
             panel1.Controls.Add(panel2);
             panel1.Controls.Add(lnkMarcarCodigo);
             panel1.Controls.Add(pictureBox1);
@@ -340,6 +342,23 @@
             pnlBase.Size = new Size(1125, 457);
             pnlBase.TabIndex = 29;
             // 
+            // lnkFakeRegister
+            // 
+            lnkFakeRegister.Anchor = AnchorStyles.Left;
+            lnkFakeRegister.AutoSize = true;
+            lnkFakeRegister.BackColor = Color.FromArgb(10, 38, 102);
+            lnkFakeRegister.Font = new Font("Segoe UI", 9F);
+            lnkFakeRegister.LinkColor = Color.FromArgb(241, 206, 0);
+            lnkFakeRegister.Location = new Point(66, 454);
+            lnkFakeRegister.Margin = new Padding(4, 0, 4, 0);
+            lnkFakeRegister.Name = "lnkFakeRegister";
+            lnkFakeRegister.Size = new Size(88, 15);
+            lnkFakeRegister.TabIndex = 29;
+            lnkFakeRegister.TabStop = true;
+            lnkFakeRegister.Text = "Registros falsos";
+            lnkFakeRegister.Visible = false;
+            lnkFakeRegister.LinkClicked += lnkFakeRegister_LinkClicked;
+            // 
             // Main
             // 
             AutoScaleDimensions = new SizeF(96F, 96F);
@@ -394,6 +413,7 @@
         private PictureBox pictureBox2;
         private Label lblLogOut;
         private Panel panel2;
+        private LinkLabel lnkFakeRegister;
     }
 }
 
