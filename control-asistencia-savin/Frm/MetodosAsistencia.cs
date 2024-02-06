@@ -14,14 +14,15 @@ namespace control_asistencia_savin.Frm
     {
         private ApiService.FunctionsDataBase _functionsDataBase = new FunctionsDataBase();
         private readonly ApiService.ApiService _apiService = new ApiService.ApiService();
-
-
+        //private MetodosAsistencia _m = new MetodosAsistencia();
         private string _capturaHoraMarcado = "";
+        // -------------------------------------------------------------------
         // PROCEDIMIENTOS PARA EL REGISTRO DE ASISTENCIA
+        // -------------------------------------------------------------------
         public int getIdTurno(int idPersonal)
         {
             int idTurno = this.capturaIdTurno(idPersonal);
-            if(validarTurno(idPersonal, idTurno))
+            if (validarTurno(idPersonal, idTurno))
             {
                 return idTurno;
             }
@@ -30,7 +31,7 @@ namespace control_asistencia_savin.Frm
                 MessageBox.Show("El personal no tiene asignado el turno: " + turnoNombre2(idTurno));
                 return 0;
             }
-        
+
         }
         public string getHoraMarcado()
         {
@@ -55,7 +56,7 @@ namespace control_asistencia_savin.Frm
             {
                 return this.capturaMinutosSalidaExtra(IdPersonal);
             }
-            
+
 
             return 0;
         }
@@ -65,10 +66,11 @@ namespace control_asistencia_savin.Frm
         }
         public int getIdPuntoAsistencia()
         {
-           return this.capturaIdPuntoAsistencia();
+            return this.capturaIdPuntoAsistencia();
         }
         // -------------------------------------------------------------------
         // PROCEDIMIENTOS PARA VALIDAR EN CLASES DE CÓDIGO Y HUELLA
+        // -------------------------------------------------------------------
         public int capturaTipoMovimiento(int IdPersonal)
         {
             using (var context = new StoreContext())
@@ -105,7 +107,6 @@ namespace control_asistencia_savin.Frm
             }
         }
         // -------------------------------------------------------------------
-
         private int capturaIdPuntoAsistencia()
         {
             using (var context = new StoreContext())
@@ -153,7 +154,9 @@ namespace control_asistencia_savin.Frm
                             return 2;
                         }
 
-                    } else if(this.getAnteriorIdTurno(IdPersonal) == 2){
+                    }
+                    else if (this.getAnteriorIdTurno(IdPersonal) == 2)
+                    {
                         return 2;
                     }
                 }
@@ -237,9 +240,10 @@ namespace control_asistencia_savin.Frm
         }
         // -------------------------------------------------------------------
         // SALIDAS EXTRAS
+        // -------------------------------------------------------------------
         private bool EsSalidaExtra(int IdPersonal)
         {
-            if(this.getAnteriorIdTurno(IdPersonal) == this.capturaIdTurno(IdPersonal) && this.getAnteriorIndMov(IdPersonal) == 462)
+            if (this.getAnteriorIdTurno(IdPersonal) == this.capturaIdTurno(IdPersonal) && this.getAnteriorIndMov(IdPersonal) == 462)
             {
                 return true;
             }
@@ -249,7 +253,7 @@ namespace control_asistencia_savin.Frm
         {
             int ultimoIdTurno = 0; // Valor por defecto si no se encuentra ningún registro
 
-            using (var dbContext = new StoreContext()) 
+            using (var dbContext = new StoreContext())
             {
                 // Consulta para obtener el ID del último registro para el IdPersonal dado
                 var ultimoRegistro = dbContext.RrhhAsistencia
@@ -294,10 +298,10 @@ namespace control_asistencia_savin.Frm
             // Hacemos las modificaciones en la base de datos local y en la API
             _functionsDataBase.ModificarHoraMarcado(IdPersonal, this.getAnteriorHora(IdPersonal), this.capturaIdPuntoAsistencia());
             _apiService.ModificarAsistenciaAsync(IdPersonal, this.getAnteriorHora(IdPersonal), this.capturaIdPuntoAsistencia());
-            
+
             // comparamos y hacemos la sumatoria de minutos
-            return  (int)(horaMarcada - horaAnterior).TotalMinutes;
-            
+            return (int)(horaMarcada - horaAnterior).TotalMinutes;
+
             //return 69;
         }
         private string getAnteriorHora(int IdPersonal)
@@ -323,6 +327,7 @@ namespace control_asistencia_savin.Frm
         }
         // -------------------------------------------------------------------
         // MINUTOS DE ATRASOS DE ENTRADA Y SALIDA
+        // -------------------------------------------------------------------
         private int capturaMinutosAtrasoEntrada(int IdPersonal)
         {
             // reconvertirmos la hora capturada del personal
@@ -350,7 +355,7 @@ namespace control_asistencia_savin.Frm
                 // 08:30:00
                 return horaMarcada > tiempoInicioTurno1 ? this.alertPersonal(horaMarcada, tiempoInicioTurno1, IdPersonal, "Estás llegando tarde") : 0;
             }
-            else if (idTurno == 2 )
+            else if (idTurno == 2)
             {
                 // 14:30:00
                 return horaMarcada > tiempoInicioTurno2 ? (int)(horaMarcada - tiempoInicioTurno2).TotalMinutes : 0;
@@ -396,16 +401,16 @@ namespace control_asistencia_savin.Frm
             // por default
             return 0;
         }
-
+        // -------------------------------------------------------------------
         // NOTIFICACIONES
+        // -------------------------------------------------------------------
         private int alertPersonal(DateTime horaMarcada, DateTime tiempoInicioTurno1, int IdPersonal, String MessageAlert)
         {
 
             int min = (int)(horaMarcada - tiempoInicioTurno1).TotalMinutes;
-            MessageBox.Show(this.NombrePersonal(IdPersonal) + "estás llegando tarde por "+ min + " minutos.");
+            MessageBox.Show(this.NombrePersonal(IdPersonal) + "estás llegando tarde por " + min + " minutos.");
             return min;
         }
-
         public string NombrePersonal(int idPersonal)
         {
             string nombreCompleto = "";
@@ -432,6 +437,7 @@ namespace control_asistencia_savin.Frm
 
             return nombreCompleto;
         }
+        // -------------------------------------------------------------------
         // FUNCIONES PARA CAPTURAR EL IDTURNO
         // -------------------------------------------------------------------
         private bool existeAnteriorIdTurno(int IdPersonal)
@@ -451,118 +457,193 @@ namespace control_asistencia_savin.Frm
                 return existeRegistroHoy;
             }
         }
+        // -------------------------------------------------------------------
         // REGISTRAR FALTAS
         // -------------------------------------------------------------------
+        private void RegistrarFalta(int IdPersonal, int MinFalta, int IdTurno)
+        {
+            // Obtener la fecha de hoy
+            DateTime fechaAsistencia = new DateTime(DateTime.Today.Year, DateTime.Today.Month, DateTime.Today.Day, 19, 00, 01);
+            MessageBox.Show("Reg: " + fechaAsistencia.ToString());
+            // Imprimir los IdPersonal que cumplen con la condición
+            //Console.WriteLine("IdPersonal sin asistencia para hoy:");
+            RrhhAsistencia auxAsis = new RrhhAsistencia
+            {
+                IdTurno = IdTurno,
+                IdPersonal = IdPersonal,
+                HoraMarcado = fechaAsistencia.ToString(),
+                MinutosAtraso = MinFalta,
+                IndTipoMovimiento = 461,
+                IdPuntoAsistencia = getIdPuntoAsistencia()
+            };
+            // No es necesario registrar en la base de datos puesto que se enviará al final deía directo al sistema central
+            this.setAddAsistencia(auxAsis);
+            _apiService.RegistrarAsistenciaAsync(auxAsis);
+        }
         public void RegistrarFaltasDelDia()
         {
-            if (!EsFeriado())
+            using (var context = new StoreContext())
             {
-                using (var context = new StoreContext())
+                try
                 {
-                    // Obtener la fecha de hoy
-                    DateTime fechaHoy = DateTime.Today;
-                    DateTime fechaHoy2 = new DateTime(DateTime.Today.Year, DateTime.Today.Month, DateTime.Today.Day, 19, 00, 01);
+                    // Extraer todos los IdPersonal de la tabla rrhh_personal
+                    var idPersonales = context.RrhhPersonals.Select(p => p.Id).ToList();
 
-
-                    // Consulta para obtener los IdPersonal que no tienen registros en RrhhAsistencia para la fecha de hoy
-                    var idPersonalSinAsistencia = context.RrhhPersonals
-                        .Where(personal =>
-                            !context.RrhhAsistencia.Any(asistencia =>
-                                asistencia.IdPersonal == personal.Id &&
-                                asistencia.HoraMarcado == fechaHoy.ToString("yyyy-MM-dd")
-                            )
-                        )
-                        .Select(personal => personal.Id)
-                        .ToList();
-
-                    // Imprimir los IdPersonal que cumplen con la condición
-                    //Console.WriteLine("IdPersonal sin asistencia para hoy:");
-                    foreach (var idPersonal in idPersonalSinAsistencia)
+                    // Imprimir los IdPersonal
+                    foreach (var IdPersonal in idPersonales)
                     {
-                        RrhhAsistencia auxAsis = new RrhhAsistencia
+                        int falta = this.FaltasPorPersonal(IdPersonal);
+                        if (falta == 510)
                         {
-                            IdTurno = 2,
-                            IdPersonal = idPersonal,
-                            HoraMarcado = fechaHoy2.ToString(),
-                            MinutosAtraso = 600,
-                            IndTipoMovimiento = 461,
-                            IdPuntoAsistencia = getIdPuntoAsistencia()
-                        };
-                        _apiService.RegistrarAsistenciaAsync( auxAsis );
-                        //Console.WriteLine(idPersonal);
+                            this.RegistrarFalta(IdPersonal, 510, 1);
+                        }
+                        else if (falta == 240)
+                        {
+                            if (this.EsSabado())
+                            {
+                                this.RegistrarFalta(IdPersonal, 240, 3);
+                            }
+                            else
+                            {
+                                this.RegistrarFalta(IdPersonal, 240, 1);
+                            }
+                        }
+                        else
+                        {
+                            this.RegistrarFalta(IdPersonal, 270, 2);
+                        }
                     }
                 }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Error al extraer e imprimir IdPersonal: {ex.Message}");
+                }
+            }
+        }
+        private int FaltasPorPersonal(int IdPersonal)
+        {
+            int cont = 0;
+            if (!EsFeriado())
+            {
+                for (global::System.Int32 i = 1; i <= 3; i++)
+                {
+                    if (this.TieneTurnoAsignado(IdPersonal, i))
+                    {
+                        if (!this.MarcoTurnoHoy(IdPersonal, i))
+                        {
+                            cont += NivelFalta(i);
+                        }
+                    }
+                }
+            }
+            return cont;
+        }
+        private bool TieneTurnoAsignado(int IdPersonal, int IdTurno)
+        {
+            using (var context = new StoreContext())
+            {
+                // Verifica si existe un registro con el IdPersonal y el IdTurno dados
+                bool existeRegistro = context.RrhhTurnoAsignados
+                    .Any(t => t.IdPersonal == IdPersonal && t.IdTurno == IdTurno);
+                return existeRegistro;
+            }
+        }
+        private bool MarcoTurnoHoy(int IdPersonal, int IdTurno)
+        {
+            using (var context = new StoreContext())
+            {
+                // Obtener la fecha de hoy en formato de cadena yyyy-MM-dd
+                string fechaHoyStr = DateTime.Today.ToString("yyyy-MM-dd");
+
+                // Verificar si existe al menos un registro con el IdPersonal y el IdTurno dados para la fecha de hoy
+                bool marcoHoy = context.RrhhAsistencia
+                    .Any(a => a.IdPersonal == IdPersonal &&
+                              a.IdTurno == IdTurno &&
+                              a.HoraMarcado.StartsWith(fechaHoyStr));
+
+                return marcoHoy;
+            }
+        }
+        private int NivelFalta(int Nivel)
+        {
+            if (Nivel == 1 || Nivel == 3)
+            {
+                return 240;
+            }
+            else
+            {
+                return 270;
             }
         }
     }
 }
 
-        //public int capturaMinAtraso()
-        //{
-        //    // Parse the captured time string to a DateTime object
-        //    DateTime horaMarcada = DateTime.Parse(_capturaHoraMarcado);
+//public int capturaMinAtraso()
+//{
+//    // Parse the captured time string to a DateTime object
+//    DateTime horaMarcada = DateTime.Parse(_capturaHoraMarcado);
 
-        //    // Define the comparison times
-        //    var tiempoInicioTurno1 = new DateTime(horaMarcada.Year, horaMarcada.Month, horaMarcada.Day, 8, 30, 0);
-        //    var tiempoInicioTurno2 = new DateTime(horaMarcada.Year, horaMarcada.Month, horaMarcada.Day, 14, 30, 0);
-        //    var tiempoInicioTurno3 = new DateTime(horaMarcada.Year, horaMarcada.Month, horaMarcada.Day, 9, 00, 0);
+//    // Define the comparison times
+//    var tiempoInicioTurno1 = new DateTime(horaMarcada.Year, horaMarcada.Month, horaMarcada.Day, 8, 30, 0);
+//    var tiempoInicioTurno2 = new DateTime(horaMarcada.Year, horaMarcada.Month, horaMarcada.Day, 14, 30, 0);
+//    var tiempoInicioTurno3 = new DateTime(horaMarcada.Year, horaMarcada.Month, horaMarcada.Day, 9, 00, 0);
 
 
-        //    // Get the values from the other functions
-        //    int idTurno = capturaIdTurno();
-        //    int indMov = capturaIndMov();
+//    // Get the values from the other functions
+//    int idTurno = capturaIdTurno();
+//    int indMov = capturaIndMov();
 
-        //    // Calculate the exceeded minutes according to the conditions
-        //    if (idTurno == 1 && indMov == 461)
-        //    {
-        //        return horaMarcada > tiempoInicioTurno1 ? (int)(horaMarcada - tiempoInicioTurno1).TotalMinutes : 0;
-        //    }
-        //    else if (idTurno == 2 && indMov == 461)
-        //    {
-        //        return horaMarcada > tiempoInicioTurno2 ? (int)(horaMarcada - tiempoInicioTurno2).TotalMinutes : 0;
-        //    }
-        //    else if (idTurno == 3 && indMov == 461)
-        //    {
-        //        return horaMarcada > tiempoInicioTurno3 ? (int)(horaMarcada - tiempoInicioTurno3).TotalMinutes : 0;
-        //    }
+//    // Calculate the exceeded minutes according to the conditions
+//    if (idTurno == 1 && indMov == 461)
+//    {
+//        return horaMarcada > tiempoInicioTurno1 ? (int)(horaMarcada - tiempoInicioTurno1).TotalMinutes : 0;
+//    }
+//    else if (idTurno == 2 && indMov == 461)
+//    {
+//        return horaMarcada > tiempoInicioTurno2 ? (int)(horaMarcada - tiempoInicioTurno2).TotalMinutes : 0;
+//    }
+//    else if (idTurno == 3 && indMov == 461)
+//    {
+//        return horaMarcada > tiempoInicioTurno3 ? (int)(horaMarcada - tiempoInicioTurno3).TotalMinutes : 0;
+//    }
 
-        //    return 0;
-        //}
+//    return 0;
+//}
 
-        //public int capturaIndMov()
-        //{
-        //    var horaActual = DateTime.Now;
-        //    var medioDia = new DateTime(horaActual.Year, horaActual.Month, horaActual.Day, 12, 0, 0);
-        //    var tarde = new DateTime(horaActual.Year, horaActual.Month, horaActual.Day, 13, 20, 0);
-        //    var noche = new DateTime(horaActual.Year, horaActual.Month, horaActual.Day, 18, 0, 0);
+//public int capturaIndMov()
+//{
+//    var horaActual = DateTime.Now;
+//    var medioDia = new DateTime(horaActual.Year, horaActual.Month, horaActual.Day, 12, 0, 0);
+//    var tarde = new DateTime(horaActual.Year, horaActual.Month, horaActual.Day, 13, 20, 0);
+//    var noche = new DateTime(horaActual.Year, horaActual.Month, horaActual.Day, 18, 0, 0);
 
-        //    if (horaActual < medioDia)
-        //    {
-        //        return 461;
-        //    }
-        //    else if (horaActual >= medioDia && horaActual < tarde)
-        //    {
-        //        return 462;
-        //    }
-        //    else if (horaActual >= tarde && horaActual < noche)
-        //    {
-        //        return 461;
-        //    }
-        //    else
-        //    {
-        //        return 462;
-        //    }
-        //}
-        
-        // capturamos su tipo de movimiento, salida o entrada
-        // aquí capturamos si es 1, 2 o 3, los feriados no está validados
-        //public string turnoNombre(int idTurno)
-        //{
-        //    using (var context = new StoreContext())
-        //    {
-        //        var turno = context.RrhhTurnos.Find(idTurno);
-        //        return turno?.Nombre; // Devuelve el nombre si se encuentra el turno, o null si no se encuentra
-        //    }
-        //}
+//    if (horaActual < medioDia)
+//    {
+//        return 461;
+//    }
+//    else if (horaActual >= medioDia && horaActual < tarde)
+//    {
+//        return 462;
+//    }
+//    else if (horaActual >= tarde && horaActual < noche)
+//    {
+//        return 461;
+//    }
+//    else
+//    {
+//        return 462;
+//    }
+//}
 
-        //Automatiza el turno pendiente
+// capturamos su tipo de movimiento, salida o entrada
+// aquí capturamos si es 1, 2 o 3, los feriados no está validados
+//public string turnoNombre(int idTurno)
+//{
+//    using (var context = new StoreContext())
+//    {
+//        var turno = context.RrhhTurnos.Find(idTurno);
+//        return turno?.Nombre; // Devuelve el nombre si se encuentra el turno, o null si no se encuentra
+//    }
+//}
+
+//Automatiza el turno pendiente
