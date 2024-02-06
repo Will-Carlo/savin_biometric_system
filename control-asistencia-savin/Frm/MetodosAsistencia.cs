@@ -121,7 +121,8 @@ namespace control_asistencia_savin.Frm
         private int capturaIdTurno(int IdPersonal)
         {
             var horaActual = DateTime.Parse(this._capturaHoraMarcado);
-            var AntesDeLas_14_29 = new DateTime(horaActual.Year, horaActual.Month, horaActual.Day, 14, 29, 0);
+            //MessageBox.Show("hora capturada: " + this._capturaHoraMarcado);
+            var AntesDeLas_14_29 = new DateTime(horaActual.Year, horaActual.Month, horaActual.Day, 14, 29, 59);
             var EsDespuesDe_12_30 = new DateTime(horaActual.Year, horaActual.Month, horaActual.Day, 12, 30, 0);
             //MessageBox.Show("Hora Actual: " + horaActual + "\nAntes de las 14:29: " + AntesDeLas_14_29 + "\nDespués de 12:30: " + EsDespuesDe_12_30);
             //var horaActual;
@@ -137,14 +138,25 @@ namespace control_asistencia_savin.Frm
                     {
                         if (horaActual < AntesDeLas_14_29)
                         {
-                            if (horaActual > EsDespuesDe_12_30 && this.getIndTipoMovimiento(IdPersonal) == 462)
+                            //if (horaActual > EsDespuesDe_12_30 && this.getIndTipoMovimiento(IdPersonal) == 462)
+                            if (horaActual > EsDespuesDe_12_30)
                             {
+                                // Si el personal está saliendo en este rango entonces se le asigna la salida con turno 1
+                                // Pero si esta entrando es decir 461, entonces se le asigna la entrada de la tarde
+                                if (this.getIndTipoMovimiento(IdPersonal) == 462)
+                                {
+                                    return 1;
+                                }
+                                else
+                                {
+                                    return 2;
+                                }
                                 // Aquí es clave para el cambio de turno al medio día
-                                return 1;
+                                //return 2;
                             }
                             else
                             {
-                                return 2;
+                                return 1;
                             }
 
                         }
@@ -343,7 +355,6 @@ namespace control_asistencia_savin.Frm
             tiempoInicioTurno1 = tiempoInicioTurno1.AddMinutes(MinTol);
             var tiempoInicioTurno2 = new DateTime(horaMarcada.Year, horaMarcada.Month, horaMarcada.Day, 14, 30, 0);
             tiempoInicioTurno2 = tiempoInicioTurno2.AddMinutes(MinTol);
-            //MessageBox.Show("entrada tarde:" + tiempoInicioTurno2);
             var tiempoInicioTurno3 = new DateTime(horaMarcada.Year, horaMarcada.Month, horaMarcada.Day, 9, 00, 0);
             tiempoInicioTurno3 = tiempoInicioTurno3.AddMinutes(MinTol);
 
@@ -358,12 +369,14 @@ namespace control_asistencia_savin.Frm
             else if (idTurno == 2)
             {
                 // 14:30:00
-                return horaMarcada > tiempoInicioTurno2 ? (int)(horaMarcada - tiempoInicioTurno2).TotalMinutes : 0;
+                //return horaMarcada > tiempoInicioTurno2 ? (int)(horaMarcada - tiempoInicioTurno2).TotalMinutes : 0;
+                return horaMarcada > tiempoInicioTurno2 ? this.alertPersonal(horaMarcada, tiempoInicioTurno2, IdPersonal, "Estás llegando tarde") : 0;
             }
             else if (idTurno == 3)
             {
                 // 09:00:00
-                return horaMarcada > tiempoInicioTurno3 ? (int)(horaMarcada - tiempoInicioTurno3).TotalMinutes : 0;
+                //return horaMarcada > tiempoInicioTurno3 ? (int)(horaMarcada - tiempoInicioTurno3).TotalMinutes : 0;
+                return horaMarcada > tiempoInicioTurno3 ? this.alertPersonal(horaMarcada, tiempoInicioTurno3, IdPersonal, "Estás llegando tarde") : 0;
             }
 
             // por default
@@ -408,7 +421,7 @@ namespace control_asistencia_savin.Frm
         {
 
             int min = (int)(horaMarcada - tiempoInicioTurno1).TotalMinutes;
-            MessageBox.Show(this.NombrePersonal(IdPersonal) + "estás llegando tarde por " + min + " minutos.");
+            MessageBox.Show(this.NombrePersonal(IdPersonal) + " estás llegando tarde por " + min + " minutos.");
             return min;
         }
         public string NombrePersonal(int idPersonal)
@@ -466,7 +479,7 @@ namespace control_asistencia_savin.Frm
             DateTime dateAux = new DateTime(DateTime.Today.Year, DateTime.Today.Month, DateTime.Today.Day, 19, 00, 01);
             string fechaAsistencia = dateAux.ToString("yyyy-MM-dd HH:mm:ss");
 
-            MessageBox.Show("Reg: " + fechaAsistencia);
+            //MessageBox.Show("Reg: " + fechaAsistencia);
 
             RrhhAsistencia auxAsis = new RrhhAsistencia
             {
@@ -530,14 +543,14 @@ namespace control_asistencia_savin.Frm
                 {
                     for (global::System.Int32 i = 1; i < 3; i++)
                     {
-                        MessageBox.Show("id: " + IdPersonal +   "\ntiene turno? :" + this.TieneTurnoAsignado(IdPersonal, i).ToString() + 
-                                                                "\nmarco hoy? :" + this.MarcoTurnoHoy(IdPersonal, i).ToString());
+                        //MessageBox.Show("id: " + IdPersonal +   "\ntiene turno? :" + this.TieneTurnoAsignado(IdPersonal, i).ToString() + 
+                        //                                        "\nmarco hoy? :" + this.MarcoTurnoHoy(IdPersonal, i).ToString());
                         if (this.TieneTurnoAsignado(IdPersonal, i))
                         {
                             if (!this.MarcoTurnoHoy(IdPersonal, i))
                             {
                                 cont += NivelFalta(i);
-                                MessageBox.Show("cont :" + cont);
+                                //MessageBox.Show("cont :" + cont);
 
                             }
                         }
@@ -545,14 +558,14 @@ namespace control_asistencia_savin.Frm
                 }
                 else
                 {
-                    MessageBox.Show("id: " + IdPersonal + "\ntiene turno? :" + this.TieneTurnoAsignado(IdPersonal, 3).ToString() +
-                                                            "\nmarco hoy? :" + this.MarcoTurnoHoy(IdPersonal, 3).ToString());
+                    //MessageBox.Show("id: " + IdPersonal + "\ntiene turno? :" + this.TieneTurnoAsignado(IdPersonal, 3).ToString() +
+                    //                                        "\nmarco hoy? :" + this.MarcoTurnoHoy(IdPersonal, 3).ToString());
                     if (this.TieneTurnoAsignado(IdPersonal, 3))
                     {
                         if (!this.MarcoTurnoHoy(IdPersonal, 3))
                         {
                             cont = NivelFalta(3);
-                            MessageBox.Show("cont :" + cont);
+                            //MessageBox.Show("cont :" + cont);
                         }
                     }
                 }

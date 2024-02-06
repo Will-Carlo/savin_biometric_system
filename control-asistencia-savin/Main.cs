@@ -82,7 +82,9 @@ namespace control_asistencia_savin
 
                 //this.Load += async (sender, e) => await _functionsDataBase.loadDataBase();
                 _functionsDataBase.loadDataBase();
-                int deleteBackups = int.Parse(DateTime.Now.ToString("MM")) - 2;
+                int deleteBackupsMonth = int.Parse(DateTime.Now.ToString("MM")) - 2;
+                int deleteBackups = deleteBackupsMonth == 0 ? 12 : deleteBackupsMonth; 
+                //MessageBox.Show("date: " + DateTime.Now.ToString("MM") +"\nInt: "+ deleteBackups.ToString());
                 _functionsDataBase.DeleteBackupFiles(deleteBackups);
             }
             else
@@ -165,6 +167,11 @@ namespace control_asistencia_savin
             AbrirForm(new frmTestApi());
 
         }
+        private void lnkFakeRegister_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            AbrirForm(new frmAsistenciaSimulation());
+        }
+        // FUNCIONES PARA CERRAR LA APLICACIÓN CON EL LOGOUT   
         private void lblLogOut_Click(object sender, EventArgs e)
         {
             //Environment.Exit(0);
@@ -175,6 +182,7 @@ namespace control_asistencia_savin
             //Environment.Exit(0);
             this.Close();
         }
+        // BACKUP
         private void Main_FormClosing(object sender, FormClosingEventArgs e)
         {
             var result = MessageBox.Show("¿Estás seguro de que quieres cerrar la aplicación?", "Confirmar salida", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
@@ -208,10 +216,6 @@ namespace control_asistencia_savin
             //this.lnkApiTest.Visible = actionLink;
             //this.lnkFakeRegister.Visible = actionLink;
         }
-        private void lnkFakeRegister_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
-        {
-            AbrirForm(new frmAsistenciaSimulation());
-        }
         // -------------------------------------------------------------------
         // REGISTRAR FALTAS
         // -------------------------------------------------------------------
@@ -244,7 +248,6 @@ namespace control_asistencia_savin
 
             return timeUntilNextRun;
         }
-
         private void Timer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
         {
             // Detenemos el temporizador para que no vuelva a ejecutarse automáticamente

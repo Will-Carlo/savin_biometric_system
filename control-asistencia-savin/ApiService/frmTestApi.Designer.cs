@@ -37,6 +37,7 @@
             btnDeleteBD = new Button();
             btnMakeBackUp = new Button();
             btnDeleteBackups = new Button();
+            txtDateBackup = new TextBox();
             SuspendLayout();
             // 
             // btnVerificarApi
@@ -123,12 +124,20 @@
             btnDeleteBackups.UseVisualStyleBackColor = true;
             btnDeleteBackups.Click += btnDeleteBackups_Click;
             // 
+            // txtDateBackup
+            // 
+            txtDateBackup.Location = new Point(338, 206);
+            txtDateBackup.Name = "txtDateBackup";
+            txtDateBackup.Size = new Size(137, 23);
+            txtDateBackup.TabIndex = 9;
+            // 
             // frmTestApi
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.White;
             ClientSize = new Size(688, 295);
+            Controls.Add(txtDateBackup);
             Controls.Add(btnDeleteBackups);
             Controls.Add(btnMakeBackUp);
             Controls.Add(btnDeleteBD);
@@ -142,6 +151,7 @@
             Name = "frmTestApi";
             Text = "TestApi";
             ResumeLayout(false);
+            PerformLayout();
         }
 
         #endregion
@@ -155,5 +165,6 @@
         private Button btnDeleteBD;
         private Button btnMakeBackUp;
         private Button btnDeleteBackups;
+        private TextBox txtDateBackup;
     }
 }

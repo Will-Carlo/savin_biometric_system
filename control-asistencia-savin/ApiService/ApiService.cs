@@ -23,11 +23,17 @@ namespace control_asistencia_savin.ApiService
 
         private String dirMac = "";
         public String nomTienda = "";
-        public bool esProduction = false;
+        public bool esProduction = true;
         public ApiService()
         {
-            this.Development();
-            //this.Production();
+            if (esProduction)
+            {
+                this.Production();
+            }
+            else
+            {
+                this.Development();
+            }
 
             nomTienda = GetNombreTienda();
             this.CleanHeaders();
@@ -291,7 +297,6 @@ namespace control_asistencia_savin.ApiService
             // TIENDA COCHA
             this.dirMac = "44-ED-57-00-16-D6";
 
-            this.esProduction = false;
             this._getApiLink = "http://200.105.183.173:8080/savin-rest/ws/biometrico/listar-estructura-biometrico";
             this._postApiLink = "http://200.105.183.173:8080/savin-rest/ws/biometrico/registrar-asistencia";
             this._getAsistenciaLink = "http://200.105.183.173:8080/savin-rest/ws/biometrico/listar-asistencia-personal";
@@ -299,20 +304,19 @@ namespace control_asistencia_savin.ApiService
         }
         private void Production()
         {
-            //this.dirMac = macAddress();
+            this.dirMac = macAddress();
 
             // GOITIA
             //this.dirMac = "14-B3-1F-11-AB-CF";
             // OFICINA LOAYZA
             //this.dirMac = "14-B3-1F-0F-D3-AF";
             // TIENDA LOAYZA
-            this.dirMac = "34-17-EB-9D-8F-97";
+            //this.dirMac = "34-17-EB-9D-8F-97";
             // TIENDA COCHA
             //this.dirMac = "44-ED-57-00-16-D6";
 
 
 
-            this.esProduction = true;
             this._getApiLink = "http://54.177.210.26:8080/savin-rest/ws/biometrico/listar-estructura-biometrico";
             this._postApiLink = "http://54.177.210.26:8080/savin-rest/ws/biometrico/registrar-asistencia";
             this._getAsistenciaLink = "http://54.177.210.26:8080/savin-rest/ws/biometrico/listar-asistencia-personal";

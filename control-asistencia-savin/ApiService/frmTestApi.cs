@@ -41,7 +41,7 @@ namespace control_asistencia_savin
         }
         private void btnMakeBackUp_Click(object sender, EventArgs e)
         {
-            _functionsDataBase.BackUpDB("fechadata");
+            _functionsDataBase.BackUpDB(this.txtDateBackup.Text);
         }
         private void btnDeleteBackups_Click(object sender, EventArgs e)
         {
