@@ -28,7 +28,7 @@ namespace control_asistencia_savin.Frm
 
         private void button1_Click(object sender, EventArgs e)
         {
-            
+
             m.setCapturaHoraMarcado(txtFecha.Text);
 
             //frmVerificar verificar = new frmVerificar();
@@ -51,24 +51,24 @@ namespace control_asistencia_savin.Frm
                 //Muestra en pantalla los datos y hora
                 //lblNombre.Visible = true;
                 //lblHora.Visible = true;
-                    RrhhAsistencia regisAsis = new RrhhAsistencia()
-                    {
-                        IdTurno = m.getIdTurno(IdPersonal),
-                        IdPersonal = IdPersonal,
-                        HoraMarcado = m.getHoraMarcado(),
-                        MinutosAtraso = m.getMinutosAtraso(IdPersonal),
-                        IndTipoMovimiento = m.getIndTipoMovimiento(IdPersonal),
-                        IdPuntoAsistencia = m.getIdPuntoAsistencia()
-                    };
-                    m.setAddAsistencia(regisAsis);
+                RrhhAsistencia regisAsis = new RrhhAsistencia()
+                {
+                    IdTurno = m.getIdTurno(IdPersonal),
+                    IdPersonal = IdPersonal,
+                    HoraMarcado = m.getHoraMarcado(),
+                    MinutosAtraso = m.getMinutosAtraso(IdPersonal),
+                    IndTipoMovimiento = m.getIndTipoMovimiento(IdPersonal),
+                    IdPuntoAsistencia = m.getIdPuntoAsistencia()
+                };
+                m.setAddAsistencia(regisAsis);
 
-                    // Enviando datos al API REST
-                    var response = _apiService.RegistrarAsistenciaAsync(regisAsis);
+                // Enviando datos al API REST
+                //var response = _apiService.RegistrarAsistenciaAsync(regisAsis);
 
-                    //if (response != null)
-                    //{
-                    //    MessageBox.Show("Asistencia enviada al servidor con éxito: " + response.Status);
-                    //}
+                //if (response != null)
+                //{
+                //    MessageBox.Show("Asistencia enviada al servidor con éxito: " + response.Status);
+                //}
                 //}
                 //else
                 //{
@@ -104,6 +104,11 @@ namespace control_asistencia_savin.Frm
             // No muestra en pantalla los datos y hora por el rechazo
             //lblNombre.Visible = false;
             //lblHora.Visible = false;
+        }
+
+        private void btnRegFaltas_Click(object sender, EventArgs e)
+        {
+            m.RegistrarFaltasDelDia();
         }
     }
 }

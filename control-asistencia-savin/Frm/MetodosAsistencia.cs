@@ -201,7 +201,7 @@ namespace control_asistencia_savin.Frm
             }
             return "";
         }
-        private bool EsSabado()
+        public bool EsSabado()
         {
             return DateTime.Today.DayOfWeek == DayOfWeek.Saturday;
         }
@@ -463,22 +463,23 @@ namespace control_asistencia_savin.Frm
         private void RegistrarFalta(int IdPersonal, int MinFalta, int IdTurno)
         {
             // Obtener la fecha de hoy
-            DateTime fechaAsistencia = new DateTime(DateTime.Today.Year, DateTime.Today.Month, DateTime.Today.Day, 19, 00, 01);
-            MessageBox.Show("Reg: " + fechaAsistencia.ToString());
-            // Imprimir los IdPersonal que cumplen con la condición
-            //Console.WriteLine("IdPersonal sin asistencia para hoy:");
+            DateTime dateAux = new DateTime(DateTime.Today.Year, DateTime.Today.Month, DateTime.Today.Day, 19, 00, 01);
+            string fechaAsistencia = dateAux.ToString("yyyy-MM-dd HH:mm:ss");
+
+            MessageBox.Show("Reg: " + fechaAsistencia);
+
             RrhhAsistencia auxAsis = new RrhhAsistencia
             {
                 IdTurno = IdTurno,
                 IdPersonal = IdPersonal,
-                HoraMarcado = fechaAsistencia.ToString(),
+                HoraMarcado = fechaAsistencia,
                 MinutosAtraso = MinFalta,
                 IndTipoMovimiento = 461,
                 IdPuntoAsistencia = getIdPuntoAsistencia()
             };
             // No es necesario registrar en la base de datos puesto que se enviará al final deía directo al sistema central
             this.setAddAsistencia(auxAsis);
-            _apiService.RegistrarAsistenciaAsync(auxAsis);
+            //_apiService.RegistrarAsistenciaAsync(auxAsis);
         }
         public void RegistrarFaltasDelDia()
         {
@@ -525,13 +526,33 @@ namespace control_asistencia_savin.Frm
             int cont = 0;
             if (!EsFeriado())
             {
-                for (global::System.Int32 i = 1; i <= 3; i++)
+                if (!EsSabado())
                 {
-                    if (this.TieneTurnoAsignado(IdPersonal, i))
+                    for (global::System.Int32 i = 1; i < 3; i++)
                     {
-                        if (!this.MarcoTurnoHoy(IdPersonal, i))
+                        MessageBox.Show("id: " + IdPersonal +   "\ntiene turno? :" + this.TieneTurnoAsignado(IdPersonal, i).ToString() + 
+                                                                "\nmarco hoy? :" + this.MarcoTurnoHoy(IdPersonal, i).ToString());
+                        if (this.TieneTurnoAsignado(IdPersonal, i))
                         {
-                            cont += NivelFalta(i);
+                            if (!this.MarcoTurnoHoy(IdPersonal, i))
+                            {
+                                cont += NivelFalta(i);
+                                MessageBox.Show("cont :" + cont);
+
+                            }
+                        }
+                    }
+                }
+                else
+                {
+                    MessageBox.Show("id: " + IdPersonal + "\ntiene turno? :" + this.TieneTurnoAsignado(IdPersonal, 3).ToString() +
+                                                            "\nmarco hoy? :" + this.MarcoTurnoHoy(IdPersonal, 3).ToString());
+                    if (this.TieneTurnoAsignado(IdPersonal, 3))
+                    {
+                        if (!this.MarcoTurnoHoy(IdPersonal, 3))
+                        {
+                            cont = NivelFalta(3);
+                            MessageBox.Show("cont :" + cont);
                         }
                     }
                 }

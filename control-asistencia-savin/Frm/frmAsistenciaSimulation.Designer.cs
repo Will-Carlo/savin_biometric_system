@@ -33,6 +33,7 @@
             label1 = new Label();
             label2 = new Label();
             txtFecha = new TextBox();
+            btnRegFaltas = new Button();
             SuspendLayout();
             // 
             // btnRegistrarFake
@@ -49,7 +50,7 @@
             // 
             txtIdPersonal.Location = new Point(372, 122);
             txtIdPersonal.Name = "txtIdPersonal";
-            txtIdPersonal.Size = new Size(100, 23);
+            txtIdPersonal.Size = new Size(52, 23);
             txtIdPersonal.TabIndex = 1;
             // 
             // label1
@@ -74,14 +75,25 @@
             // 
             txtFecha.Location = new Point(374, 169);
             txtFecha.Name = "txtFecha";
-            txtFecha.Size = new Size(100, 23);
+            txtFecha.Size = new Size(154, 23);
             txtFecha.TabIndex = 4;
+            // 
+            // btnRegFaltas
+            // 
+            btnRegFaltas.Location = new Point(670, 122);
+            btnRegFaltas.Name = "btnRegFaltas";
+            btnRegFaltas.Size = new Size(235, 23);
+            btnRegFaltas.TabIndex = 5;
+            btnRegFaltas.Text = "Registrar Faltas";
+            btnRegFaltas.UseVisualStyleBackColor = true;
+            btnRegFaltas.Click += btnRegFaltas_Click;
             // 
             // frmAsistenciaSimulation
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(1109, 418);
+            Controls.Add(btnRegFaltas);
             Controls.Add(txtFecha);
             Controls.Add(label2);
             Controls.Add(label1);
@@ -101,5 +113,6 @@
         private Label label1;
         private Label label2;
         private TextBox txtFecha;
+        private Button btnRegFaltas;
     }
 }

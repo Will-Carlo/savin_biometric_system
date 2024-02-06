@@ -18,10 +18,13 @@ namespace control_asistencia_savin
         // Para actualizar los modelos de la BD
         // Scaffold-DbContext "Data Source=store.db" Microsoft.EntityFrameworkCore.Sqlite -OutputDir Models
 
-        private readonly ApiService.ApiService _apiService;
-        private ApiService.FunctionsDataBase _functionsDataBase;
-        private string _hora;
-        private string _fecha;
+        private readonly ApiService.ApiService _apiService = new ApiService.ApiService();
+        private ApiService.FunctionsDataBase _functionsDataBase = new ApiService.FunctionsDataBase();
+        private MetodosAsistencia _m = new MetodosAsistencia();
+
+        private string _hora = "";
+        private string _fecha = "";
+        private System.Timers.Timer timer;
 
 
         public Main()
@@ -31,11 +34,7 @@ namespace control_asistencia_savin
 
             //this.FormBorderStyle = FormBorderStyle.None; // Remueve los bordes de la ventana
             this.WindowState = FormWindowState.Maximized; // Maximiza la ventana
-                                                          //this.TopMost = true;
-
-            _functionsDataBase = new ApiService.FunctionsDataBase();
-            _apiService = new ApiService.ApiService();
-
+     
             loadSystem();
             AbrirForm(new frmAsistencia());
 
@@ -53,6 +52,22 @@ namespace control_asistencia_savin
 
             lblSisAsis.Location = new System.Drawing.Point(x1, y1);
             lblPunto.Location = new System.Drawing.Point(x2, y2);
+
+
+            //--------------------------------------------------------------
+            // Inicializa el temporizador
+            timer = new System.Timers.Timer();
+
+            // Establece el intervalo de tiempo (en milisegundos) antes de que se dispare el evento
+            // En este ejemplo, configuramos el temporizador para que se ejecute cada día a las 9:00 AM
+            TimeSpan timeUntilNextRun = CalculateTimeUntilNextRun();
+            timer.Interval = timeUntilNextRun.TotalMilliseconds;
+
+            // Manejador de evento para el temporizador
+            timer.Elapsed += Timer_Elapsed;
+
+            // Inicia el temporizador
+            timer.Start();
         }
         private void loadSystem()
         {
@@ -193,10 +208,52 @@ namespace control_asistencia_savin
             //this.lnkApiTest.Visible = actionLink;
             //this.lnkFakeRegister.Visible = actionLink;
         }
-
         private void lnkFakeRegister_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             AbrirForm(new frmAsistenciaSimulation());
+        }
+        // -------------------------------------------------------------------
+        // REGISTRAR FALTAS
+        // -------------------------------------------------------------------
+        private TimeSpan CalculateTimeUntilNextRun()
+        {
+            // Obtenemos la hora actual
+            DateTime now = DateTime.Now;
+
+            // Establecemos la hora específica en la que deseamos que se ejecute la tarea
+            DateTime scheduledTime;
+
+            if (_m.EsSabado())
+            {
+                scheduledTime = new DateTime(now.Year, now.Month, now.Day, 13, 00, 01); // 1:00 PM
+            }
+            else
+            {
+                scheduledTime = new DateTime(now.Year, now.Month, now.Day, 19, 00, 01); // 7:00 PM
+            }
+
+            // Si ya pasó la hora programada de hoy, programamos la tarea para mañana a la misma hora
+            if (now > scheduledTime)
+            {
+                _m.RegistrarFaltasDelDia();
+                scheduledTime = scheduledTime.AddDays(1);
+            }
+
+            // Calculamos el tiempo hasta la próxima ejecución
+            TimeSpan timeUntilNextRun = scheduledTime - now;
+
+            return timeUntilNextRun;
+        }
+
+        private void Timer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
+        {
+            // Detenemos el temporizador para que no vuelva a ejecutarse automáticamente
+            timer.Stop();
+
+            _m.RegistrarFaltasDelDia();
+            // Reiniciamos el temporizador para el próximo día
+            timer.Interval = 24 * 60 * 60 * 1000; // 24 horas en milisegundos
+            timer.Start();
         }
     }
 }

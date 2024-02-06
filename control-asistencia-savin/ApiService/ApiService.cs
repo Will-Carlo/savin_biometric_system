@@ -26,8 +26,8 @@ namespace control_asistencia_savin.ApiService
         public bool esProduction = false;
         public ApiService()
         {
-            //this.Development();
-            this.Production();
+            this.Development();
+            //this.Production();
 
             nomTienda = GetNombreTienda();
             this.CleanHeaders();
@@ -88,7 +88,7 @@ namespace control_asistencia_savin.ApiService
             {
                 // Captura la excepción y maneja el error aquí
                 MessageBox.Show("Error al conectar al servidor: " + ex.Message+ "\nContacte con el administrador.");
-                //Environment.Exit(0);
+                Environment.Exit(0);
                 return null;
             }
         }
@@ -285,9 +285,11 @@ namespace control_asistencia_savin.ApiService
         private void Development()
         {
             // GOITIA
-            this.dirMac = "14-B3-1F-11-AB-CF";
+            //this.dirMac = "14-B3-1F-11-AB-CF";
             // OFICINA LOAYZA
             //this.dirMac = "14-B3-1F-0F-D3-AF";
+            // TIENDA COCHA
+            this.dirMac = "44-ED-57-00-16-D6";
 
             this.esProduction = false;
             this._getApiLink = "http://200.105.183.173:8080/savin-rest/ws/biometrico/listar-estructura-biometrico";
