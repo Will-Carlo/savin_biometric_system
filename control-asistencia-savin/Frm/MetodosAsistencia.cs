@@ -28,10 +28,8 @@ namespace control_asistencia_savin.Frm
             }
             else
             {
-                MessageBox.Show("El personal no tiene asignado el turno: " + turnoNombre2(idTurno));
-                return 0;
+                throw new HttpRequestException($"No tienes asignado el turno: " + turnoNombre2(idTurno) + "\nContactar con el administrador.");
             }
-
         }
         public string getHoraMarcado()
         {
@@ -41,6 +39,8 @@ namespace control_asistencia_savin.Frm
         {
             // capturamos el tipo de turno para sumar si se atrasa o si sale antes
             int indMov = capturaTipoMovimiento(IdPersonal);
+                //MessageBox.Show("IndMov: " + indMov+
+                //    "\nEsSalidaExtra?: "+ EsSalidaExtra(IdPersonal).ToString());
             if (!EsSalidaExtra(IdPersonal))
             {
                 if (indMov == 461)
@@ -107,6 +107,9 @@ namespace control_asistencia_savin.Frm
             }
         }
         // -------------------------------------------------------------------
+        // 
+        // -------------------------------------------------------------------
+        // no se necesita validar la fecha de hoy
         private int capturaIdPuntoAsistencia()
         {
             using (var context = new StoreContext())
@@ -118,6 +121,7 @@ namespace control_asistencia_savin.Frm
                 return ultimoRegistro;
             }
         }
+        // no se necesita validar la fecha de hoy sólo necesitamos capturar las horas del día
         private int capturaIdTurno(int IdPersonal)
         {
             var horaActual = DateTime.Parse(this._capturaHoraMarcado);
@@ -143,7 +147,7 @@ namespace control_asistencia_savin.Frm
                             {
                                 // Si el personal está saliendo en este rango entonces se le asigna la salida con turno 1
                                 // Pero si esta entrando es decir 461, entonces se le asigna la entrada de la tarde
-                                if (this.getIndTipoMovimiento(IdPersonal) == 462)
+                                if (this.capturaTipoMovimiento(IdPersonal) == 462)
                                 {
                                     return 1;
                                 }
@@ -190,6 +194,7 @@ namespace control_asistencia_savin.Frm
             }
             return 0;
         }
+        // no se necesita validar la fecha de hoy, sólo validamos si el personal tiene asignado el turno 
         private bool validarTurno(int idPersonal, int idTurno)
         {
             using (var context = new StoreContext())
@@ -217,6 +222,7 @@ namespace control_asistencia_savin.Frm
         {
             return DateTime.Today.DayOfWeek == DayOfWeek.Saturday;
         }
+        // validamos si hoy es un día feriado para evitar que el sistema les marque falatas
         private bool EsFeriado()
         {
 
@@ -261,15 +267,19 @@ namespace control_asistencia_savin.Frm
             }
             return false;
         }
+        // validamos la fecha de hoy
         private int getAnteriorIdTurno(int IdPersonal)
         {
             int ultimoIdTurno = 0; // Valor por defecto si no se encuentra ningún registro
 
             using (var dbContext = new StoreContext())
             {
-                // Consulta para obtener el ID del último registro para el IdPersonal dado
+                // Obtener la fecha de hoy en el formato de texto correcto para comparar con la base de datos
+                string fechaHoy = DateTime.Today.ToString("yyyy-MM-dd");
+
+                // Consulta para obtener el ID del último registro para el IdPersonal dado y la fecha de hoy
                 var ultimoRegistro = dbContext.RrhhAsistencia
-                    .Where(a => a.IdPersonal == IdPersonal)
+                    .Where(a => a.IdPersonal == IdPersonal && a.HoraMarcado.StartsWith(fechaHoy)) // Filtrar por fecha de hoy
                     .OrderByDescending(a => a.Id) // Ordenar por el ID en orden descendente para obtener el último registro
                     .FirstOrDefault();
 
@@ -281,15 +291,19 @@ namespace control_asistencia_savin.Frm
 
             return ultimoIdTurno;
         }
+        // validamos la fecha de hoy
         private int getAnteriorIndMov(int IdPersonal)
         {
             int indTipoMovimiento = 0; // Valor predeterminado en caso de no encontrar registro
 
             using (var context = new StoreContext())
             {
+                // Obtener la fecha de hoy
+                string fechaHoy = DateTime.Today.ToString("yyyy-MM-dd");
+
                 // Consulta LINQ para obtener el ind_tipo_movimiento del último registro para el IdPersonal dado
                 var ultimoRegistro = context.RrhhAsistencia
-                    .Where(a => a.IdPersonal == IdPersonal)
+                    .Where(a => a.IdPersonal == IdPersonal && a.HoraMarcado.StartsWith(fechaHoy))
                     .OrderByDescending(a => a.Id)
                     .FirstOrDefault(); // Obtiene el primer elemento o null si no hay registros
 
@@ -301,6 +315,7 @@ namespace control_asistencia_savin.Frm
 
             return indTipoMovimiento;
         }
+        // pedimos el anterior horario y comparamos con la nueva entrada
         private int capturaMinutosSalidaExtra(int IdPersonal)
         {
             // reconvertirmos la hora capturada del personal
@@ -346,7 +361,6 @@ namespace control_asistencia_savin.Frm
             DateTime horaMarcada = DateTime.Parse(this._capturaHoraMarcado);
             int idTurno = capturaIdTurno(IdPersonal);
             int MinTol = _functionsDataBase.MinutosDeTolerancia();
-            //MessageBox.Show("MinTol:" + MinTol);
             //int MinTol = 0;
 
 
@@ -358,6 +372,9 @@ namespace control_asistencia_savin.Frm
             var tiempoInicioTurno3 = new DateTime(horaMarcada.Year, horaMarcada.Month, horaMarcada.Day, 9, 00, 0);
             tiempoInicioTurno3 = tiempoInicioTurno3.AddMinutes(MinTol);
 
+            //MessageBox.Show("horaMarcada: " + this._capturaHoraMarcado+
+            //                "\nTurno: "+ idTurno+
+            //                "\ntiempoInicioTurno2: "+ tiempoInicioTurno2);
 
 
             // comparamos y hacemos la sumatoria de minutos
@@ -453,6 +470,7 @@ namespace control_asistencia_savin.Frm
         // -------------------------------------------------------------------
         // FUNCIONES PARA CAPTURAR EL IDTURNO
         // -------------------------------------------------------------------
+        // validamos la fecha de hoy para saber si el personal tiene algún IdTurno marcado hoy
         private bool existeAnteriorIdTurno(int IdPersonal)
         {
             using (var context = new StoreContext())
@@ -488,11 +506,11 @@ namespace control_asistencia_savin.Frm
                 HoraMarcado = fechaAsistencia,
                 MinutosAtraso = MinFalta,
                 IndTipoMovimiento = 461,
-                IdPuntoAsistencia = getIdPuntoAsistencia()
+                IdPuntoAsistencia = capturaIdPuntoAsistencia()
             };
             // No es necesario registrar en la base de datos puesto que se enviará al final deía directo al sistema central
             this.setAddAsistencia(auxAsis);
-            //_apiService.RegistrarAsistenciaAsync(auxAsis);
+            _apiService.RegistrarAsistenciaAsync(auxAsis);
         }
         public void RegistrarFaltasDelDia()
         {
@@ -609,6 +627,69 @@ namespace control_asistencia_savin.Frm
                 return 270;
             }
         }
+
+        // -------------------------------------------------------------------
+        // REGISTROS DOBLES
+        public bool EsRegistroDoble(int IdPersonal)
+        {
+            if (this.MarcoAsistenciaHoy(IdPersonal))
+            {
+                if (this.MarcoHacePoco(IdPersonal))
+                {
+                    return true;
+                }
+            }
+            return false;
+
+        }
+        private bool MarcoAsistenciaHoy(int IdPersonal)
+        {
+            using (var context = new StoreContext())
+            {
+                // Obtener la fecha de hoy en formato de cadena yyyy-MM-dd
+                string fechaHoyStr = DateTime.Today.ToString("yyyy-MM-dd");
+
+                // Verificar si existe al menos un registro con el IdPersonal y el IdTurno dados para la fecha de hoy
+                bool marcoHoy = context.RrhhAsistencia
+                    .Any(a => a.IdPersonal == IdPersonal &&
+                              a.HoraMarcado.StartsWith(fechaHoyStr));
+
+                return marcoHoy;
+            }
+        }
+        private bool MarcoHacePoco(int IdPersonal)
+        {
+            using (var context = new StoreContext())
+            {
+                // Obtener el último registro de hora_marcado para el IdPersonal dado
+                var ultimoRegistro = context.RrhhAsistencia
+                                            .Where(a => a.IdPersonal == IdPersonal)
+                                            .OrderByDescending(a => a.IdPersonal) // Ordena los registros en orden descendente para obtener el más reciente
+                                            .Select(a => a.HoraMarcado)
+                                            .FirstOrDefault();
+
+                if (!string.IsNullOrEmpty(ultimoRegistro))
+                {
+                    // Convertir el último registro de hora_marcado a un formato de fecha y hora
+                    DateTime horaAnterior = DateTime.ParseExact(ultimoRegistro, "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture);
+                    DateTime horaMarcado = DateTime.ParseExact(this._capturaHoraMarcado, "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture);
+
+
+                    // Calcular la diferencia de tiempo entre la hora de marcado y la hora actual
+                    TimeSpan diferenciaTiempo = horaAnterior - horaAnterior;
+
+                    // Si la diferencia de tiempo es menor o igual a 15 minutos, devuelve true
+                    if (diferenciaTiempo.TotalMinutes <= 15)
+                    {
+                        return true;
+                    }
+                }
+
+                // Si no se encuentra ningún registro o la diferencia de tiempo es mayor a 15 minutos, devuelve false
+                return false;
+            }
+        }
+
     }
 }
 

@@ -60,10 +60,18 @@ namespace control_asistencia_savin.Frm
                     IndTipoMovimiento = m.getIndTipoMovimiento(IdPersonal),
                     IdPuntoAsistencia = m.getIdPuntoAsistencia()
                 };
-                m.setAddAsistencia(regisAsis);
+                if (!m.EsRegistroDoble(IdPersonal))
+                {
+                    m.setAddAsistencia(regisAsis);
+                    // Enviando datos al API REST
+                    //var response = _apiService.RegistrarAsistenciaAsync(regisAsis);
+                }
+                else
+                {
+                    string tipoMov2 = m.capturaTipoMovimiento(IdPersonal) != 461 ? "ENTRADA" : "SALIDA";
 
-                // Enviando datos al API REST
-                //var response = _apiService.RegistrarAsistenciaAsync(regisAsis);
+                    MessageBox.Show("Cuidado estás volviendo a marcar tu: "+ tipoMov2);
+                }
 
                 //if (response != null)
                 //{

@@ -420,5 +420,15 @@ namespace control_asistencia_savin.ApiService
                 return minutosTolerancia != null ? (int)minutosTolerancia: 0;
             }
         }
+
+        public string? GetNombreTienda()
+        {
+            using (var context = new StoreContext())
+            {
+                var puntoAsistencia = context.RrhhPuntoAsistencia
+                                            .FirstOrDefault(pa => pa.DireccionMac == _apiService._dirMac);
+                return puntoAsistencia?.Nombre;
+            }
+        }
     }
 }

@@ -9,6 +9,7 @@ using System.Linq;
 using System.Net.NetworkInformation;
 using System.Reflection.Emit;
 using System.Text;
+using System.Timers;
 using System.Windows.Forms;
 
 namespace control_asistencia_savin
@@ -25,13 +26,11 @@ namespace control_asistencia_savin
         private string _hora = "";
         private string _fecha = "";
         private System.Timers.Timer timer;
-
-
+        private System.Timers.Timer delayTimer;
         public Main()
         {
             InitializeComponent();
             tmrTime.Start();
-
             //this.FormBorderStyle = FormBorderStyle.None; // Remueve los bordes de la ventana
             this.WindowState = FormWindowState.Maximized; // Maximiza la ventana
      
@@ -40,7 +39,9 @@ namespace control_asistencia_savin
 
 
             // Pidiendo datos de la tienda por dirección MAC
-            lblPunto.Text = "Punto: " + _apiService.nomTienda;
+
+            MessageBox.Show("BIENVENIDOS");
+            lblPunto.Text = "Punto: " + _functionsDataBase.GetNombreTienda();
 
             //CENTRANDO TÍTULOS
             lblSisAsis.AutoSize = true;
@@ -83,13 +84,13 @@ namespace control_asistencia_savin
                 //this.Load += async (sender, e) => await _functionsDataBase.loadDataBase();
                 _functionsDataBase.loadDataBase();
                 int deleteBackupsMonth = int.Parse(DateTime.Now.ToString("MM")) - 2;
-                int deleteBackups = deleteBackupsMonth == 0 ? 12 : deleteBackupsMonth; 
+                int deleteBackups = deleteBackupsMonth == 0 ? 12 : deleteBackupsMonth;
                 //MessageBox.Show("date: " + DateTime.Now.ToString("MM") +"\nInt: "+ deleteBackups.ToString());
                 _functionsDataBase.DeleteBackupFiles(deleteBackups);
             }
             else
             {
-                MessageBox.Show("Tu dirección MAC no está registrada.\nDir mac: " + _apiService.getDirMac() + "\nCerrando la aplicación.");
+                MessageBox.Show("Tu dirección MAC no está registrada.\nDir mac: " + _apiService._dirMac + "\nCerrando la aplicación.");
                 Environment.Exit(0);
                 //this.Close();
             }
@@ -108,6 +109,7 @@ namespace control_asistencia_savin
             lblTime.Location = new System.Drawing.Point(x1, y1);
             lblFecha.Location = new System.Drawing.Point(x2, y2);
         }
+    
         public void AbrirForm(object subForm)
         {
             if (this.pnlBase.Controls.Count > 0)
@@ -125,7 +127,7 @@ namespace control_asistencia_savin
         {
             if (this.lnkInicio.Visible)
             {
-                if (_apiService.getEsProduction())
+                if (_apiService._esProduction)
                 {
                     this.LinksProduction(false);
                 }
@@ -136,7 +138,7 @@ namespace control_asistencia_savin
             }
             else
             {
-                if (_apiService.getEsProduction())
+                if (_apiService._esProduction)
                 {
                     this.LinksProduction(true);
                 }
@@ -258,5 +260,7 @@ namespace control_asistencia_savin
             timer.Interval = 24 * 60 * 60 * 1000; // 24 horas en milisegundos
             timer.Start();
         }
+
+
     }
 }
