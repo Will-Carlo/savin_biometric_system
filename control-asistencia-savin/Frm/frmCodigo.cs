@@ -98,14 +98,29 @@ namespace control_asistencia_savin
                             IndTipoMovimiento = m.getIndTipoMovimiento(IdPersonal),
                             IdPuntoAsistencia = m.getIdPuntoAsistencia()
                         };
-                        m.setAddAsistencia(regisAsis);
 
+                        // v1
+                        // m.setAddAsistencia(regisAsis);
                         // Enviando datos al API REST
-                        var response = _apiService.RegistrarAsistenciaAsync(regisAsis);
+                        // var response = _apiService.RegistrarAsistenciaAsync(regisAsis);
+                        // ----------
+
                         //if (response != null)
                         //{
                         //    MessageBox.Show("Asistencia enviada al servidor con éxito: " + response.Status);
                         //}
+
+                        if (!m.EsRegistroDoble(IdPersonal))
+                        {
+                            m.setAddAsistencia(regisAsis);
+                            // Enviando datos al API REST
+                            var response = _apiService.RegistrarAsistenciaAsync(regisAsis);
+                        }
+                        else
+                        {
+                            string tipoMov2 = m.capturaTipoMovimiento(IdPersonal) != 461 ? "ENTRADA" : "SALIDA";
+                            m.NotificationMessage("Cuidado estás volviendo a marcar tu: " + tipoMov2, "alert");
+                        }
                     }
                     else
                     {

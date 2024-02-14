@@ -59,10 +59,25 @@ namespace control_asistencia_savin
                         IndTipoMovimiento = m.getIndTipoMovimiento(verificar.idEncontrado),
                         IdPuntoAsistencia = m.getIdPuntoAsistencia()
                     };
-                    m.setAddAsistencia(regisAsis);
-
+                    
+                    // v1
+                    // m.setAddAsistencia(regisAsis);
                     // Enviando datos al API REST
-                    var response = _apiService.RegistrarAsistenciaAsync(regisAsis);
+                    // var response = _apiService.RegistrarAsistenciaAsync(regisAsis);
+                    // -----
+
+                    if (!m.EsRegistroDoble(verificar.idEncontrado))
+                    {
+                        m.setAddAsistencia(regisAsis);
+                        // Enviando datos al API REST
+                        var response = _apiService.RegistrarAsistenciaAsync(regisAsis);
+                    }
+                    else
+                    {
+                        string tipoMov2 = m.capturaTipoMovimiento(verificar.idEncontrado) != 461 ? "ENTRADA" : "SALIDA";
+                        m.NotificationMessage("Cuidado estás volviendo a marcar tu: " + tipoMov2+"\nDebes esperar al menos 5 min. para volver a marcar.", "alert");
+                    }
+
 
                     //if (response != null)
                     //{

@@ -439,7 +439,8 @@ namespace control_asistencia_savin.Frm
         {
 
             int min = (int)(horaMarcada - tiempoInicioTurno1).TotalMinutes;
-            MessageBox.Show(this.NombrePersonal(IdPersonal) + " estás llegando tarde por " + min + " minutos.");
+            //MessageBox.Show(this.NombrePersonal(IdPersonal) + " estás llegando tarde por " + min + " minutos.");
+            this.NotificationMessage(this.NombrePersonal(IdPersonal) + "\nEstás llegando tarde por " + min + " minutos.", "alert");
             return min;
         }
         public string NombrePersonal(int idPersonal)
@@ -644,7 +645,7 @@ namespace control_asistencia_savin.Frm
             {
                 if (this.MarcoHacePoco(IdPersonal))
                 {
-                    MessageBox.Show("1: " + this.MarcoAsistenciaHoy(IdPersonal).ToString() + "\n2: " + this.MarcoHacePoco(IdPersonal).ToString());
+                    // MessageBox.Show("1: " + this.MarcoAsistenciaHoy(IdPersonal).ToString() + "\n2: " + this.MarcoHacePoco(IdPersonal).ToString());
                     return true;
                 }
             }
@@ -671,10 +672,15 @@ namespace control_asistencia_savin.Frm
         {
             using (var context = new StoreContext())
             {
+                DateTime horaMarcadoHoy = DateTime.ParseExact(this._capturaHoraMarcado, "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture);
+                string fechaHoyStr = horaMarcadoHoy.ToString("yyyy-MM-dd");
+
+
                 // Obtener el último registro de hora_marcado para el IdPersonal dado
                 var ultimoRegistro = context.RrhhAsistencia
-                                            .Where(a => a.IdPersonal == IdPersonal)
-                                            .OrderByDescending(a => a.IdPersonal) // Ordena los registros en orden descendente para obtener el más reciente
+                                            .Where(a => a.IdPersonal == IdPersonal )
+                                            // && a.HoraMarcado.StartsWith(fechaHoyStr))
+                                            .OrderByDescending(a => a.Id) // Ordena los registros en orden descendente para obtener el más reciente
                                             .Select(a => a.HoraMarcado)
                                             .FirstOrDefault();
 
@@ -684,12 +690,11 @@ namespace control_asistencia_savin.Frm
                     DateTime horaAnterior = DateTime.ParseExact(ultimoRegistro, "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture);
                     DateTime horaMarcado = DateTime.ParseExact(this._capturaHoraMarcado, "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture);
 
-
                     // Calcular la diferencia de tiempo entre la hora de marcado y la hora actual
-                    TimeSpan diferenciaTiempo = horaAnterior - horaAnterior;
-
+                    TimeSpan diferenciaTiempo = horaMarcado - horaAnterior;
+                    // MessageBox.Show("Actual: "+ horaMarcado + "\nAnterior: "+ horaAnterior + "\nDiferencia: "+diferenciaTiempo.ToString());
                     // Si la diferencia de tiempo es menor o igual a 15 minutos, devuelve true
-                    if (diferenciaTiempo.TotalMinutes <= 15)
+                    if (diferenciaTiempo.TotalMinutes <= 5)
                     {
                         return true;
                     }
