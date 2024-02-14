@@ -1,5 +1,6 @@
 ﻿using control_asistencia_savin.Frm;
 using control_asistencia_savin.Models;
+using control_asistencia_savin.Notifications;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -39,8 +40,9 @@ namespace control_asistencia_savin
 
 
             // Pidiendo datos de la tienda por dirección MAC
-
-            MessageBox.Show("BIENVENIDOS");
+            //MessageBox.Show("BIENVENIDOS");
+            _m.NotificationMessage("BIENVENIDOS", "welcome");
+            //notificicacionesUsuario.ShowWarningNotification("BIENVENIDOS");
             lblPunto.Text = "Punto: " + _functionsDataBase.GetNombreTienda();
 
             //CENTRANDO TÍTULOS

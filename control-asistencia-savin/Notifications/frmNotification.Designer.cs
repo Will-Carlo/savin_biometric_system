@@ -1,6 +1,6 @@
 ﻿namespace control_asistencia_savin.Notifications
 {
-    partial class Notification
+    partial class frmNotification
     {
         /// <summary>
         /// Required designer variable.
@@ -28,12 +28,45 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(800, 450);
-            this.Text = "Notification";
+            lblMessage = new Label();
+            btnOk = new Button();
+            SuspendLayout();
+            // 
+            // lblMessage
+            // 
+            lblMessage.AutoSize = true;
+            lblMessage.Location = new Point(79, 43);
+            lblMessage.Name = "lblMessage";
+            lblMessage.Size = new Size(66, 15);
+            lblMessage.TabIndex = 0;
+            lblMessage.Text = "lblMessage";
+            // 
+            // btnOk
+            // 
+            btnOk.Location = new Point(211, 104);
+            btnOk.Name = "btnOk";
+            btnOk.Size = new Size(75, 23);
+            btnOk.TabIndex = 1;
+            btnOk.Text = "Ok";
+            btnOk.UseVisualStyleBackColor = true;
+            btnOk.Click += btnOk_Click;
+            // 
+            // frmNotification
+            // 
+            AutoScaleDimensions = new SizeF(7F, 15F);
+            AutoScaleMode = AutoScaleMode.Font;
+            ClientSize = new Size(336, 150);
+            Controls.Add(btnOk);
+            Controls.Add(lblMessage);
+            Name = "frmNotification";
+            Text = "Notification";
+            ResumeLayout(false);
+            PerformLayout();
         }
 
         #endregion
+
+        private Label lblMessage;
+        private Button btnOk;
     }
 }

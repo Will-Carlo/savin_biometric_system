@@ -69,8 +69,7 @@ namespace control_asistencia_savin.Frm
                 else
                 {
                     string tipoMov2 = m.capturaTipoMovimiento(IdPersonal) != 461 ? "ENTRADA" : "SALIDA";
-
-                    MessageBox.Show("Cuidado estás volviendo a marcar tu: "+ tipoMov2);
+                    m.NotificationMessage("Cuidado estás volviendo a marcar tu: "+ tipoMov2, "alert");
                 }
 
                 //if (response != null)

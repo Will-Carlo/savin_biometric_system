@@ -1,5 +1,6 @@
 ﻿using control_asistencia_savin.ApiService;
 using control_asistencia_savin.Models;
+using control_asistencia_savin.Notifications;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -467,6 +468,12 @@ namespace control_asistencia_savin.Frm
 
             return nombreCompleto;
         }
+        public void NotificationMessage(string MessageUser, string TypeMessage)
+        {
+            frmNotification customMessage = new frmNotification(MessageUser, TypeMessage);
+            customMessage.ShowDialog();
+            //customMessage.ShowWarningNotification(MessageUser);
+        }
         // -------------------------------------------------------------------
         // FUNCIONES PARA CAPTURAR EL IDTURNO
         // -------------------------------------------------------------------
@@ -630,12 +637,14 @@ namespace control_asistencia_savin.Frm
 
         // -------------------------------------------------------------------
         // REGISTROS DOBLES
+        // -------------------------------------------------------------------
         public bool EsRegistroDoble(int IdPersonal)
         {
             if (this.MarcoAsistenciaHoy(IdPersonal))
             {
                 if (this.MarcoHacePoco(IdPersonal))
                 {
+                    MessageBox.Show("1: " + this.MarcoAsistenciaHoy(IdPersonal).ToString() + "\n2: " + this.MarcoHacePoco(IdPersonal).ToString());
                     return true;
                 }
             }
@@ -647,7 +656,8 @@ namespace control_asistencia_savin.Frm
             using (var context = new StoreContext())
             {
                 // Obtener la fecha de hoy en formato de cadena yyyy-MM-dd
-                string fechaHoyStr = DateTime.Today.ToString("yyyy-MM-dd");
+                DateTime horaMarcado = DateTime.ParseExact(this._capturaHoraMarcado, "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture);
+                string fechaHoyStr = horaMarcado.ToString("yyyy-MM-dd");
 
                 // Verificar si existe al menos un registro con el IdPersonal y el IdTurno dados para la fecha de hoy
                 bool marcoHoy = context.RrhhAsistencia
