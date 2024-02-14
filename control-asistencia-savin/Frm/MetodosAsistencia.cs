@@ -57,8 +57,6 @@ namespace control_asistencia_savin.Frm
             {
                 return this.capturaMinutosSalidaExtra(IdPersonal);
             }
-
-
             return 0;
         }
         public int getIndTipoMovimiento(int IdPersonal)
@@ -82,7 +80,7 @@ namespace control_asistencia_savin.Frm
                 var ultimoRegistro = context.RrhhAsistencia
                     .Where(a => a.IdPersonal == IdPersonal &&
                                  a.HoraMarcado.StartsWith(fechaHoyStr))
-                    .OrderByDescending(a => a.Id) // Asumiendo que 'Id' es un autoincremento y representa el más reciente.
+                    .OrderByDescending(a => a.HoraMarcado) // Asumiendo que 'Id' es un autoincremento y representa el más reciente; ordenamos por Hora de marcado por si se agregó por postman
                     .Select(a => a.IndTipoMovimiento)
                     .FirstOrDefault(); // Devuelve el primer elemento o 0 si la secuencia está vacía.
 
@@ -281,7 +279,7 @@ namespace control_asistencia_savin.Frm
                 // Consulta para obtener el ID del último registro para el IdPersonal dado y la fecha de hoy
                 var ultimoRegistro = dbContext.RrhhAsistencia
                     .Where(a => a.IdPersonal == IdPersonal && a.HoraMarcado.StartsWith(fechaHoy)) // Filtrar por fecha de hoy
-                    .OrderByDescending(a => a.Id) // Ordenar por el ID en orden descendente para obtener el último registro
+                    .OrderByDescending(a => a.HoraMarcado) // Ordenar por el ID en orden descendente para obtener el último registro
                     .FirstOrDefault();
 
                 if (ultimoRegistro != null)
@@ -305,7 +303,7 @@ namespace control_asistencia_savin.Frm
                 // Consulta LINQ para obtener el ind_tipo_movimiento del último registro para el IdPersonal dado
                 var ultimoRegistro = context.RrhhAsistencia
                     .Where(a => a.IdPersonal == IdPersonal && a.HoraMarcado.StartsWith(fechaHoy))
-                    .OrderByDescending(a => a.Id)
+                    .OrderByDescending(a => a.HoraMarcado)
                     .FirstOrDefault(); // Obtiene el primer elemento o null si no hay registros
 
                 if (ultimoRegistro != null)
@@ -341,7 +339,7 @@ namespace control_asistencia_savin.Frm
                 // Consulta para obtener el último registro de asistencia para el idPersonal dado
                 var ultimoRegistro = dbContext.RrhhAsistencia
                     .Where(a => a.IdPersonal == IdPersonal)
-                    .OrderByDescending(a => a.Id)
+                    .OrderByDescending(a => a.HoraMarcado)
                     .FirstOrDefault();
 
                 // Verificar si se encontró un registro
@@ -441,6 +439,14 @@ namespace control_asistencia_savin.Frm
             int min = (int)(horaMarcada - tiempoInicioTurno1).TotalMinutes;
             //MessageBox.Show(this.NombrePersonal(IdPersonal) + " estás llegando tarde por " + min + " minutos.");
             this.NotificationMessage(this.NombrePersonal(IdPersonal) + "\nEstás llegando tarde por " + min + " minutos.", "alert");
+            return min;
+        }
+        private int alertPersonal2(DateTime horaMarcada, DateTime tiempoInicioTurno1, int IdPersonal, String MessageAlert)
+        {
+
+            int min = (int)(horaMarcada - tiempoInicioTurno1).TotalMinutes;
+            //MessageBox.Show(this.NombrePersonal(IdPersonal) + " estás llegando tarde por " + min + " minutos.");
+            this.NotificationMessage(this.NombrePersonal(IdPersonal) + "\nEstás saliendo antes por " + min + " minutos.", "alert");
             return min;
         }
         public string NombrePersonal(int idPersonal)
@@ -680,7 +686,7 @@ namespace control_asistencia_savin.Frm
                 var ultimoRegistro = context.RrhhAsistencia
                                             .Where(a => a.IdPersonal == IdPersonal )
                                             // && a.HoraMarcado.StartsWith(fechaHoyStr))
-                                            .OrderByDescending(a => a.Id) // Ordena los registros en orden descendente para obtener el más reciente
+                                            .OrderByDescending(a => a.HoraMarcado) // Ordena los registros en orden descendente para obtener el más reciente; ordenamos por hora de marcado para validar datos integrados por postman
                                             .Select(a => a.HoraMarcado)
                                             .FirstOrDefault();
 

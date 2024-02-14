@@ -76,6 +76,7 @@ namespace control_asistencia_savin
                     {
                         string tipoMov2 = m.capturaTipoMovimiento(verificar.idEncontrado) != 461 ? "ENTRADA" : "SALIDA";
                         m.NotificationMessage("Cuidado estás volviendo a marcar tu: " + tipoMov2+"\nDebes esperar al menos 5 min. para volver a marcar.", "alert");
+                        CleanLabels();
                     }
 
 
