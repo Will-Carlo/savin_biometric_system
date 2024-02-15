@@ -62,7 +62,7 @@ namespace control_asistencia_savin
             timer = new System.Timers.Timer();
 
             // Establece el intervalo de tiempo (en milisegundos) antes de que se dispare el evento
-            // En este ejemplo, configuramos el temporizador para que se ejecute cada día a las 9:00 AM
+            // En este ejemplo, configuramos el temporizador para que se ejecute cada día a las 7:00 pM
             TimeSpan timeUntilNextRun = CalculateTimeUntilNextRun();
             timer.Interval = timeUntilNextRun.TotalMilliseconds;
 
@@ -243,7 +243,8 @@ namespace control_asistencia_savin
             // Si ya pasó la hora programada de hoy, programamos la tarea para mañana a la misma hora
             if (now > scheduledTime)
             {
-                _m.RegistrarFaltasDelDia();
+                // aquí iniiamos el procedimiento si ya pasó la hora y el programa estaba cerrado
+                _m.RegistrarFaltasDelDiaAfterClose();
                 scheduledTime = scheduledTime.AddDays(1);
             }
 
@@ -257,7 +258,7 @@ namespace control_asistencia_savin
             // Detenemos el temporizador para que no vuelva a ejecutarse automáticamente
             timer.Stop();
 
-            _m.RegistrarFaltasDelDia();
+            _m.RegistrarFaltasDelDiaAfterClose();
             // Reiniciamos el temporizador para el próximo día
             timer.Interval = 24 * 60 * 60 * 1000; // 24 horas en milisegundos
             timer.Start();

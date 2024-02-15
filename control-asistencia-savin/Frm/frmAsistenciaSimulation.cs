@@ -64,7 +64,7 @@ namespace control_asistencia_savin.Frm
                 {
                     m.setAddAsistencia(regisAsis);
                     // Enviando datos al API REST
-                    //var response = _apiService.RegistrarAsistenciaAsync(regisAsis);
+                    var response = _apiService.RegistrarAsistenciaAsync(regisAsis);
                 }
                 else
                 {

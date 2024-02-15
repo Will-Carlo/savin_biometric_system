@@ -17,7 +17,7 @@ namespace control_asistencia_savin.ApiService
         private readonly HttpClient _httpClient = new HttpClient();
         private Credenciales _credenciales;
         public string _dirMac { get; set; }
-        public bool _esProduction = true;
+        public bool _esProduction = false;
         public ApiService()
         {
             _credenciales = new Credenciales(_esProduction);

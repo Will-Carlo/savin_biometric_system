@@ -1,6 +1,7 @@
 ﻿using control_asistencia_savin.ApiService;
 using control_asistencia_savin.Models;
 using control_asistencia_savin.Notifications;
+using DPFP;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -505,13 +506,28 @@ namespace control_asistencia_savin.Frm
         // -------------------------------------------------------------------
         // REGISTRAR FALTAS
         // -------------------------------------------------------------------
+        public void RegistrarFaltasDelDiaAfterClose()
+        {
+            if (!SeRegistroFaltas())
+            {
+                this.RegistrarFaltasDelDia();
+            }
+            //else
+            //{
+            //    MessageBox.Show("Ya se registraron las faltas hoy");
+            //}
+        }
         private void RegistrarFalta(int IdPersonal, int MinFalta, int IdTurno)
         {
+            // MessageBox.Show("Id recibido: " + IdPersonal);
+
             // Obtener la fecha de hoy
             DateTime dateAux = new DateTime(DateTime.Today.Year, DateTime.Today.Month, DateTime.Today.Day, 19, 00, 01);
+            // MessageBox.Show("DateAux: " + dateAux.ToString());
+
             string fechaAsistencia = dateAux.ToString("yyyy-MM-dd HH:mm:ss");
 
-            //MessageBox.Show("Reg: " + fechaAsistencia);
+            //MessageBox.Show("Registrando falta: " + fechaAsistencia);
 
             RrhhAsistencia auxAsis = new RrhhAsistencia
             {
@@ -519,7 +535,8 @@ namespace control_asistencia_savin.Frm
                 IdPersonal = IdPersonal,
                 HoraMarcado = fechaAsistencia,
                 MinutosAtraso = MinFalta,
-                IndTipoMovimiento = 461,
+                // por convención el parámetro 469 es para registrar un falta
+                IndTipoMovimiento = 469,
                 IdPuntoAsistencia = capturaIdPuntoAsistencia()
             };
             // No es necesario registrar en la base de datos puesto que se enviará al final deía directo al sistema central
@@ -538,7 +555,9 @@ namespace control_asistencia_savin.Frm
                     // Imprimir los IdPersonal
                     foreach (var IdPersonal in idPersonales)
                     {
-                        int falta = this.FaltasPorPersonal(IdPersonal);
+                        //MessageBox.Show("Personal list: " + IdPersonal);
+                        int falta = this.FaltasPorPersonal(IdPersonal); 
+                    
                         if (falta == 510)
                         {
                             this.RegistrarFalta(IdPersonal, 510, 1);
@@ -554,15 +573,19 @@ namespace control_asistencia_savin.Frm
                                 this.RegistrarFalta(IdPersonal, 240, 1);
                             }
                         }
-                        else
+                        else if(falta == 270)
                         {
                             this.RegistrarFalta(IdPersonal, 270, 2);
                         }
+                        //else
+                        //{
+                        //    MessageBox.Show("El personal no tiene faltas hoy");
+                        //}
                     }
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine($"Error al extraer e imprimir IdPersonal: {ex.Message}");
+                    Console.WriteLine($"Error al registrar faltas del Personal: {ex.Message}");
                 }
             }
         }
@@ -590,14 +613,14 @@ namespace control_asistencia_savin.Frm
                 }
                 else
                 {
-                    //MessageBox.Show("id: " + IdPersonal + "\ntiene turno? :" + this.TieneTurnoAsignado(IdPersonal, 3).ToString() +
-                    //                                        "\nmarco hoy? :" + this.MarcoTurnoHoy(IdPersonal, 3).ToString());
+                    //MessageBox.Show("id: " + IdPersonal +   "\ntiene turno? sab:" + this.TieneTurnoAsignado(IdPersonal, 3).ToString() +
+                    //                                        "\nmarco hoy? sab:" + this.MarcoTurnoHoy(IdPersonal, 3).ToString());
                     if (this.TieneTurnoAsignado(IdPersonal, 3))
                     {
                         if (!this.MarcoTurnoHoy(IdPersonal, 3))
                         {
                             cont = NivelFalta(3);
-                            //MessageBox.Show("cont :" + cont);
+                            //MessageBox.Show("cont sab:" + cont);
                         }
                     }
                 }
@@ -639,6 +662,20 @@ namespace control_asistencia_savin.Frm
             else
             {
                 return 270;
+            }
+        }
+        private bool SeRegistroFaltas()
+        {
+            using (var context = new StoreContext())
+            {
+                // Obtener la fecha de hoy en formato de cadena yyyy-MM-dd
+                string fechaHoyStr = DateTime.Today.ToString("yyyy-MM-dd");
+
+                // Verifica si existe un registro con el IdPersonal y el IdTurno dados
+                bool existeRegistro = context.RrhhAsistencia
+                    .Any(t => t.IndTipoMovimiento == 469 &&
+                              t.HoraMarcado.StartsWith(fechaHoyStr));
+                return existeRegistro;
             }
         }
 
