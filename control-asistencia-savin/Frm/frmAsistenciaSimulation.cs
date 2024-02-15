@@ -41,7 +41,7 @@ namespace control_asistencia_savin.Frm
                 //if (verificar.statusProcess)
                 //{
                 int IdPersonal = int.Parse(txtIdPersonal.Text);
-                string tipoMov = m.capturaTipoMovimiento(IdPersonal) == 461 ? "ENTRADA" : "SALIDA";
+                //string tipoMov = m.capturaTipoMovimiento(IdPersonal) == 461 ? "ENTRADA" : "SALIDA";
                 //lblStatusProcess.Text = tipoMov + " VERIFICADA";
                 //lblStatusProcess.ForeColor = Color.Green;
                 //lblStatusProcess.Visible = true;
@@ -51,17 +51,17 @@ namespace control_asistencia_savin.Frm
                 //Muestra en pantalla los datos y hora
                 //lblNombre.Visible = true;
                 //lblHora.Visible = true;
-                RrhhAsistencia regisAsis = new RrhhAsistencia()
-                {
-                    IdTurno = m.getIdTurno(IdPersonal),
-                    IdPersonal = IdPersonal,
-                    HoraMarcado = m.getHoraMarcado(),
-                    MinutosAtraso = m.getMinutosAtraso(IdPersonal),
-                    IndTipoMovimiento = m.getIndTipoMovimiento(IdPersonal),
-                    IdPuntoAsistencia = m.getIdPuntoAsistencia()
-                };
                 if (!m.EsRegistroDoble(IdPersonal))
                 {
+                    RrhhAsistencia regisAsis = new RrhhAsistencia()
+                    {
+                        IdTurno = m.getIdTurno(IdPersonal),
+                        IdPersonal = IdPersonal,
+                        HoraMarcado = m.getHoraMarcado(),
+                        MinutosAtraso = m.getMinutosAtraso(IdPersonal),
+                        IndTipoMovimiento = m.getIndTipoMovimiento(IdPersonal),
+                        IdPuntoAsistencia = m.getIdPuntoAsistencia()
+                    };
                     m.setAddAsistencia(regisAsis);
                     // Enviando datos al API REST
                     var response = _apiService.RegistrarAsistenciaAsync(regisAsis);

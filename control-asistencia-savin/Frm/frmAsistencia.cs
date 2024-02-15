@@ -39,35 +39,35 @@ namespace control_asistencia_savin
                 //if (verificar.statusProcess)
                 if (verificar.statusProcess)
                 {
-                    string tipoMov = m.capturaTipoMovimiento(verificar.idEncontrado) == 461 ? "ENTRADA" : "SALIDA";
-                    lblStatusProcess.Text = tipoMov + " VERIFICADA";
-                    lblStatusProcess.ForeColor = Color.Green;
-                    lblStatusProcess.Visible = true;
-                    // carga los datos del empleado en el label
-                    lblHora.Text = m.getHora();
-                    lblNombre.Text = verificar.personalName;
-                    //Muestra en pantalla los datos y hora
-                    lblNombre.Visible = true;
-                    lblHora.Visible = true;
-
-                    RrhhAsistencia regisAsis = new RrhhAsistencia()
-                    {
-                        IdTurno = m.getIdTurno(verificar.idEncontrado),
-                        IdPersonal = verificar.idEncontrado,
-                        HoraMarcado = m.getHoraMarcado(),
-                        MinutosAtraso = m.getMinutosAtraso(verificar.idEncontrado),
-                        IndTipoMovimiento = m.getIndTipoMovimiento(verificar.idEncontrado),
-                        IdPuntoAsistencia = m.getIdPuntoAsistencia()
-                    };
-                    
-                    // v1
-                    // m.setAddAsistencia(regisAsis);
-                    // Enviando datos al API REST
-                    // var response = _apiService.RegistrarAsistenciaAsync(regisAsis);
-                    // -----
-
                     if (!m.EsRegistroDoble(verificar.idEncontrado))
                     {
+                        string tipoMov = m.capturaTipoMovimiento(verificar.idEncontrado) == 461 ? "ENTRADA" : "SALIDA";
+                        lblStatusProcess.Text = tipoMov + " VERIFICADA";
+                        lblStatusProcess.ForeColor = Color.Green;
+                        lblStatusProcess.Visible = true;
+                        // carga los datos del empleado en el label
+                        lblHora.Text = m.getHora();
+                        lblNombre.Text = verificar.personalName;
+                        //Muestra en pantalla los datos y hora
+                        lblNombre.Visible = true;
+                        lblHora.Visible = true;
+
+                        RrhhAsistencia regisAsis = new RrhhAsistencia()
+                        {
+                            IdTurno = m.getIdTurno(verificar.idEncontrado),
+                            IdPersonal = verificar.idEncontrado,
+                            HoraMarcado = m.getHoraMarcado(),
+                            MinutosAtraso = m.getMinutosAtraso(verificar.idEncontrado),
+                            IndTipoMovimiento = m.getIndTipoMovimiento(verificar.idEncontrado),
+                            IdPuntoAsistencia = m.getIdPuntoAsistencia()
+                        };
+                    
+                        // v1
+                        // m.setAddAsistencia(regisAsis);
+                        // Enviando datos al API REST
+                        // var response = _apiService.RegistrarAsistenciaAsync(regisAsis);
+                        // -----
+
                         m.setAddAsistencia(regisAsis);
                         // Enviando datos al API REST
                         var response = _apiService.RegistrarAsistenciaAsync(regisAsis);
