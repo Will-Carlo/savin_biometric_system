@@ -72,7 +72,7 @@ namespace control_asistencia_savin.ApiService
             this._PssdToken = "SavinBio-23%";
 
             this._mac = "DirMac";
-            this._PssdMac = MacList(0);
+            this._PssdMac = MacList(9);
         }
 
         private string MacList(int n)
@@ -105,6 +105,9 @@ namespace control_asistencia_savin.ApiService
                 case 8:
                     // ALMACÉN CENTRAL
                     return "1C-BF-CE-62-20-A8";
+                case 9:
+                    // SANTA CRUZ
+                    return "90-B1-1C-6C-47-28";
                 default:
                     return this.macAddress();
             }

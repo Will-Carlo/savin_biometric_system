@@ -27,22 +27,23 @@ namespace control_asistencia_savin
         private string _hora = "";
         private string _fecha = "";
         private System.Timers.Timer timer;
-        private System.Timers.Timer delayTimer;
         public Main()
         {
             InitializeComponent();
+            //InitializeDelayTimer();
             tmrTime.Start();
             //this.FormBorderStyle = FormBorderStyle.None; // Remueve los bordes de la ventana
             this.WindowState = FormWindowState.Maximized; // Maximiza la ventana
-     
+
             loadSystem();
             AbrirForm(new frmAsistencia());
 
 
             // Pidiendo datos de la tienda por dirección MAC
             //MessageBox.Show("BIENVENIDOS");
-            _m.NotificationMessage("BIENVENIDOS", "welcome");
+            //_m.NotificationMessage("BIENVENIDOS", "welcome");
             //notificicacionesUsuario.ShowWarningNotification("BIENVENIDOS");
+
             lblPunto.Text = "Punto: " + _functionsDataBase.GetNombreTienda();
 
             //CENTRANDO TÍTULOS
@@ -75,12 +76,10 @@ namespace control_asistencia_savin
         private void loadSystem()
         {
 
-            // MessageBox.Show(_functionsDataBase.verifyConection().ToString());
+            //MessageBox.Show(_functionsDataBase.verifyConection().ToString());
             if (_functionsDataBase.verifyConection())
             {
-
                 //MessageBox.Show("estado: " + _functionsDataBase.correctConection);
-
                 _functionsDataBase.LimpiarDB();
 
                 //this.Load += async (sender, e) => await _functionsDataBase.loadDataBase();
@@ -89,10 +88,13 @@ namespace control_asistencia_savin
                 int deleteBackups = deleteBackupsMonth == 0 ? 12 : deleteBackupsMonth;
                 //MessageBox.Show("date: " + DateTime.Now.ToString("MM") +"\nInt: "+ deleteBackups.ToString());
                 _functionsDataBase.DeleteBackupFiles(deleteBackups);
+
+                frmLoading loadingForm = new frmLoading();
+                Application.Run(loadingForm);
             }
             else
             {
-                MessageBox.Show("Tu dirección MAC no está registrada.\nDir mac: " + _apiService._dirMac + "\nCerrando la aplicación.");
+                //MessageBox.Show("Tu dirección MAC no está registrada.\nDir mac: " + _apiService._dirMac + "\nCerrando la aplicación.");
                 Environment.Exit(0);
                 //this.Close();
             }
@@ -265,5 +267,33 @@ namespace control_asistencia_savin
         }
 
 
+        // -------------------------------------------------------------------
+        // INICIAR ENTRE 5 A 10
+        // -------------------------------------------------------------------
+
+
+        //private void InitializeDelayTimer()
+        //{
+        //    delayTimer = new System.Timers.Timer();
+        //    delayTimer.Interval = new Random().Next(5000, 10000); // Entre 5 y 10 segundos
+        //    delayTimer.AutoReset = false;
+        //    delayTimer.Elapsed += DelayTimer_Elapsed;
+        //    delayTimer.Start();
+        //}
+
+        //private void DelayTimer_Elapsed(object sender, ElapsedEventArgs e)
+        //{
+        //    // Cuando el temporizador finaliza, muestra el formulario principal
+        //    this.Invoke(new MethodInvoker(delegate
+        //    {
+        //        this.Show();
+        //    }));
+        //}
+
+        //private void Main_Load(object sender, EventArgs e)
+        //{
+        //    // Oculta el formulario principal mientras espera
+        //    this.Hide();
+        //}
     }
 }

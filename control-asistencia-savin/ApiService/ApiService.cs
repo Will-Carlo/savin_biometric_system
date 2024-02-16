@@ -32,7 +32,7 @@ namespace control_asistencia_savin.ApiService
 
                 if (response.StatusCode == HttpStatusCode.BadRequest)
                 {
-                    MessageBox.Show("Tu dirección MAC no está registrada.\nDir mac: " + _credenciales._PssdMac + "\nCerrando la aplicación.");
+                    MessageBox.Show("sssTu dirección MAC no está registrada.\nDir mac: " + _credenciales._PssdMac + "\nCerrando la aplicación.");
                     Environment.Exit(0);
                     return null;
                 }
