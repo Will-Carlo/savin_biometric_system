@@ -59,19 +59,19 @@ namespace control_asistencia_savin
 
 
             //--------------------------------------------------------------
-            // Inicializa el temporizador
-            timer = new System.Timers.Timer();
+            //// Inicializa el temporizador
+            //timer = new System.Timers.Timer();
 
-            // Establece el intervalo de tiempo (en milisegundos) antes de que se dispare el evento
-            // En este ejemplo, configuramos el temporizador para que se ejecute cada día a las 7:00 pM
-            TimeSpan timeUntilNextRun = CalculateTimeUntilNextRun();
-            timer.Interval = timeUntilNextRun.TotalMilliseconds;
+            //// Establece el intervalo de tiempo (en milisegundos) antes de que se dispare el evento
+            //// En este ejemplo, configuramos el temporizador para que se ejecute cada día a las 7:00 pM
+            //TimeSpan timeUntilNextRun = CalculateTimeUntilNextRun();
+            //timer.Interval = timeUntilNextRun.TotalMilliseconds;
 
-            // Manejador de evento para el temporizador
-            timer.Elapsed += Timer_Elapsed;
+            //// Manejador de evento para el temporizador
+            //timer.Elapsed += Timer_Elapsed;
 
-            // Inicia el temporizador
-            timer.Start();
+            //// Inicia el temporizador
+            //timer.Start();
         }
         private void loadSystem()
         {
@@ -113,7 +113,6 @@ namespace control_asistencia_savin
             lblTime.Location = new System.Drawing.Point(x1, y1);
             lblFecha.Location = new System.Drawing.Point(x2, y2);
         }
-    
         public void AbrirForm(object subForm)
         {
             if (this.pnlBase.Controls.Count > 0)
@@ -225,46 +224,46 @@ namespace control_asistencia_savin
         // -------------------------------------------------------------------
         // REGISTRAR FALTAS
         // -------------------------------------------------------------------
-        private TimeSpan CalculateTimeUntilNextRun()
-        {
-            // Obtenemos la hora actual
-            DateTime now = DateTime.Now;
+        //private TimeSpan CalculateTimeUntilNextRun()
+        //{
+        //    // Obtenemos la hora actual
+        //    DateTime now = DateTime.Now;
 
-            // Establecemos la hora específica en la que deseamos que se ejecute la tarea
-            DateTime scheduledTime;
+        //    // Establecemos la hora específica en la que deseamos que se ejecute la tarea
+        //    DateTime scheduledTime;
 
-            if (_m.EsSabado())
-            {
-                scheduledTime = new DateTime(now.Year, now.Month, now.Day, 13, 00, 01); // 1:00 PM
-            }
-            else
-            {
-                scheduledTime = new DateTime(now.Year, now.Month, now.Day, 19, 00, 01); // 7:00 PM
-            }
+        //    if (_m.EsSabado())
+        //    {
+        //        scheduledTime = new DateTime(now.Year, now.Month, now.Day, 13, 00, 01); // 1:00 PM
+        //    }
+        //    else
+        //    {
+        //        scheduledTime = new DateTime(now.Year, now.Month, now.Day, 19, 00, 01); // 7:00 PM
+        //    }
 
-            // Si ya pasó la hora programada de hoy, programamos la tarea para mañana a la misma hora
-            if (now > scheduledTime)
-            {
-                // aquí iniiamos el procedimiento si ya pasó la hora y el programa estaba cerrado
-                _m.RegistrarFaltasDelDiaAfterClose();
-                scheduledTime = scheduledTime.AddDays(1);
-            }
+        //    // Si ya pasó la hora programada de hoy, programamos la tarea para mañana a la misma hora
+        //    if (now > scheduledTime)
+        //    {
+        //        // aquí iniiamos el procedimiento si ya pasó la hora y el programa estaba cerrado
+        //        _m.RegistrarFaltasDelDiaAfterClose();
+        //        scheduledTime = scheduledTime.AddDays(1);
+        //    }
 
-            // Calculamos el tiempo hasta la próxima ejecución
-            TimeSpan timeUntilNextRun = scheduledTime - now;
+        //    // Calculamos el tiempo hasta la próxima ejecución
+        //    TimeSpan timeUntilNextRun = scheduledTime - now;
 
-            return timeUntilNextRun;
-        }
-        private void Timer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
-        {
-            // Detenemos el temporizador para que no vuelva a ejecutarse automáticamente
-            timer.Stop();
+        //    return timeUntilNextRun;
+        //}
+        //private void Timer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
+        //{
+        //    // Detenemos el temporizador para que no vuelva a ejecutarse automáticamente
+        //    timer.Stop();
 
-            _m.RegistrarFaltasDelDiaAfterClose();
-            // Reiniciamos el temporizador para el próximo día
-            timer.Interval = 24 * 60 * 60 * 1000; // 24 horas en milisegundos
-            timer.Start();
-        }
+        //    _m.RegistrarFaltasDelDiaAfterClose();
+        //    // Reiniciamos el temporizador para el próximo día
+        //    timer.Interval = 24 * 60 * 60 * 1000; // 24 horas en milisegundos
+        //    timer.Start();
+        //}
 
 
         // -------------------------------------------------------------------
@@ -272,28 +271,6 @@ namespace control_asistencia_savin
         // -------------------------------------------------------------------
 
 
-        //private void InitializeDelayTimer()
-        //{
-        //    delayTimer = new System.Timers.Timer();
-        //    delayTimer.Interval = new Random().Next(5000, 10000); // Entre 5 y 10 segundos
-        //    delayTimer.AutoReset = false;
-        //    delayTimer.Elapsed += DelayTimer_Elapsed;
-        //    delayTimer.Start();
-        //}
 
-        //private void DelayTimer_Elapsed(object sender, ElapsedEventArgs e)
-        //{
-        //    // Cuando el temporizador finaliza, muestra el formulario principal
-        //    this.Invoke(new MethodInvoker(delegate
-        //    {
-        //        this.Show();
-        //    }));
-        //}
-
-        //private void Main_Load(object sender, EventArgs e)
-        //{
-        //    // Oculta el formulario principal mientras espera
-        //    this.Hide();
-        //}
     }
 }

@@ -17,22 +17,48 @@ namespace control_asistencia_savin.ApiService
         private readonly HttpClient _httpClient = new HttpClient();
         private Credenciales _credenciales;
         public string _dirMac { get; set; }
-        public bool _esProduction = true;
+        public bool _esProduction = false;
         public ApiService()
         {
             _credenciales = new Credenciales(_esProduction);
             _dirMac = _credenciales._PssdMac;
             this.CleanHeaders();
         }
+        public bool IsInternetAvailable()
+        {
+            try
+            {
+                using (var client = new WebClient())
+                {
+                    using (client.OpenRead("http://clients3.google.com/generate_204"))
+                    {
+                        return true;
+                    }
+                }
+            }
+            catch
+            {
+                return false;
+            }
+        }
         public async Task<ModelJson?> GetDataAsync()
         {
             try
             {
+                //MessageBox.Show("m: " + IsInternetAvailable().ToString());
+                if (!IsInternetAvailable())
+                {
+                    MessageBox.Show("No hay conexión a Internet. Verifique su conexión e inténtelo de nuevo.", "Error de conexión");
+                    Environment.Exit(0);
+
+                    return null;
+                }
+
                 var response = await _httpClient.GetAsync(_credenciales._getApiLink);
 
                 if (response.StatusCode == HttpStatusCode.BadRequest)
                 {
-                    MessageBox.Show("sssTu dirección MAC no está registrada.\nDir mac: " + _credenciales._PssdMac + "\nCerrando la aplicación.");
+                    MessageBox.Show("Tu dirección MAC no está registrada.\nDir mac: " + _credenciales._PssdMac + "\nCerrando la aplicación.");
                     Environment.Exit(0);
                     return null;
                 }

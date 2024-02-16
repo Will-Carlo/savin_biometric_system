@@ -72,7 +72,7 @@ namespace control_asistencia_savin.ApiService
             this._PssdToken = "SavinBio-23%";
 
             this._mac = "DirMac";
-            this._PssdMac = MacList(9);
+            this._PssdMac = MacList(1);
         }
 
         private string MacList(int n)

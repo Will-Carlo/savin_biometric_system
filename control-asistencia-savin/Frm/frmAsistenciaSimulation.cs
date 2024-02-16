@@ -91,15 +91,13 @@ namespace control_asistencia_savin.Frm
             }
             catch (HttpRequestException ex)
             {
-                MessageBox.Show("Error: " + ex.Message);
+                m.NotificationMessage("Error: " + ex.Message, "alert");
                 CleanLabels();
-
             }
             catch (Exception ex)
             {
-                MessageBox.Show("error: " + ex.Message, "Error");
+                m.NotificationMessage("error: " + ex.Message, "alert");
                 CleanLabels();
-
             }
 
         }

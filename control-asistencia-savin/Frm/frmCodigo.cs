@@ -147,13 +147,16 @@ namespace control_asistencia_savin
                 // Si hay una excepción interna, muestra su mensaje; de lo contrario, muestra el mensaje de la excepción principal.
                 MessageBox.Show(ex.InnerException?.Message ?? ex.Message, "Error al guardar datos");
             }
+
+            catch (HttpRequestException ex)
+            {
+                m.NotificationMessage("Error: " + ex.Message, "alert");
+            }
             catch (Exception ex)
             {
-                //MessageBox.Show(ex.Message);
                 lblNombre.Visible = false;
                 lblHora.Visible = false;
-                MessageBox.Show("error: " + ex.Message, "Error");
-
+                m.NotificationMessage("error: " + ex.Message, "alert");
             }
         }
 

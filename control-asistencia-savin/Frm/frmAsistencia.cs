@@ -67,10 +67,11 @@ namespace control_asistencia_savin
                         // Enviando datos al API REST
                         // var response = _apiService.RegistrarAsistenciaAsync(regisAsis);
                         // -----
+                        var response = _apiService.RegistrarAsistenciaAsync(regisAsis);
+                        MessageBox.Show("Response: " + response.ToString());
 
                         m.setAddAsistencia(regisAsis);
                         // Enviando datos al API REST
-                        var response = _apiService.RegistrarAsistenciaAsync(regisAsis);
                     }
                     else
                     {
@@ -99,15 +100,13 @@ namespace control_asistencia_savin
             }
             catch (HttpRequestException ex)
             {
-                MessageBox.Show("Error: "+ex.Message);
+                m.NotificationMessage("Error: "+ex.Message, "alert");
                 CleanLabels();
-
             }
             catch (Exception ex)
             {
-                MessageBox.Show("error: " + ex.Message, "Error");
+                m.NotificationMessage("error: " + ex.Message, "alert");
                 CleanLabels();
-
             }
 
         }
