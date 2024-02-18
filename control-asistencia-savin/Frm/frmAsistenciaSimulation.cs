@@ -62,9 +62,14 @@ namespace control_asistencia_savin.Frm
                         IndTipoMovimiento = m.getIndTipoMovimiento(IdPersonal),
                         IdPuntoAsistencia = m.getIdPuntoAsistencia()
                     };
-                    m.setAddAsistencia(regisAsis);
+
+
                     // Enviando datos al API REST
-                    var response = _apiService.RegistrarAsistenciaAsync(regisAsis);
+
+                    m.ValidarAsistencia(regisAsis);
+
+
+
                 }
                 else
                 {

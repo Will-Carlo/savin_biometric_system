@@ -77,6 +77,7 @@
             Controls.Add(pgbSavinLoad);
             Controls.Add(pictureBox1);
             FormBorderStyle = FormBorderStyle.None;
+            Icon = (Icon)resources.GetObject("$this.Icon");
             Name = "frmLoading";
             Text = "frmLoading";
             ((System.ComponentModel.ISupportInitialize)pictureBox1).EndInit();

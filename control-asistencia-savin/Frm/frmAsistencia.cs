@@ -61,17 +61,10 @@ namespace control_asistencia_savin
                             IndTipoMovimiento = m.getIndTipoMovimiento(verificar.idEncontrado),
                             IdPuntoAsistencia = m.getIdPuntoAsistencia()
                         };
-                    
-                        // v1
-                        // m.setAddAsistencia(regisAsis);
-                        // Enviando datos al API REST
-                        // var response = _apiService.RegistrarAsistenciaAsync(regisAsis);
-                        // -----
-                        var response = _apiService.RegistrarAsistenciaAsync(regisAsis);
-                        MessageBox.Show("Response: " + response.ToString());
 
-                        m.setAddAsistencia(regisAsis);
                         // Enviando datos al API REST
+
+                        m.ValidarAsistencia(regisAsis);
                     }
                     else
                     {

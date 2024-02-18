@@ -1,4 +1,5 @@
-﻿using control_asistencia_savin.Models;
+﻿using control_asistencia_savin.Frm;
+using control_asistencia_savin.Models;
 using Newtonsoft.Json;
 using RestSharp;
 using System;
@@ -9,6 +10,7 @@ using System.Net.Http.Headers;
 using System.Net.NetworkInformation;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace control_asistencia_savin.ApiService
 {
@@ -16,8 +18,10 @@ namespace control_asistencia_savin.ApiService
     {
         private readonly HttpClient _httpClient = new HttpClient();
         private Credenciales _credenciales;
+        //private readonly MetodosAsistencia _m = new MetodosAsistencia();
+
         public string _dirMac { get; set; }
-        public bool _esProduction = false;
+        public bool _esProduction = true;
         public ApiService()
         {
             _credenciales = new Credenciales(_esProduction);
@@ -117,6 +121,12 @@ namespace control_asistencia_savin.ApiService
         }
         public async Task<HttpResponseMessage> RegistrarAsistenciaAsync(RrhhAsistencia asistencia)
         {
+            //if (!this.IsInternetAvailable())
+            //{
+            //    MessageBox.Show("No hay conexión a internet, se registrará en la tabla de TemporalAsistencia", "Estado de la respuesta del servidor");
+            //    //_m.setAddAsistenciaTemporal(asistencia);
+            //}
+
             this.CleanHeaders();
 
             var regAsistencia = new
@@ -143,22 +153,27 @@ namespace control_asistencia_savin.ApiService
 
             var content = new StringContent(jsonContent, Encoding.UTF8, "application/json");
 
-            // Cabeceras para la autenticación
-            //_httpClient.DefaultRequestHeaders.Add("Tkn", "SavinBio-23%");
-
             // Realiza la solicitud POST a la API
             var response = await _httpClient.PostAsync(_credenciales._postApiLink, content);
             var responseBody = await response.Content.ReadAsStringAsync();
+
+            //string message = $"Estado de la respuesta: {response.StatusCode}\n";
+            //message += $"Contenido de la respuesta: {responseBody}";
+
+            //MessageBox.Show(message, "Estado de la respuesta del servidor");
+
+            //_m.setAddAsistencia(asistencia);
+
 
             if (!response.IsSuccessStatusCode)
             {
                 MessageBox.Show("Error al registrar a la asistencia: " + response.StatusCode + "\nDetalles: " + responseBody + "\nContactar con el administrador.");
 
                 //throw new HttpRequestException($"Error al registrar a la asistencia: {response.StatusCode}" + "\nDetalles: " + responseBody);
-
             }
 
             return response;
+    
         }
         public async Task<HttpResponseMessage> ModificarAsistenciaAsync(int IdPersonal, string HoraMarcado, int IdPuntoAsistencia)
         {
@@ -178,14 +193,14 @@ namespace control_asistencia_savin.ApiService
                 if (!response.IsSuccessStatusCode)
                 {
                     var responseBody = await response.Content.ReadAsStringAsync();
-                    MessageBox.Show("Error al modificar el registro: " + response.StatusCode + "\nDetalles: " + responseBody + "\nContactar con el administrador.");
+                    //MessageBox.Show("Error al modificar el registro: " + response.StatusCode + "\nDetalles: " + responseBody + "\nContactar con el administrador.");
                 }
 
                 return response;
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Error al realizar la solicitud PUT: " + ex.Message);
+                //MessageBox.Show("Error al realizar la solicitud PUT: " + ex.Message);
                 return null;
             }
         }

@@ -98,6 +98,9 @@ namespace control_asistencia_savin.Frm
             DateTime getDateToString = DateTime.Parse(_capturaHoraMarcado);
             return getDateToString.ToString("HH:mm:ss");
         }
+        // -------------------------------------------------------------------
+        // PROCEDIMIENTOS PARA VALIDAR ASISTENCIAS EN APIREST O LOCAL CON ASISTENCIAS TEMPORALES
+        // -------------------------------------------------------------------        
         public void setAddAsistencia(RrhhAsistencia item)
         {
             using (var db = new StoreContext())
@@ -106,6 +109,74 @@ namespace control_asistencia_savin.Frm
                 db.SaveChanges();
             }
         }
+        public void setAddAsistenciaTemporal(RrhhAsistencia item)
+        {
+
+            RrhhAsistenciaTemporal regAsistencia = new RrhhAsistenciaTemporal()
+            {
+                IdTurno = item.IdTurno,
+                IdPersonal = item.IdPersonal,
+                HoraMarcado = item.HoraMarcado,
+                MinutosAtraso = item.MinutosAtraso,
+                IndTipoMovimiento = item.IndTipoMovimiento,
+                IdPuntoAsistencia = item.IdPuntoAsistencia
+            };
+
+            using (var db = new StoreContext())
+            {
+                db.RrhhAsistenciaTemporals.Add(regAsistencia);
+                db.SaveChanges();
+            }
+        }
+        public void ValidarAsistencia(RrhhAsistencia item)
+        {
+
+            if (_apiService.IsInternetAvailable())
+            {
+                var response = _apiService.RegistrarAsistenciaAsync(item);
+                this.setAddAsistencia(item);
+            }
+            else
+            {
+                //MessageBox.Show("No hay conexión a internet, se registrará en la tabla de TemporalAsistencia", "Estado de la respuesta del servidor");
+                this.setAddAsistenciaTemporal(item);
+            }
+        }
+        public void registrarAsistenciasTemporales()
+        {
+            using (var context = new StoreContext())
+            {
+                // Obtener todos los registros de rrhh_asistencia_temporal
+                var registrosTemporales = context.RrhhAsistenciaTemporals.ToList();
+
+                foreach (var registroTemporal in registrosTemporales)
+                {
+                    // Convertir el registro temporal a un objeto RrhhAsistencia
+                    var item = new RrhhAsistencia
+                    {
+                        IdTurno = registroTemporal.IdTurno,
+                        IdPersonal = registroTemporal.IdPersonal,
+                        HoraMarcado = registroTemporal.HoraMarcado,
+                        MinutosAtraso = registroTemporal.MinutosAtraso,
+                        IndTipoMovimiento = registroTemporal.IndTipoMovimiento,
+                        IdPuntoAsistencia = registroTemporal.IdPuntoAsistencia
+                    };
+
+                    // Enviar el objeto a través del servicio API
+                    var response = _apiService.RegistrarAsistenciaAsync(item);
+
+                    // Si el registro se envió con éxito, elimínalo de la tabla temporal
+                    //if (response.IsSuccessStatusCode)
+                    //{
+                    context.RrhhAsistenciaTemporals.Remove(registroTemporal);
+                    //}
+                }
+
+                // Guardar los cambios en la base de datos
+                context.SaveChanges();
+            }
+        }
+
         // -------------------------------------------------------------------
         // 
         // -------------------------------------------------------------------
@@ -114,7 +185,9 @@ namespace control_asistencia_savin.Frm
         {
             using (var context = new StoreContext())
             {
+                string dirMac = _apiService._dirMac;
                 var ultimoRegistro = context.RrhhPuntoAsistencia
+                    .Where(a => a.DireccionMac == dirMac)
                     .Select(a => a.Id)
                     .FirstOrDefault(); // Devuelve el primer elemento o 0 si la secuencia está vacía.
 

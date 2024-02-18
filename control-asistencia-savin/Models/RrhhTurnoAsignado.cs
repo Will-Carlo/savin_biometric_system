@@ -15,13 +15,13 @@ public partial class RrhhTurnoAsignado
 
     public int? IndMarcadoFijoVariable { get; set; }
 
-    public int IdPuntoAsistencia { get; set; }
+    public int? IdPuntoAsistencia { get; set; }
 
     public string? Codigo { get; set; }
 
     public virtual RrhhPersonal IdPersonalNavigation { get; set; } = null!;
 
-    public virtual RrhhPuntoAsistencia IdPuntoAsistenciaNavigation { get; set; } = null!;
+    public virtual RrhhPuntoAsistencia? IdPuntoAsistenciaNavigation { get; set; }
 
     public virtual RrhhTurno IdTurnoNavigation { get; set; } = null!;
 }

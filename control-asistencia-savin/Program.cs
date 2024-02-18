@@ -23,6 +23,8 @@ namespace control_asistencia_savin
             // Inicializar y mostrar el formulario de carga
             //frmLoading loadingForm = new frmLoading();
             //Application.Run(loadingForm);
+            InternetChecker networkChangeExample = new InternetChecker();
+            Console.ReadLine();
 
 
             ApplicationConfiguration.Initialize();

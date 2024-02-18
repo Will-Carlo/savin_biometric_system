@@ -40,6 +40,7 @@
             panel1 = new Panel();
             panel2 = new Panel();
             pictureBox1 = new PictureBox();
+            label1 = new Label();
             panel1.SuspendLayout();
             panel2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
@@ -166,6 +167,7 @@
             // 
             // panel2
             // 
+            panel2.Controls.Add(label1);
             panel2.Controls.Add(pictureBox1);
             panel2.Controls.Add(lblTitOption);
             panel2.Controls.Add(lblHora);
@@ -189,6 +191,16 @@
             pictureBox1.SizeMode = PictureBoxSizeMode.Zoom;
             pictureBox1.TabIndex = 32;
             pictureBox1.TabStop = false;
+            // 
+            // label1
+            // 
+            label1.AutoSize = true;
+            label1.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            label1.Location = new Point(1054, 297);
+            label1.Name = "label1";
+            label1.Size = new Size(51, 21);
+            label1.TabIndex = 33;
+            label1.Text = "v2.0.5";
             // 
             // VerifyForm
             // 
@@ -222,5 +234,6 @@
         public Label lblTitHora;
         public Label lblTitPersonal;
         public Label lblTitOption;
+        private Label label1;
     }
 }

@@ -223,6 +223,7 @@ namespace control_asistencia_savin.ApiService
                     BorrarDatosDeTabla(context.RrhhTurnoAsignados);
                     
                     BorrarDatosDeTabla(context.RrhhAsistencia);
+                    BorrarDatosDeTabla(context.RrhhAsistenciaTemporals);
                     BorrarDatosDeTabla(context.AuxAsistencia);
 
 

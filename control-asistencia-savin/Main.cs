@@ -59,19 +59,24 @@ namespace control_asistencia_savin
 
 
             //--------------------------------------------------------------
-            //// Inicializa el temporizador
-            //timer = new System.Timers.Timer();
+            // temporizador para registro de asistencias temporales y de tipo variable
+            timer = new System.Timers.Timer();
 
-            //// Establece el intervalo de tiempo (en milisegundos) antes de que se dispare el evento
-            //// En este ejemplo, configuramos el temporizador para que se ejecute cada día a las 7:00 pM
-            //TimeSpan timeUntilNextRun = CalculateTimeUntilNextRun();
-            //timer.Interval = timeUntilNextRun.TotalMilliseconds;
+            // Establece el intervalo de tiempo (en milisegundos) antes de que se dispare el evento
+            // En este ejemplo, configuramos el temporizador para que se ejecute cada día a las
+            TimeSpan timeUntilNextRun = CalculateTimeUntilNextRun();
+            timer.Interval = timeUntilNextRun.TotalMilliseconds;
 
-            //// Manejador de evento para el temporizador
-            //timer.Elapsed += Timer_Elapsed;
+            // Manejador de evento para el temporizador
+            timer.Elapsed += Timer_Elapsed;
 
-            //// Inicia el temporizador
-            //timer.Start();
+            // Inicia el temporizador
+            timer.Start();
+
+
+            //---------------------------------------------------------------
+            // verifica la conexión cada 20 minutos
+
         }
         private void loadSystem()
         {
@@ -270,7 +275,72 @@ namespace control_asistencia_savin
         // INICIAR ENTRE 5 A 10
         // -------------------------------------------------------------------
 
+        // -------------------------------------------------------------------
+        // REGISTRAR ASISTENCIAS TEMPORALES Y RECARGAR PARA ASISTENCIAS DE PERSONAL DE TIPO VARIABLE
+        // -------------------------------------------------------------------
+        private TimeSpan CalculateTimeUntilNextRun()
+        {
+            // Obtenemos la hora actual
+            DateTime now = DateTime.Now;
 
+            // Establecemos la hora específica en la que deseamos que se ejecute la tarea
+            DateTime scheduledTime;
+
+            if (_m.EsSabado())
+            {
+                scheduledTime = new DateTime(now.Year, now.Month, now.Day, 12, 30, 01); // 12:30 PM
+            }
+            else
+            {
+                if (now.TimeOfDay > new TimeSpan(12, 0, 0)) // Si es después de las 12:00 PM
+                {
+                    scheduledTime = new DateTime(now.Year, now.Month, now.Day, 12, 0, 1); // 12:00 PM
+                }
+                else if (now.TimeOfDay > new TimeSpan(14, 0, 0)) // Si es después de las 2:00 PM
+                {
+                    scheduledTime = new DateTime(now.Year, now.Month, now.Day, 14, 0, 1); // 2:00 PM
+                }
+                else if (now.TimeOfDay > new TimeSpan(18, 30, 0)) // Si es después de las 2:00 PM
+                {
+                    scheduledTime = new DateTime(now.Year, now.Month, now.Day, 18, 30, 1); // 6:30 PM
+                }
+                else
+                {
+                    scheduledTime = new DateTime(now.Year, now.Month, now.Day, 18, 50, 1); // caso por defecto
+                }
+            }
+
+            // Si ya pasó la hora programada de hoy, programamos la tarea para mañana a la misma hora
+            if (now > scheduledTime && _apiService.IsInternetAvailable())
+            {
+                // aquí iniiamos el procedimiento si ya pasó la hora y el programa estaba cerrado
+                this.reLoad();
+                scheduledTime = scheduledTime.AddDays(1);
+            }
+
+            // Calculamos el tiempo hasta la próxima ejecución
+            TimeSpan timeUntilNextRun = scheduledTime - now;
+
+            return timeUntilNextRun;
+        }
+        private void Timer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
+        {
+            // Detenemos el temporizador para que no vuelva a ejecutarse automáticamente
+            timer.Stop();
+            this.reLoad();
+            // Reiniciamos el temporizador para el próximo día
+            timer.Interval = 24 * 60 * 60 * 1000; // 24 horas en milisegundos
+            timer.Start();
+        }
+        private void reLoad()
+        {
+            if (_apiService.IsInternetAvailable())
+            {
+                _m.registrarAsistenciasTemporales();
+                _functionsDataBase.LimpiarDB();
+                _functionsDataBase.loadDataBase();
+            }
+        }
 
     }
 }

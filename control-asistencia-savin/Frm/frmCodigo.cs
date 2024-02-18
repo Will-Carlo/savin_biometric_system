@@ -78,43 +78,43 @@ namespace control_asistencia_savin
                 {
                     if (PersonalName(IdPersonal) != null)
                     {
-                        string tipoMov = m.capturaTipoMovimiento(IdPersonal) == 461 ? "ENTRADA" : "SALIDA";
-                        lblStatusProcess.Text = tipoMov + " VERIFICADA";
-                        lblStatusProcess.ForeColor = Color.Green;
-                        lblStatusProcess.Visible = true;
-                        // carga los datos del empleado en el label
-                        lblNombre.Text = PersonalName(IdPersonal);
-                        lblHora.Text = m.getHora();
-                        //Muestra en pantalla los datos y hora
-                        lblNombre.Visible = true;
-                        lblHora.Visible = true;
-
-                        RrhhAsistencia regisAsis = new RrhhAsistencia()
-                        {
-                            IdTurno = m.getIdTurno(IdPersonal),
-                            IdPersonal = IdPersonal,
-                            HoraMarcado = m.getHoraMarcado(),
-                            MinutosAtraso = m.getMinutosAtraso(IdPersonal),
-                            IndTipoMovimiento = m.getIndTipoMovimiento(IdPersonal),
-                            IdPuntoAsistencia = m.getIdPuntoAsistencia()
-                        };
-
-                        // v1
-                        // m.setAddAsistencia(regisAsis);
-                        // Enviando datos al API REST
-                        // var response = _apiService.RegistrarAsistenciaAsync(regisAsis);
-                        // ----------
-
-                        //if (response != null)
-                        //{
-                        //    MessageBox.Show("Asistencia enviada al servidor con éxito: " + response.Status);
-                        //}
-
                         if (!m.EsRegistroDoble(IdPersonal))
                         {
-                            m.setAddAsistencia(regisAsis);
+                            string tipoMov = m.capturaTipoMovimiento(IdPersonal) == 461 ? "ENTRADA" : "SALIDA";
+                            lblStatusProcess.Text = tipoMov + " VERIFICADA";
+                            lblStatusProcess.ForeColor = Color.Green;
+                            lblStatusProcess.Visible = true;
+                            // carga los datos del empleado en el label
+                            lblNombre.Text = PersonalName(IdPersonal);
+                            lblHora.Text = m.getHora();
+                            //Muestra en pantalla los datos y hora
+                            lblNombre.Visible = true;
+                            lblHora.Visible = true;
+
+                            RrhhAsistencia regisAsis = new RrhhAsistencia()
+                            {
+                                IdTurno = m.getIdTurno(IdPersonal),
+                                IdPersonal = IdPersonal,
+                                HoraMarcado = m.getHoraMarcado(),
+                                MinutosAtraso = m.getMinutosAtraso(IdPersonal),
+                                IndTipoMovimiento = m.getIndTipoMovimiento(IdPersonal),
+                                IdPuntoAsistencia = m.getIdPuntoAsistencia()
+                            };
+
+                            // v1
+                            // m.setAddAsistencia(regisAsis);
                             // Enviando datos al API REST
-                            var response = _apiService.RegistrarAsistenciaAsync(regisAsis);
+                            // var response = _apiService.RegistrarAsistenciaAsync(regisAsis);
+                            // ----------
+
+                            //if (response != null)
+                            //{
+                            //    MessageBox.Show("Asistencia enviada al servidor con éxito: " + response.Status);
+                            //}
+
+                                // Enviando datos al API REST
+
+                            m.ValidarAsistencia(regisAsis);
                         }
                         else
                         {

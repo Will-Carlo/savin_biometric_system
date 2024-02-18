@@ -11,6 +11,8 @@ public partial class RrhhPuntoAsistencia
 
     public string? Direccion { get; set; }
 
+    public int? MinutosTolerancia { get; set; }
+
     public int? IdPersonal { get; set; }
 
     public string? DireccionMac { get; set; }
@@ -24,6 +26,10 @@ public partial class RrhhPuntoAsistencia
     public virtual RrhhPersonal? IdPersonalNavigation { get; set; }
 
     public virtual InvSucursal? IdSucursalNavigation { get; set; }
+
+    public virtual ICollection<RrhhAsistencia> RrhhAsistencia { get; set; } = new List<RrhhAsistencia>();
+
+    public virtual ICollection<RrhhAsistenciaTemporal> RrhhAsistenciaTemporals { get; set; } = new List<RrhhAsistenciaTemporal>();
 
     public virtual ICollection<RrhhTurnoAsignado> RrhhTurnoAsignados { get; set; } = new List<RrhhTurnoAsignado>();
 }

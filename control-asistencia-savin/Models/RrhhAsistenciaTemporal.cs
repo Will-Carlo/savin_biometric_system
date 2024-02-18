@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace control_asistencia_savin.Models;
 
-public partial class RrhhAsistencia
+public partial class RrhhAsistenciaTemporal
 {
     public int Id { get; set; }
 
