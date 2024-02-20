@@ -21,7 +21,7 @@ namespace control_asistencia_savin.ApiService
         //private readonly MetodosAsistencia _m = new MetodosAsistencia();
 
         public string _dirMac { get; set; }
-        public bool _esProduction = false;
+        public bool _esProduction = true;
         public ApiService()
         {
             _credenciales = new Credenciales(_esProduction);

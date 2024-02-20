@@ -188,7 +188,7 @@
             label1.Name = "label1";
             label1.Size = new Size(51, 21);
             label1.TabIndex = 33;
-            label1.Text = "v2.0.6";
+            label1.Text = "v2.0.7";
             // 
             // pictureBox1
             // 

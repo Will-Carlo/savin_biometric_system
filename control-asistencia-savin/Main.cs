@@ -60,22 +60,23 @@ namespace control_asistencia_savin
 
             //--------------------------------------------------------------
             // temporizador para registro de asistencias temporales y de tipo variable
-            timer = new System.Timers.Timer();
+            //timer = new System.Timers.Timer();
 
-            // Establece el intervalo de tiempo (en milisegundos) antes de que se dispare el evento
-            // En este ejemplo, configuramos el temporizador para que se ejecute cada día a las
-            TimeSpan timeUntilNextRun = CalculateTimeUntilNextRun();
-            timer.Interval = timeUntilNextRun.TotalMilliseconds;
+            //// Establece el intervalo de tiempo (en milisegundos) antes de que se dispare el evento
+            //// En este ejemplo, configuramos el temporizador para que se ejecute cada día a las
+            //TimeSpan timeUntilNextRun = CalculateTimeUntilNextRun();
+            //timer.Interval = timeUntilNextRun.TotalMilliseconds;
 
-            // Manejador de evento para el temporizador
-            timer.Elapsed += Timer_Elapsed;
+            //// Manejador de evento para el temporizador
+            //timer.Elapsed += Timer_Elapsed;
 
-            // Inicia el temporizador
-            timer.Start();
+            //// Inicia el temporizador
+            //timer.Start();
 
 
             //---------------------------------------------------------------
-            // verifica la conexión cada 20 minutos
+            // verifica la conexión cada 20 minutos v2
+            SetupScheduledTask();
 
         }
         private void loadSystem()
@@ -277,60 +278,156 @@ namespace control_asistencia_savin
         // -------------------------------------------------------------------
         // REGISTRAR ASISTENCIAS TEMPORALES Y RECARGAR PARA ASISTENCIAS DE PERSONAL DE TIPO VARIABLE
         // -------------------------------------------------------------------
-        private TimeSpan CalculateTimeUntilNextRun()
+        //private TimeSpan CalculateTimeUntilNextRun()
+        //{
+        //    // Obtenemos la hora actual
+        //    DateTime now = DateTime.Now;
+
+        //    // Establecemos la hora específica en la que deseamos que se ejecute la tarea
+        //    DateTime scheduledTime;
+
+        //    if (_m.EsSabado())
+        //    {
+        //        scheduledTime = new DateTime(now.Year, now.Month, now.Day, 12, 30, 01); // 12:30 PM
+        //    }   
+        //    else
+        //    {
+        //        if (now.TimeOfDay > new TimeSpan(11, 20, 0)) // Si es después de las 12:00 PM
+        //        {
+        //            scheduledTime = new DateTime(now.Year, now.Month, now.Day, 11, 54, 1); // 12:00 PM
+        //        }
+        //        else if (now.TimeOfDay > new TimeSpan(11, 50, 0)) // Si es después de las 2:00 PM
+        //        {
+        //            //scheduledTime = new DateTime(now.Year, now.Month, now.Day, 9, 47, 1); // 12:00 PM
+        //            scheduledTime = new DateTime(now.Year, now.Month, now.Day, 11, 56, 1); // 2:00 PM
+        //        }
+        //        else if (now.TimeOfDay > new TimeSpan(18, 30, 0)) // Si es después de las 2:00 PM
+        //        {
+        //            //scheduledTime = new DateTime(now.Year, now.Month, now.Day, 9, 47, 1); // 12:00 PM
+        //            scheduledTime = new DateTime(now.Year, now.Month, now.Day, 18, 30, 1); // 6:30 PM
+        //        }
+        //        else
+        //        {
+        //            scheduledTime = new DateTime(now.Year, now.Month, now.Day, 18, 50, 1); // caso por defecto
+        //        }
+        //    }
+
+        //    // Si ya pasó la hora programada de hoy, programamos la tarea para mañana a la misma hora
+        //    if (now > scheduledTime && _apiService.IsInternetAvailable())
+        //    {
+        //        // aquí iniiamos el procedimiento si ya pasó la hora y el programa estaba cerrado
+        //        this.reLoad();
+        //        scheduledTime = scheduledTime.AddDays(1);
+        //    }
+
+        //    // Calculamos el tiempo hasta la próxima ejecución
+        //    TimeSpan timeUntilNextRun = scheduledTime - now;
+
+        //    return timeUntilNextRun;
+        //}
+        //private void Timer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
+        //{
+        //    // Detenemos el temporizador para que no vuelva a ejecutarse automáticamente
+        //    timer.Stop();
+        //    this.reLoad();
+        //    // Reiniciamos el temporizador para el próximo día
+        //    timer.Interval = 24 * 60 * 60 * 1000; // 24 horas en milisegundos
+        //    timer.Start();
+        //}
+        //private void reLoad()
+        //{
+        //    if (_apiService.IsInternetAvailable())
+        //    {
+        //        _m.registrarAsistenciasTemporales();
+        //        _functionsDataBase.LimpiarDB();
+        //        _functionsDataBase.loadDataBase();
+        //    }
+        //}
+
+        // -------------------------------------------------------------------
+        // REGISTRAR ASISTENCIAS TEMPORALES Y RECARGAR PARA ASISTENCIAS DE PERSONAL DE TIPO VARIABLE V2
+        // -------------------------------------------------------------------
+
+        private void SetupScheduledTask()
         {
-            // Obtenemos la hora actual
-            DateTime now = DateTime.Now;
+            // Crear un temporizador
+            System.Timers.Timer timer = new System.Timers.Timer();
 
-            // Establecemos la hora específica en la que deseamos que se ejecute la tarea
-            DateTime scheduledTime;
+            // Establecer el intervalo del temporizador a 1 minuto (60000 milisegundos)
+            timer.Interval = 60000;
 
-            if (_m.EsSabado())
-            {
-                scheduledTime = new DateTime(now.Year, now.Month, now.Day, 12, 30, 01); // 12:30 PM
-            }   
-            else
-            {
-                if (now.TimeOfDay > new TimeSpan(9, 0, 0)) // Si es después de las 12:00 PM
-                {
-                    scheduledTime = new DateTime(now.Year, now.Month, now.Day, 9, 47, 1); // 12:00 PM
-                }
-                else if (now.TimeOfDay > new TimeSpan(14, 0, 0)) // Si es después de las 2:00 PM
-                {
-                    scheduledTime = new DateTime(now.Year, now.Month, now.Day, 14, 0, 1); // 2:00 PM
-                }
-                else if (now.TimeOfDay > new TimeSpan(18, 30, 0)) // Si es después de las 2:00 PM
-                {
-                    scheduledTime = new DateTime(now.Year, now.Month, now.Day, 18, 30, 1); // 6:30 PM
-                }
-                else
-                {
-                    scheduledTime = new DateTime(now.Year, now.Month, now.Day, 18, 50, 1); // caso por defecto
-                }
-            }
+            // Asociar un controlador de eventos al evento Elapsed del temporizador
+            timer.Elapsed += ScheduledTaskHandler;
 
-            // Si ya pasó la hora programada de hoy, programamos la tarea para mañana a la misma hora
-            if (now > scheduledTime && _apiService.IsInternetAvailable())
-            {
-                // aquí iniiamos el procedimiento si ya pasó la hora y el programa estaba cerrado
-                this.reLoad();
-                scheduledTime = scheduledTime.AddDays(1);
-            }
-
-            // Calculamos el tiempo hasta la próxima ejecución
-            TimeSpan timeUntilNextRun = scheduledTime - now;
-
-            return timeUntilNextRun;
-        }
-        private void Timer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
-        {
-            // Detenemos el temporizador para que no vuelva a ejecutarse automáticamente
-            timer.Stop();
-            this.reLoad();
-            // Reiniciamos el temporizador para el próximo día
-            timer.Interval = 24 * 60 * 60 * 1000; // 24 horas en milisegundos
+            // Iniciar el temporizador
             timer.Start();
         }
+
+        private void ScheduledTaskHandler(object sender, System.Timers.ElapsedEventArgs e)
+        {
+            // Obtener la hora actual
+            DateTime now = DateTime.Now;
+
+            // Verificar si la hora actual está dentro del rango de ejecución deseado
+            if (IsScheduledTime(now))
+            {
+                // Ejecutar la tarea programada
+                ExecuteScheduledTask();
+            }
+        }
+
+        private bool IsScheduledTime(DateTime currentTime)
+        {
+            // Definir los horarios deseados para ejecutar la tarea automáticamente
+            TimeSpan[] scheduledTimes = new TimeSpan[]
+            {
+                //MAÑANA
+                new TimeSpan(9, 01, 01), // 12:30 PM
+                new TimeSpan(9, 31, 01), // 12:30 PM
+                new TimeSpan(10, 01, 01), // 12:30 PM
+                new TimeSpan(10, 31, 01), // 12:30 PM
+                new TimeSpan(11, 01, 01), // 12:30 PM
+                new TimeSpan(11, 31, 01), // 12:30 PM
+                new TimeSpan(12, 01, 01), // 12:30 PM
+                new TimeSpan(12, 29, 01), // 12:30 PM
+                //TARDE
+                new TimeSpan(14, 01, 01),  // 2:00 PM
+                new TimeSpan(14, 31, 01),  // 2:00 PM
+                new TimeSpan(15, 01, 01),  // 2:00 PM
+                new TimeSpan(15, 31, 01),  // 2:00 PM
+                new TimeSpan(16, 01, 01),  // 2:00 PM
+                new TimeSpan(16, 31, 01),  // 2:00 PM
+                new TimeSpan(17, 01, 01),  // 2:00 PM
+                new TimeSpan(17, 31, 01),  // 2:00 PM
+                new TimeSpan(18, 01, 01),  // 6:30 PM
+                new TimeSpan(18, 31, 01),  // 6:30 PM
+                new TimeSpan(18, 59, 01),  // 6:30 PM
+                new TimeSpan(19, 31, 01),  // 6:30 PM
+                //new TimeSpan(12, 04, 0),  // PRUEBA
+                //new TimeSpan(12, 05, 0),  // PRUEBA
+                //new TimeSpan(12, 06, 0),  // PRUEBA
+                //new TimeSpan(12, 07, 0)  // PRUEBA
+
+            };
+
+            // Verificar si la hora actual coincide con alguno de los horarios programados
+            foreach (TimeSpan scheduledTime in scheduledTimes)
+            {
+                if (currentTime.TimeOfDay.Hours == scheduledTime.Hours &&
+                    currentTime.TimeOfDay.Minutes == scheduledTime.Minutes)
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        private void ExecuteScheduledTask()
+        {
+            reLoad();
+        }
+
         private void reLoad()
         {
             if (_apiService.IsInternetAvailable())
@@ -340,6 +437,7 @@ namespace control_asistencia_savin
                 _functionsDataBase.loadDataBase();
             }
         }
+
 
     }
 }
