@@ -84,7 +84,7 @@ namespace control_asistencia_savin.ApiService
             using (var context = new StoreContext())
             {
                 GuardarEntidades(context, data.RrhhTurno);
-                GuardarEntidades(context, data.GenCiudad);
+                GuardarEntidades(context, data.GenCiudad);    
                 GuardarEntidades(context, data.InvAlmacen);
 
                 GuardarPersonal(context, data.RrhhPersonal);
@@ -95,7 +95,7 @@ namespace control_asistencia_savin.ApiService
                 GuardarEntidades(context, data.RrhhPuntoAsistencia);
                 GuardarEntidades(context, data.RrhhTurnoAsignado);
 
-                //recibimos datos de la tabla rrhh_asistencia
+                //////recibimos datos de la tabla rrhh_asistencia
                 GuardarEntidades(context, data.RrhhAsistencia);
 
                 context.SaveChanges();

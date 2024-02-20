@@ -108,6 +108,12 @@ namespace control_asistencia_savin.ApiService
                 case 9:
                     // SANTA CRUZ
                     return "90-B1-1C-6C-47-28";
+                case 10:
+                    // ORURO
+                    return "98-90-96-DC-33-C6";
+                case 11:
+                    // POTOSÍ
+                    return "90-B1-1C-9D-95-0A";
                 default:
                     return this.macAddress();
             }

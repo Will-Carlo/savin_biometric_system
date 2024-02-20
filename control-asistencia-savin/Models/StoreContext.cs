@@ -196,12 +196,6 @@ public partial class StoreContext : DbContext
             entity.Property(e => e.IdSucursal).HasColumnName("id_sucursal");
             entity.Property(e => e.MinutosTolerancia).HasColumnName("minutos_tolerancia");
             entity.Property(e => e.Nombre).HasColumnName("nombre");
-
-            entity.HasOne(d => d.IdAlmacenNavigation).WithMany(p => p.RrhhPuntoAsistencia).HasForeignKey(d => d.IdAlmacen);
-
-            entity.HasOne(d => d.IdPersonalNavigation).WithMany(p => p.RrhhPuntoAsistencia).HasForeignKey(d => d.IdPersonal);
-
-            entity.HasOne(d => d.IdSucursalNavigation).WithMany(p => p.RrhhPuntoAsistencia).HasForeignKey(d => d.IdSucursal);
         });
 
         modelBuilder.Entity<RrhhTurno>(entity =>

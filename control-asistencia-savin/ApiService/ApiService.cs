@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace control_asistencia_savin.ApiService
-{
+{           
     public class ApiService
     {
         private readonly HttpClient _httpClient = new HttpClient();
@@ -21,7 +21,7 @@ namespace control_asistencia_savin.ApiService
         //private readonly MetodosAsistencia _m = new MetodosAsistencia();
 
         public string _dirMac { get; set; }
-        public bool _esProduction = true;
+        public bool _esProduction = false;
         public ApiService()
         {
             _credenciales = new Credenciales(_esProduction);

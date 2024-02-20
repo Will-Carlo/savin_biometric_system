@@ -21,12 +21,6 @@ public partial class RrhhPuntoAsistencia
 
     public int? IdAlmacen { get; set; }
 
-    public virtual InvAlmacen? IdAlmacenNavigation { get; set; }
-
-    public virtual RrhhPersonal? IdPersonalNavigation { get; set; }
-
-    public virtual InvSucursal? IdSucursalNavigation { get; set; }
-
     public virtual ICollection<RrhhAsistencia> RrhhAsistencia { get; set; } = new List<RrhhAsistencia>();
 
     public virtual ICollection<RrhhAsistenciaTemporal> RrhhAsistenciaTemporals { get; set; } = new List<RrhhAsistenciaTemporal>();

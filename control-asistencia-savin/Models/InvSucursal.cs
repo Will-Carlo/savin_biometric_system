@@ -10,6 +10,4 @@ public partial class InvSucursal
     public int? IdCiudad { get; set; }
 
     public virtual GenCiudad? IdCiudadNavigation { get; set; }
-
-    public virtual ICollection<RrhhPuntoAsistencia> RrhhPuntoAsistencia { get; set; } = new List<RrhhPuntoAsistencia>();
 }

@@ -234,9 +234,7 @@ public partial class StoreContext : DbContext
                 .HasForeignKey(d => d.IdPersonal)
                 .OnDelete(DeleteBehavior.ClientSetNull);
 
-            entity.HasOne(d => d.IdPuntoAsistenciaNavigation).WithMany(p => p.RrhhTurnoAsignados)
-                .HasForeignKey(d => d.IdPuntoAsistencia)
-                .OnDelete(DeleteBehavior.ClientSetNull);
+            entity.HasOne(d => d.IdPuntoAsistenciaNavigation).WithMany(p => p.RrhhTurnoAsignados).HasForeignKey(d => d.IdPuntoAsistencia);
 
             entity.HasOne(d => d.IdTurnoNavigation).WithMany(p => p.RrhhTurnoAsignados)
                 .HasForeignKey(d => d.IdTurno)

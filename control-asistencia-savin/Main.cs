@@ -80,7 +80,6 @@ namespace control_asistencia_savin
         }
         private void loadSystem()
         {
-
             //MessageBox.Show(_functionsDataBase.verifyConection().ToString());
             if (_functionsDataBase.verifyConection())
             {
@@ -289,12 +288,12 @@ namespace control_asistencia_savin
             if (_m.EsSabado())
             {
                 scheduledTime = new DateTime(now.Year, now.Month, now.Day, 12, 30, 01); // 12:30 PM
-            }
+            }   
             else
             {
-                if (now.TimeOfDay > new TimeSpan(12, 0, 0)) // Si es después de las 12:00 PM
+                if (now.TimeOfDay > new TimeSpan(9, 0, 0)) // Si es después de las 12:00 PM
                 {
-                    scheduledTime = new DateTime(now.Year, now.Month, now.Day, 12, 0, 1); // 12:00 PM
+                    scheduledTime = new DateTime(now.Year, now.Month, now.Day, 9, 47, 1); // 12:00 PM
                 }
                 else if (now.TimeOfDay > new TimeSpan(14, 0, 0)) // Si es después de las 2:00 PM
                 {
