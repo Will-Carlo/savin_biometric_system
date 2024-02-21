@@ -32,7 +32,9 @@ control-asistencia-savin/backup/
 # Archivo ApiService
 control-asistencia-savin/ApiService/Credenciales.cs
 
-
+# Archivos del software
+control-asistencia-savin.sln
+control-asistencia-savin/Properties/launchSettings.json
 
 
 
