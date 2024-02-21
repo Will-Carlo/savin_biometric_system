@@ -30,7 +30,8 @@ backup/
 control-asistencia-savin/backup/
 
 # Archivo ApiService
-control-asistencia-savin/ApiService/ApiService.cs
+control-asistencia-savin/ApiService/Credenciales.cs
+
 
 
 
