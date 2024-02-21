@@ -26,10 +26,9 @@
 Thumbs.db
 
 # Backups de la Base de Datos
-backup/
 control-asistencia-savin/backup/
 
-# Archivo ApiService
+# Archivo Credenciales
 control-asistencia-savin/ApiService/Credenciales.cs
 
 # Archivos del software
