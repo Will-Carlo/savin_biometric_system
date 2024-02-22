@@ -39,7 +39,7 @@
             btnVerificarHuellaCod = new Button();
             panel1 = new Panel();
             panel2 = new Panel();
-            label1 = new Label();
+            lblVersion = new Label();
             pictureBox1 = new PictureBox();
             panel1.SuspendLayout();
             panel2.SuspendLayout();
@@ -167,7 +167,7 @@
             // 
             // panel2
             // 
-            panel2.Controls.Add(label1);
+            panel2.Controls.Add(lblVersion);
             panel2.Controls.Add(pictureBox1);
             panel2.Controls.Add(lblTitOption);
             panel2.Controls.Add(lblHora);
@@ -180,15 +180,15 @@
             panel2.Size = new Size(1125, 333);
             panel2.TabIndex = 34;
             // 
-            // label1
+            // lblVersion
             // 
-            label1.AutoSize = true;
-            label1.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            label1.Location = new Point(1054, 297);
-            label1.Name = "label1";
-            label1.Size = new Size(51, 21);
-            label1.TabIndex = 33;
-            label1.Text = "v2.0.7";
+            lblVersion.AutoSize = true;
+            lblVersion.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            lblVersion.Location = new Point(1054, 297);
+            lblVersion.Name = "lblVersion";
+            lblVersion.Size = new Size(51, 21);
+            lblVersion.TabIndex = 33;
+            lblVersion.Text = "vX.X.X";
             // 
             // pictureBox1
             // 
@@ -234,6 +234,6 @@
         public Label lblTitHora;
         public Label lblTitPersonal;
         public Label lblTitOption;
-        private Label label1;
+        private Label lblVersion;
     }
 }
