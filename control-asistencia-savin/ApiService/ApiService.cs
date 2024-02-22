@@ -21,11 +21,17 @@ namespace control_asistencia_savin.ApiService
         //private readonly MetodosAsistencia _m = new MetodosAsistencia();
 
         public string _dirMac { get; set; }
-        public bool _esProduction = true;
+        public bool _esProduction = false;
         public ApiService()
         {
             _credenciales = new Credenciales(_esProduction);
             _dirMac = _credenciales._PssdMac;
+            this.CleanHeaders();
+        }
+        public ApiService(bool _prod, string _mac)
+        {
+            _credenciales = new Credenciales(_prod);
+            _dirMac = _mac;
             this.CleanHeaders();
         }
         public bool IsInternetAvailable()
@@ -209,7 +215,7 @@ namespace control_asistencia_savin.ApiService
             // Limpiar los encabezados antes de agregarlos nuevamente
             _httpClient.DefaultRequestHeaders.Clear();
             _httpClient.DefaultRequestHeaders.Add(_credenciales._token, _credenciales._PssdToken);
-            _httpClient.DefaultRequestHeaders.Add(_credenciales._mac, _credenciales._PssdMac);
+            _httpClient.DefaultRequestHeaders.Add(_credenciales._mac, this._dirMac);
         }
   
     }

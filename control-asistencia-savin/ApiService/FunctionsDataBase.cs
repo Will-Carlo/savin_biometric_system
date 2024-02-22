@@ -61,6 +61,27 @@ namespace control_asistencia_savin.ApiService
             }
         }
 
+        public async Task loadDataBaseForMac(ApiService _apiService)
+        {
+            try
+            {
+                var data = await _apiService.GetDataAsync();
+
+                if (data != null)
+                {
+                    GuardarDatosEnBaseDeDatos(data);
+                }
+                // MessageBox.Show("Datos guardados con éxito");
+
+            }
+            catch (DbUpdateException ex)
+            {
+                MessageBox.Show("error bd reg: " + ex.InnerException.Message);
+                Environment.Exit(0);
+
+            }
+        }
+
         //public void loadDataBase()
         //{
         //    try
@@ -372,7 +393,7 @@ namespace control_asistencia_savin.ApiService
                     try
                     {
                         file.Delete();
-                        //MessageBox.Show($"El archivo {file.Name} ha sido eliminado.");
+                        MessageBox.Show($"El archivo {file.Name} ha sido eliminado.");
                     }
                     catch (Exception ex)
                     {
@@ -428,6 +449,39 @@ namespace control_asistencia_savin.ApiService
             {
                 var puntoAsistencia = context.RrhhPuntoAsistencia
                                             .FirstOrDefault(pa => pa.DireccionMac == _apiService._dirMac);
+                return puntoAsistencia?.Nombre;
+            }
+        }
+
+        public string LoadRegisters(int n, string messageMac)
+        {
+            this.LimpiarDB();
+            Credenciales cd = new Credenciales(n);
+            //MessageBox.Show("MAC: "+cd._mac);
+            ApiService ap = new ApiService(true, cd._mac);
+            this.loadDataBaseForMac(ap);
+
+            MessageBox.Show(messageMac);
+
+            return "Punto Asistencia: " + this.GetPuntoAsistencia(cd._mac) +
+                "\nNombre de la tienda: " + this.GetNombreTienda(cd._mac);
+        }
+
+        public string? GetPuntoAsistencia(string _dirMac)
+        {
+            using (var context = new StoreContext())
+            {
+                var puntoAsistencia = context.RrhhPuntoAsistencia
+                                            .FirstOrDefault(pa => pa.DireccionMac == _dirMac);
+                return puntoAsistencia?.Id.ToString();
+            }
+        }
+        public string? GetNombreTienda(string _dirMac)
+        {
+            using (var context = new StoreContext())
+            {
+                var puntoAsistencia = context.RrhhPuntoAsistencia
+                                            .FirstOrDefault(pa => pa.DireccionMac == _dirMac);
                 return puntoAsistencia?.Nombre;
             }
         }

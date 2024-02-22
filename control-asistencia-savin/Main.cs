@@ -91,7 +91,7 @@ namespace control_asistencia_savin
                 _functionsDataBase.loadDataBase();
                 int deleteBackupsMonth = int.Parse(DateTime.Now.ToString("MM")) - 2;
                 int deleteBackups = deleteBackupsMonth == 0 ? 12 : deleteBackupsMonth;
-                //MessageBox.Show("date: " + DateTime.Now.ToString("MM") +"\nInt: "+ deleteBackups.ToString());
+                //MessageBox.Show("date: " + DateTime.Now.ToString("MM") + "\nInt: " + deleteBackups.ToString());
                 _functionsDataBase.DeleteBackupFiles(deleteBackups);
 
                 frmLoading loadingForm = new frmLoading();

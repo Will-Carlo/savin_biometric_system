@@ -33,11 +33,13 @@
             pgrCargarDB = new ProgressBar();
             btnCargarDB = new Button();
             tableLayoutPanel1 = new TableLayoutPanel();
-            flowLayoutPanel1 = new FlowLayoutPanel();
             btnDeleteBD = new Button();
             btnMakeBackUp = new Button();
             btnDeleteBackups = new Button();
             txtDateBackup = new TextBox();
+            cbxStore = new ComboBox();
+            btnCargarRegistros = new Button();
+            lblPuntoAsistencia = new Label();
             SuspendLayout();
             // 
             // btnVerificarApi
@@ -87,13 +89,6 @@
             tableLayoutPanel1.Size = new Size(119, 151);
             tableLayoutPanel1.TabIndex = 4;
             // 
-            // flowLayoutPanel1
-            // 
-            flowLayoutPanel1.Location = new Point(490, 46);
-            flowLayoutPanel1.Name = "flowLayoutPanel1";
-            flowLayoutPanel1.Size = new Size(186, 199);
-            flowLayoutPanel1.TabIndex = 5;
-            // 
             // btnDeleteBD
             // 
             btnDeleteBD.Location = new Point(195, 156);
@@ -131,17 +126,47 @@
             txtDateBackup.Size = new Size(137, 23);
             txtDateBackup.TabIndex = 9;
             // 
+            // cbxStore
+            // 
+            cbxStore.FormattingEnabled = true;
+            cbxStore.Location = new Point(496, 72);
+            cbxStore.Name = "cbxStore";
+            cbxStore.Size = new Size(162, 23);
+            cbxStore.TabIndex = 10;
+            cbxStore.SelectedIndexChanged += cbxStore_SelectedIndexChanged;
+            // 
+            // btnCargarRegistros
+            // 
+            btnCargarRegistros.Location = new Point(496, 119);
+            btnCargarRegistros.Name = "btnCargarRegistros";
+            btnCargarRegistros.Size = new Size(162, 23);
+            btnCargarRegistros.TabIndex = 11;
+            btnCargarRegistros.Text = "Cargar Registros";
+            btnCargarRegistros.UseVisualStyleBackColor = true;
+            btnCargarRegistros.Click += btnCargarRegistros_Click;
+            // 
+            // lblPuntoAsistencia
+            // 
+            lblPuntoAsistencia.AutoSize = true;
+            lblPuntoAsistencia.Location = new Point(496, 164);
+            lblPuntoAsistencia.Name = "lblPuntoAsistencia";
+            lblPuntoAsistencia.Size = new Size(99, 15);
+            lblPuntoAsistencia.TabIndex = 12;
+            lblPuntoAsistencia.Text = "Punto asistencia: ";
+            // 
             // frmTestApi
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.White;
             ClientSize = new Size(688, 295);
+            Controls.Add(lblPuntoAsistencia);
+            Controls.Add(btnCargarRegistros);
+            Controls.Add(cbxStore);
             Controls.Add(txtDateBackup);
             Controls.Add(btnDeleteBackups);
             Controls.Add(btnMakeBackUp);
             Controls.Add(btnDeleteBD);
-            Controls.Add(flowLayoutPanel1);
             Controls.Add(tableLayoutPanel1);
             Controls.Add(pgrCargarDB);
             Controls.Add(btnCargarDB);
@@ -159,12 +184,14 @@
         private ProgressBar pgrVerificarApi;
         private ProgressBar pgrCargarDB;
         private TableLayoutPanel tableLayoutPanel1;
-        private FlowLayoutPanel flowLayoutPanel1;
         private Button btnVerificarApi;
         private Button btnCargarDB;
         private Button btnDeleteBD;
         private Button btnMakeBackUp;
         private Button btnDeleteBackups;
         private TextBox txtDateBackup;
+        private ComboBox cbxStore;
+        private Button btnCargarRegistros;
+        private Label lblPuntoAsistencia;
     }
 }

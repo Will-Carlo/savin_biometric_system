@@ -2,7 +2,7 @@
   "profiles": {
     "control-asistencia-savin": {
       "commandName": "Project",
-      "workingDirectory": "C:\\Users\\ASUS\\source\\repos\\control-asistencia-savin\\control-asistencia-savin"
+      "workingDirectory": "C:\\Users\\USUARIO\\source\\repos\\savin_biometric_system\\control-asistencia-savin"
     }
   }
 }

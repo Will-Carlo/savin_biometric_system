@@ -38,6 +38,11 @@ namespace control_asistencia_savin.ApiService
             this.EsProduction(esProduction);
             //_esProduction = esProduction;
         }
+        public Credenciales(int dirMac)
+        {
+            this._mac = this.MacList(dirMac);
+            //_esProduction = esProduction;
+        }
 
         private void EsProduction(bool Savin)
         {
@@ -72,7 +77,7 @@ namespace control_asistencia_savin.ApiService
             this._PssdToken = "SavinBio-23%";
 
             this._mac = "DirMac";
-            this._PssdMac = MacList(0);
+            this._PssdMac = MacList(1);
         }
 
         private string MacList(int n)
@@ -82,17 +87,17 @@ namespace control_asistencia_savin.ApiService
                 case 0:
                     return this.macAddress().ToString();
                 case 1:
+                    // ALMACÉN CENTRAL
+                    return "1C-BF-CE-62-20-A8";
+                case 2:
                     // GOITIA
                     return "14-B3-1F-11-AB-CF";
-                case 2:
+                case 3:
                     // OFICINA LOAYZA
                     return "14-B3-1F-0F-D3-AF";
-                case 3:
+                case 4:
                     // TIENDA LOAYZA
                     return "34-17-EB-9D-8F-97";
-                case 4:
-                    // TIENDA COCHA
-                    return "1C-BF-CE-65-9D-59";
                 case 5:
                     // TIENDA SATÉLITE
                     return "64-00-6A-86-65-DF";
@@ -100,20 +105,26 @@ namespace control_asistencia_savin.ApiService
                     // TIENDA CEIBO
                     return "98-90-96-D5-EC-45";
                 case 7:
-                    // TIENDA OBRAJES
-                    return "14-B3-1F-0E-FE-82";
+                    // TIENDA COCHA
+                    return "1C-BF-CE-65-9D-59";
                 case 8:
-                    // ALMACÉN CENTRAL
-                    return "1C-BF-CE-62-20-A8";
-                case 9:
                     // SANTA CRUZ
                     return "90-B1-1C-6C-47-28";
+                case 9:
+                    // TARIJA
+                    return "64-00-6A-81-19-2E";
                 case 10:
                     // ORURO
                     return "98-90-96-DC-33-C6";
                 case 11:
                     // POTOSÍ
                     return "90-B1-1C-9D-95-0A";
+                case 12:
+                    // SUCRE
+                    return "90-B1-1C-9D-95-0A";
+                case 13:
+                    // TIENDA OBRAJES
+                    return "14-B3-1F-0E-FE-82";
                 default:
                     return this.macAddress();
             }
