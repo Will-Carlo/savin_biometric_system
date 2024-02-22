@@ -376,14 +376,14 @@ namespace control_asistencia_savin.ApiService
         public void DeleteBackupFiles(int monthBackups)
         {
             string backupDirectory = "backup";
-            string nameBackups = "store_backup_*_" + monthBackups + "*";
+            string nameBackups = "store_backup_*_" + monthBackups + "_*";
             // Asegúrate de que el directorio existe
             if (Directory.Exists(backupDirectory))
             {
                 // Crea una instancia de DirectoryInfo para el directorio 'backup'
                 DirectoryInfo directoryInfo = new DirectoryInfo(backupDirectory);
 
-                // Encuentra todos los archivos que comienzan con 'store_backup_30_12'
+                // Encuentra todos los archivos que comienzan con 'store_backup_30_12_'
                 //MessageBox.Show("test: " + nameBackups);
                 FileInfo[] files = directoryInfo.GetFiles(nameBackups);
 
@@ -393,7 +393,7 @@ namespace control_asistencia_savin.ApiService
                     try
                     {
                         file.Delete();
-                        MessageBox.Show($"El archivo {file.Name} ha sido eliminado.");
+                        //MessageBox.Show($"El archivo {file.Name} ha sido eliminado.");
                     }
                     catch (Exception ex)
                     {

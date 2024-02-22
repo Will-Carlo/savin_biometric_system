@@ -362,7 +362,6 @@ namespace control_asistencia_savin
             // Iniciar el temporizador
             timer.Start();
         }
-
         private void ScheduledTaskHandler(object sender, System.Timers.ElapsedEventArgs e)
         {
             // Obtener la hora actual
@@ -375,7 +374,6 @@ namespace control_asistencia_savin
                 ExecuteScheduledTask();
             }
         }
-
         private bool IsScheduledTime(DateTime currentTime)
         {
             // Definir los horarios deseados para ejecutar la tarea automáticamente
@@ -422,12 +420,10 @@ namespace control_asistencia_savin
 
             return false;
         }
-
         private void ExecuteScheduledTask()
         {
             reLoad();
         }
-
         private void reLoad()
         {
             if (_apiService.IsInternetAvailable())

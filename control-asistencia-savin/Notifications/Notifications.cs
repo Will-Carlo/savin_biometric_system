@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace control_asistencia_savin.Notifications
 {
-    internal class Notificaiones
+    internal class Notifications
     {
 
         //public frmNotification()

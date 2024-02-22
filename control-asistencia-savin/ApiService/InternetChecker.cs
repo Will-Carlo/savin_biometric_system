@@ -6,12 +6,17 @@ using System.Threading.Tasks;
 using System;
 using System.Net.NetworkInformation;
 using System.Timers;
+using control_asistencia_savin.Frm;
 
 namespace control_asistencia_savin.ApiService
 {
 
     public class InternetChecker
     {
+
+
+        private FunctionsDataBase _functionsDataBase = new FunctionsDataBase();
+        private MetodosAsistencia _m = new MetodosAsistencia();
         public InternetChecker()
         {
             NetworkChange.NetworkAvailabilityChanged += NetworkAvailabilityChanged;
@@ -21,9 +26,18 @@ namespace control_asistencia_savin.ApiService
         {
             if (e.IsAvailable)
             {
-                MessageBox.Show("La conexión a Internet se ha restablecido.");
-                // Llama a tu procedimiento aquí
+                reLoad();
             }
         }
+
+        private void reLoad()
+        {
+            _m.registrarAsistenciasTemporales();
+            _functionsDataBase.LimpiarDB();
+            _functionsDataBase.loadDataBase();
+            //MessageBox.Show("se ejecutó la tarea con éxito.");
+
+        }
+
     }
 }

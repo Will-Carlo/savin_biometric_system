@@ -24,7 +24,7 @@ namespace control_asistencia_savin
             //frmLoading loadingForm = new frmLoading();
             //Application.Run(loadingForm);
             InternetChecker networkChangeExample = new InternetChecker();
-            Console.ReadLine();
+            //Console.ReadLine();
 
 
             ApplicationConfiguration.Initialize();
