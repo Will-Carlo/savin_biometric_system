@@ -9,11 +9,16 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Windows.Forms;
+using System.Timers;
 
 namespace control_asistencia_savin
 {
     public partial class frmVerificar : CaptureForm
     {
+        private System.Timers.Timer timer;
+
+
+
         private DPFP.Template Template;
         private DPFP.Verification.Verification Verificator;
         private StoreContext contexto;
@@ -49,8 +54,12 @@ namespace control_asistencia_savin
         //}
         protected override void Process(DPFP.Sample Sample)
         {
+            if (InvokeRequired)
+            {
+                Invoke(new Action(() => Process(Sample)));
+                return;
+            }
             base.Process(Sample);
-
             // Process the sample and create a feature set for the enrollment purpose.
             DPFP.FeatureSet features = ExtractFeatures(Sample, DPFP.Processing.DataPurpose.Verification);
 
@@ -97,8 +106,10 @@ namespace control_asistencia_savin
                                 idEncontrado = emp.Id;
                                 statusProcess = true;
                                 //MessageBox.Show("stt: " + statusProcess);
-
+                                //this.Close();
+                                Close();
                                 Stop();
+                                
                                 //break;
                             }
                             else
@@ -111,6 +122,7 @@ namespace control_asistencia_savin
                         }
                     }
                 }
+
             }
         }
 
@@ -119,6 +131,5 @@ namespace control_asistencia_savin
             contexto = new StoreContext();
             InitializeComponent();
         }
-
     }
 }

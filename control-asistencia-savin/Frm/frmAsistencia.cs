@@ -28,11 +28,10 @@ namespace control_asistencia_savin
 
         private void btnVerificarHuellaCod_Click_1(object sender, EventArgs e)
         {
-            m.setCapturaHoraMarcado(DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
-
             frmVerificar verificar = new frmVerificar();
             verificar.ShowDialog();
 
+            m.setCapturaHoraMarcado(DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
             try
             {
                 // si la verificación es correcta muestra en verde 'VERIFICADO'

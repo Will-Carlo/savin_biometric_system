@@ -51,16 +51,16 @@
 
   <ItemGroup>
     <Reference Include="DPFPDevNET">
-      <HintPath>..\..\..\..\Downloads\DLL.NET\DPFPDevNET.dll</HintPath>
+      <HintPath>DLL.NET\DPFPDevNET.dll</HintPath>
     </Reference>
     <Reference Include="DPFPEngNET">
-      <HintPath>..\..\..\..\Downloads\DLL.NET\DPFPEngNET.dll</HintPath>
+      <HintPath>DLL.NET\DPFPEngNET.dll</HintPath>
     </Reference>
     <Reference Include="DPFPShrNET">
-      <HintPath>..\..\..\..\Downloads\DLL.NET\DPFPShrNET.dll</HintPath>
+      <HintPath>DLL.NET\DPFPShrNET.dll</HintPath>
     </Reference>
     <Reference Include="DPFPVerNET">
-      <HintPath>..\..\..\..\Downloads\DLL.NET\DPFPVerNET.dll</HintPath>
+      <HintPath>DLL.NET\DPFPVerNET.dll</HintPath>
     </Reference>
   </ItemGroup>
 

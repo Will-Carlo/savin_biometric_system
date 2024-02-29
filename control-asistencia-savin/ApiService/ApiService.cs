@@ -88,14 +88,18 @@ namespace control_asistencia_savin.ApiService
                 }
                 else
                 {
-                    throw new HttpRequestException($"No se pudo conectar al servidor: {response.StatusCode}");
+                    return null;
+                    //throw new HttpRequestException($"No se pudo conectar al servidor: {response.StatusCode}");
                 }
             }
             catch (HttpRequestException ex)
             {
                 // Captura la excepción y maneja el error aquí
-                MessageBox.Show("Error al conectar al servidor: " + ex.Message+ "\nContacte con el administrador.");
-                Environment.Exit(0);
+                //MessageBox.Show("Error al conectar al servidor: " + ex.Message+ "\nContacte con el administrador.");
+                //if (this._esProduction)
+                //{
+                //    Environment.Exit(0);
+                //}
                 return null;
             }
         }

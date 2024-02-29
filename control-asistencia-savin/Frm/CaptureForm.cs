@@ -66,7 +66,10 @@ namespace control_asistencia_savin
                 try
                 {
                     Capturer.StopCapture();
-                }
+					//MessageBox.Show("Cerrando el form");
+					////Application.ExitThread();
+					//Close();
+				}
                 catch
                 {
                     SetPrompt("No se puede terminar la captura");
