@@ -61,7 +61,9 @@ namespace control_asistencia_savin
             // Prompt
             // 
             Prompt.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            Prompt.BackColor = SystemColors.Control;
             Prompt.Enabled = false;
+            Prompt.ForeColor = Color.Crimson;
             Prompt.Location = new Point(3, 180);
             Prompt.Margin = new Padding(4, 3, 4, 3);
             Prompt.Name = "Prompt";
@@ -73,7 +75,7 @@ namespace control_asistencia_savin
             // 
             StatusText.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             StatusText.BackColor = SystemColors.Window;
-            StatusText.Location = new Point(-68, 194);
+            StatusText.Location = new Point(-54, 209);
             StatusText.Margin = new Padding(4, 3, 4, 3);
             StatusText.Multiline = true;
             StatusText.Name = "StatusText";

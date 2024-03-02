@@ -33,7 +33,7 @@ namespace control_asistencia_savin
                 { "TIENDA CEIBO", 6 },
                 { "TIENDA COCHA", 7 },
                 { "SANTA CRUZ", 8 },
-                //{ "TARIJA", 9 },
+                { "TARIJA", 9 },
                 { "ORURO", 10 },
                 //{ "POTOSÍ", 11 },
                 //{ "SUCRE", 12 },

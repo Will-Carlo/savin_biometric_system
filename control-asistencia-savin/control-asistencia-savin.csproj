@@ -15,16 +15,19 @@
 
   <ItemGroup>
     <Compile Remove="backup\**" />
+    <Compile Remove="DLL.NET\**" />
     <Compile Remove="Models0.0\**" />
     <Compile Remove="Models2\**" />
     <Compile Remove="Models3\**" />
     <Compile Remove="Modelsbackup\**" />
     <EmbeddedResource Remove="backup\**" />
+    <EmbeddedResource Remove="DLL.NET\**" />
     <EmbeddedResource Remove="Models0.0\**" />
     <EmbeddedResource Remove="Models2\**" />
     <EmbeddedResource Remove="Models3\**" />
     <EmbeddedResource Remove="Modelsbackup\**" />
     <None Remove="backup\**" />
+    <None Remove="DLL.NET\**" />
     <None Remove="Models0.0\**" />
     <None Remove="Models2\**" />
     <None Remove="Models3\**" />

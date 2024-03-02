@@ -38,10 +38,15 @@
             txtCodigo = new TextBox();
             btnVerificarHuellaCod = new Button();
             panel1 = new Panel();
+            imgIn = new PictureBox();
+            imgOut = new PictureBox();
+            lblInOut = new Label();
             panel2 = new Panel();
             lblVersion = new Label();
             pictureBox1 = new PictureBox();
             panel1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)imgIn).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)imgOut).BeginInit();
             panel2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
             SuspendLayout();
@@ -54,7 +59,7 @@
             lblStatusProcess.FlatStyle = FlatStyle.System;
             lblStatusProcess.Font = new Font("Segoe UI", 15.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
             lblStatusProcess.ForeColor = Color.FromArgb(10, 38, 102);
-            lblStatusProcess.Location = new Point(353, 67);
+            lblStatusProcess.Location = new Point(356, 65);
             lblStatusProcess.Name = "lblStatusProcess";
             lblStatusProcess.Size = new Size(171, 30);
             lblStatusProcess.TabIndex = 31;
@@ -156,6 +161,9 @@
             // 
             // panel1
             // 
+            panel1.Controls.Add(imgIn);
+            panel1.Controls.Add(imgOut);
+            panel1.Controls.Add(lblInOut);
             panel1.Controls.Add(btnVerificarHuellaCod);
             panel1.Controls.Add(lblStatusProcess);
             panel1.Controls.Add(txtCodigo);
@@ -164,6 +172,49 @@
             panel1.Name = "panel1";
             panel1.Size = new Size(1125, 124);
             panel1.TabIndex = 33;
+            // 
+            // imgIn
+            // 
+            imgIn.Anchor = AnchorStyles.Top;
+            imgIn.BackColor = Color.Ivory;
+            imgIn.Image = (Image)resources.GetObject("imgIn.Image");
+            imgIn.Location = new Point(960, 61);
+            imgIn.Margin = new Padding(0);
+            imgIn.Name = "imgIn";
+            imgIn.Size = new Size(49, 40);
+            imgIn.SizeMode = PictureBoxSizeMode.Zoom;
+            imgIn.TabIndex = 34;
+            imgIn.TabStop = false;
+            imgIn.Visible = false;
+            // 
+            // imgOut
+            // 
+            imgOut.Anchor = AnchorStyles.Top;
+            imgOut.BackColor = Color.Ivory;
+            imgOut.Image = (Image)resources.GetObject("imgOut.Image");
+            imgOut.Location = new Point(960, 61);
+            imgOut.Margin = new Padding(0);
+            imgOut.Name = "imgOut";
+            imgOut.Size = new Size(49, 40);
+            imgOut.SizeMode = PictureBoxSizeMode.Zoom;
+            imgOut.TabIndex = 35;
+            imgOut.TabStop = false;
+            imgOut.Visible = false;
+            // 
+            // lblInOut
+            // 
+            lblInOut.Anchor = AnchorStyles.Top;
+            lblInOut.AutoSize = true;
+            lblInOut.BackColor = Color.Transparent;
+            lblInOut.FlatStyle = FlatStyle.System;
+            lblInOut.Font = new Font("Segoe UI", 15.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            lblInOut.ForeColor = Color.FromArgb(10, 38, 102);
+            lblInOut.Location = new Point(862, 65);
+            lblInOut.Name = "lblInOut";
+            lblInOut.Size = new Size(95, 30);
+            lblInOut.TabIndex = 32;
+            lblInOut.Text = "lblInOut";
+            lblInOut.Visible = false;
             // 
             // panel2
             // 
@@ -215,6 +266,8 @@
             Text = "VerifyForm";
             panel1.ResumeLayout(false);
             panel1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)imgIn).EndInit();
+            ((System.ComponentModel.ISupportInitialize)imgOut).EndInit();
             panel2.ResumeLayout(false);
             panel2.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).EndInit();
@@ -235,5 +288,8 @@
         public Label lblTitPersonal;
         public Label lblTitOption;
         private Label lblVersion;
+        public Label lblInOut;
+        private PictureBox imgIn;
+        private PictureBox imgOut;
     }
 }

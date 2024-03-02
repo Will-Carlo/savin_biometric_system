@@ -117,7 +117,7 @@ namespace control_asistencia_savin
                                 //MessageBox.Show("stt: " + statusProcess);
 
                                 statusProcess = false;
-                                SetPrompt("RECHAZADO");
+                                SetPrompt("Vuleve a colocar tu huella.");
                             }
                         }
                     }

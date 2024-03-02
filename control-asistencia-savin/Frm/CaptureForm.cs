@@ -18,6 +18,7 @@ namespace control_asistencia_savin
 		public CaptureForm()
 		{
 			InitializeComponent();
+			// Prompt.ForeColor = Color.Red;
 		}
 
 		protected virtual void Init()
@@ -160,7 +161,8 @@ namespace control_asistencia_savin
 		{
 			this.Invoke(new Function(delegate() {
 				Prompt.Text = prompt;
-			}));
+                // Prompt.ForeColor = Color.Red;
+            }));
 		}
 		protected void MakeReport(string message)
 		{
