@@ -1,8 +1,6 @@
 ﻿using control_asistencia_savin.ApiService;
 using control_asistencia_savin.Models;
 using control_asistencia_savin.Notifications;
-using DPFP;
-using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -12,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace control_asistencia_savin.Frm
 {
-    internal class MetodosAsistencia
+    internal class MetodosAsistenciaTemporalTable
     {
         private ApiService.FunctionsDataBase _functionsDataBase = new FunctionsDataBase();
         private readonly ApiService.ApiService _apiService = new ApiService.ApiService();
@@ -78,7 +76,7 @@ namespace control_asistencia_savin.Frm
                 // Capturamos la fecha de hoy y la convertimos a su representación en cadena
                 string fechaHoyStr = DateTime.Today.ToString("yyyy-MM-dd");
 
-                var ultimoRegistro = context.RrhhAsistencia
+                var ultimoRegistro = context.RrhhAsistenciaTemporals
                     .Where(a => a.IdPersonal == IdPersonal &&
                                  a.HoraMarcado.StartsWith(fechaHoyStr) && a.IndTipoMovimiento != 469)  // no usamos los registros de faltas
                     .OrderByDescending(a => a.HoraMarcado) // Asumiendo que 'Id' es un autoincremento y representa el más reciente; ordenamos por Hora de marcado por si se agregó por postman
@@ -98,86 +96,7 @@ namespace control_asistencia_savin.Frm
             DateTime getDateToString = DateTime.Parse(_capturaHoraMarcado);
             return getDateToString.ToString("HH:mm:ss");
         }
-        // -------------------------------------------------------------------
-        // PROCEDIMIENTOS PARA VALIDAR ASISTENCIAS EN APIREST O LOCAL CON ASISTENCIAS TEMPORALES
-        // -------------------------------------------------------------------        
-        public void setAddAsistencia(RrhhAsistencia item)
-        {
-            using (var db = new StoreContext())
-            {
-                db.RrhhAsistencia.Add(item);
-                db.SaveChanges();
-            }
-        }
-        public void setAddAsistenciaTemporal(RrhhAsistencia item)
-        {
-
-            RrhhAsistenciaTemporal regAsistencia = new RrhhAsistenciaTemporal()
-            {
-                IdTurno = item.IdTurno,
-                IdPersonal = item.IdPersonal,
-                HoraMarcado = item.HoraMarcado,
-                MinutosAtraso = item.MinutosAtraso,
-                IndTipoMovimiento = item.IndTipoMovimiento,
-                IdPuntoAsistencia = item.IdPuntoAsistencia
-            };
-
-            using (var db = new StoreContext())
-            {
-                db.RrhhAsistenciaTemporals.Add(regAsistencia);
-                db.SaveChanges();
-            }
-        }
-        public void ValidarAsistencia(RrhhAsistencia item)
-        {
-            
-            //if (_apiService.IsInternetAvailable())
-            if (_functionsDataBase.verifyConection())
-            {
-                var response = _apiService.RegistrarAsistenciaAsync(item);
-                this.setAddAsistencia(item);
-            }
-            else
-            {
-                //MessageBox.Show("No hay conexión a internet, se registrará en la tabla de TemporalAsistencia", "Estado de la respuesta del servidor");
-                this.setAddAsistenciaTemporal(item);
-            }
-        }
-        public void registrarAsistenciasTemporales()
-        {
-            using (var context = new StoreContext())
-            {
-                // Obtener todos los registros de rrhh_asistencia_temporal
-                var registrosTemporales = context.RrhhAsistenciaTemporals.ToList();
-
-                foreach (var registroTemporal in registrosTemporales)
-                {
-                    // Convertir el registro temporal a un objeto RrhhAsistencia
-                    var item = new RrhhAsistencia
-                    {
-                        IdTurno = registroTemporal.IdTurno,
-                        IdPersonal = registroTemporal.IdPersonal,
-                        HoraMarcado = registroTemporal.HoraMarcado,
-                        MinutosAtraso = registroTemporal.MinutosAtraso,
-                        IndTipoMovimiento = registroTemporal.IndTipoMovimiento,
-                        IdPuntoAsistencia = registroTemporal.IdPuntoAsistencia
-                    };
-
-                    // Enviar el objeto a través del servicio API
-                    var response = _apiService.RegistrarAsistenciaAsync(item);
-
-                    // Si el registro se envió con éxito, elimínalo de la tabla temporal
-                    //if (response.IsSuccessStatusCode)
-                    //{
-                    context.RrhhAsistenciaTemporals.Remove(registroTemporal);
-                    //}
-                }
-
-                // Guardar los cambios en la base de datos
-                context.SaveChanges();
-            }
-        }
-
+       
         // -------------------------------------------------------------------
         // 
         // -------------------------------------------------------------------
@@ -353,7 +272,7 @@ namespace control_asistencia_savin.Frm
                 string fechaHoy = DateTime.Today.ToString("yyyy-MM-dd");
 
                 // Consulta para obtener el ID del último registro para el IdPersonal dado y la fecha de hoy
-                var ultimoRegistro = dbContext.RrhhAsistencia
+                var ultimoRegistro = dbContext.RrhhAsistenciaTemporals
                     .Where(a => a.IdPersonal == IdPersonal && a.HoraMarcado.StartsWith(fechaHoy) && a.IndTipoMovimiento != 469) // Filtrar por fecha de hoy
                     .OrderByDescending(a => a.HoraMarcado) // Ordenar por el ID en orden descendente para obtener el último registro
                     .FirstOrDefault();
@@ -377,7 +296,7 @@ namespace control_asistencia_savin.Frm
                 string fechaHoy = DateTime.Today.ToString("yyyy-MM-dd");
 
                 // Consulta LINQ para obtener el ind_tipo_movimiento del último registro para el IdPersonal dado
-                var ultimoRegistro = context.RrhhAsistencia
+                var ultimoRegistro = context.RrhhAsistenciaTemporals
                     .Where(a => a.IdPersonal == IdPersonal && a.HoraMarcado.StartsWith(fechaHoy) && a.IndTipoMovimiento != 469)
                     .OrderByDescending(a => a.HoraMarcado)
                     .FirstOrDefault(); // Obtiene el primer elemento o null si no hay registros
@@ -398,17 +317,8 @@ namespace control_asistencia_savin.Frm
             DateTime horaAnterior = DateTime.Parse(this.getAnteriorHora(IdPersonal)); // 15:00:00
 
             // Hacemos las modificaciones en la base de datos local y en la API
-
-            _functionsDataBase.ModificarHoraMarcado(IdPersonal, this.getAnteriorHora(IdPersonal), this.capturaIdPuntoAsistencia());
-            if (_functionsDataBase.verifyConection())
-            {
-                _apiService.ModificarAsistenciaAsync(IdPersonal, this.getAnteriorHora(IdPersonal), this.capturaIdPuntoAsistencia());
-            }
-            //else
-            //{
-            //    _functionsDataBase.ModificarHoraMarcadoTT(IdPersonal, this.getAnteriorHora(IdPersonal), this.capturaIdPuntoAsistencia());
-            //}
-
+            _functionsDataBase.ModificarHoraMarcadoTT(IdPersonal, this.getAnteriorHora(IdPersonal), this.capturaIdPuntoAsistencia());
+            // _apiService.ModificarAsistenciaAsync(IdPersonal, this.getAnteriorHora(IdPersonal), this.capturaIdPuntoAsistencia());
 
             // comparamos y hacemos la sumatoria de minutos
             return (int)(horaMarcada - horaAnterior).TotalMinutes;
@@ -422,7 +332,7 @@ namespace control_asistencia_savin.Frm
             using (var dbContext = new StoreContext())
             {
                 // Consulta para obtener el último registro de asistencia para el idPersonal dado
-                var ultimoRegistro = dbContext.RrhhAsistencia
+                var ultimoRegistro = dbContext.RrhhAsistenciaTemporals
                     .Where(a => a.IdPersonal == IdPersonal && a.IndTipoMovimiento != 469)
                     .OrderByDescending(a => a.HoraMarcado)
                     .FirstOrDefault();
@@ -581,187 +491,13 @@ namespace control_asistencia_savin.Frm
                 string fechaHoyStr = fechaHoy.ToString("yyyy-MM-dd");
 
                 // Verificar si hay algún registro para la fecha de hoy
-                bool existeRegistroHoy = context.RrhhAsistencia
+                bool existeRegistroHoy = context.RrhhAsistenciaTemporals
                     .Any(a => a.IdPersonal == IdPersonal && a.HoraMarcado.StartsWith(fechaHoyStr));
 
                 return existeRegistroHoy;
             }
         }
-        // -------------------------------------------------------------------
-        // REGISTRAR FALTAS
-        // -------------------------------------------------------------------
-        public void RegistrarFaltasDelDiaAfterClose()
-        {
-            if (!SeRegistroFaltas())
-            {
-                this.RegistrarFaltasDelDia();
-            }
-            //else
-            //{
-            //    MessageBox.Show("Ya se registraron las faltas hoy");
-            //}
-        }
-        private void RegistrarFalta(int IdPersonal, int MinFalta, int IdTurno)
-        {
-            // MessageBox.Show("Id recibido: " + IdPersonal);
-
-            // Obtener la fecha de hoy
-            DateTime dateAux = new DateTime(DateTime.Today.Year, DateTime.Today.Month, DateTime.Today.Day, 19, 00, 01);
-            // MessageBox.Show("DateAux: " + dateAux.ToString());
-
-            string fechaAsistencia = dateAux.ToString("yyyy-MM-dd HH:mm:ss");
-
-            //MessageBox.Show("Registrando falta: " + fechaAsistencia);
-
-            RrhhAsistencia auxAsis = new RrhhAsistencia
-            {
-                IdTurno = IdTurno,
-                IdPersonal = IdPersonal,
-                HoraMarcado = fechaAsistencia,
-                MinutosAtraso = MinFalta,
-                // por convención el parámetro 469 es para registrar un falta
-                IndTipoMovimiento = 469,
-                IdPuntoAsistencia = capturaIdPuntoAsistencia()
-            };
-            // No es necesario registrar en la base de datos puesto que se enviará al final deía directo al sistema central
-            this.setAddAsistencia(auxAsis);
-            _apiService.RegistrarAsistenciaAsync(auxAsis);
-        }
-        public void RegistrarFaltasDelDia()
-        {
-            using (var context = new StoreContext())
-            {
-                try
-                {
-                    // Extraer todos los IdPersonal de la tabla rrhh_personal
-                    var idPersonales = context.RrhhPersonals.Select(p => p.Id).ToList();
-
-                    // Imprimir los IdPersonal
-                    foreach (var IdPersonal in idPersonales)
-                    {
-                        //MessageBox.Show("Personal list: " + IdPersonal);
-                        int falta = this.FaltasPorPersonal(IdPersonal); 
-                    
-                        if (falta == 510)
-                        {
-                            this.RegistrarFalta(IdPersonal, 510, 1);
-                        }
-                        else if (falta == 240)
-                        {
-                            if (this.EsSabado())
-                            {
-                                this.RegistrarFalta(IdPersonal, 240, 3);
-                            }
-                            else
-                            {
-                                this.RegistrarFalta(IdPersonal, 240, 1);
-                            }
-                        }
-                        else if(falta == 270)
-                        {
-                            this.RegistrarFalta(IdPersonal, 270, 2);
-                        }
-                        //else
-                        //{
-                        //    MessageBox.Show("El personal no tiene faltas hoy");
-                        //}
-                    }
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine($"Error al registrar faltas del Personal: {ex.Message}");
-                }
-            }
-        }
-        private int FaltasPorPersonal(int IdPersonal)
-        {
-            int cont = 0;
-            if (!EsFeriado())
-            {
-                if (!EsSabado())
-                {
-                    for (global::System.Int32 i = 1; i < 3; i++)
-                    {
-                        //MessageBox.Show("id: " + IdPersonal +   "\ntiene turno? :" + this.TieneTurnoAsignado(IdPersonal, i).ToString() + 
-                        //                                        "\nmarco hoy? :" + this.MarcoTurnoHoy(IdPersonal, i).ToString());
-                        if (this.TieneTurnoAsignado(IdPersonal, i))
-                        {
-                            if (!this.MarcoTurnoHoy(IdPersonal, i))
-                            {
-                                cont += NivelFalta(i);
-                                //MessageBox.Show("cont :" + cont);
-
-                            }
-                        }
-                    }
-                }
-                else
-                {
-                    //MessageBox.Show("id: " + IdPersonal +   "\ntiene turno? sab:" + this.TieneTurnoAsignado(IdPersonal, 3).ToString() +
-                    //                                        "\nmarco hoy? sab:" + this.MarcoTurnoHoy(IdPersonal, 3).ToString());
-                    if (this.TieneTurnoAsignado(IdPersonal, 3))
-                    {
-                        if (!this.MarcoTurnoHoy(IdPersonal, 3))
-                        {
-                            cont = NivelFalta(3);
-                            //MessageBox.Show("cont sab:" + cont);
-                        }
-                    }
-                }
-            }
-            return cont;
-        }
-        private bool TieneTurnoAsignado(int IdPersonal, int IdTurno)
-        {
-            using (var context = new StoreContext())
-            {
-                // Verifica si existe un registro con el IdPersonal y el IdTurno dados
-                bool existeRegistro = context.RrhhTurnoAsignados
-                    .Any(t => t.IdPersonal == IdPersonal && t.IdTurno == IdTurno);
-                return existeRegistro;
-            }
-        }
-        private bool MarcoTurnoHoy(int IdPersonal, int IdTurno)
-        {
-            using (var context = new StoreContext())
-            {
-                // Obtener la fecha de hoy en formato de cadena yyyy-MM-dd
-                string fechaHoyStr = DateTime.Today.ToString("yyyy-MM-dd");
-
-                // Verificar si existe al menos un registro con el IdPersonal y el IdTurno dados para la fecha de hoy
-                bool marcoHoy = context.RrhhAsistencia
-                    .Any(a => a.IdPersonal == IdPersonal &&
-                              a.IdTurno == IdTurno &&
-                              a.HoraMarcado.StartsWith(fechaHoyStr));
-
-                return marcoHoy;
-            }
-        }
-        private int NivelFalta(int Nivel)
-        {
-            if (Nivel == 1 || Nivel == 3)
-            {
-                return 240;
-            }
-            else
-            {
-                return 270;
-            }
-        }
-        private bool SeRegistroFaltas()
-        {
-            using (var context = new StoreContext())
-            {
-                // Obtener la fecha de hoy en formato de cadena yyyy-MM-dd
-                string fechaHoyStr = DateTime.Today.ToString("yyyy-MM-dd");
-
-                // Verifica si existe un registro con el IdPersonal y el IdTurno dados
-                bool existeRegistro = context.RrhhAsistencia
-                    .Any(t => t.IndTipoMovimiento == 469 &&
-                              t.HoraMarcado.StartsWith(fechaHoyStr));
-                return existeRegistro;
-            }
-        }
+       
 
         // -------------------------------------------------------------------
         // REGISTROS DOBLES
@@ -788,7 +524,7 @@ namespace control_asistencia_savin.Frm
                 string fechaHoyStr = horaMarcado.ToString("yyyy-MM-dd");
 
                 // Verificar si existe al menos un registro con el IdPersonal y el IdTurno dados para la fecha de hoy
-                bool marcoHoy = context.RrhhAsistencia
+                bool marcoHoy = context.RrhhAsistenciaTemporals
                     .Any(a => a.IdPersonal == IdPersonal &&
                               a.HoraMarcado.StartsWith(fechaHoyStr));
 
@@ -804,7 +540,7 @@ namespace control_asistencia_savin.Frm
 
 
                 // Obtener el último registro de hora_marcado para el IdPersonal dado
-                var ultimoRegistro = context.RrhhAsistencia
+                var ultimoRegistro = context.RrhhAsistenciaTemporals
                                             .Where(a => a.IdPersonal == IdPersonal && a.IndTipoMovimiento != 469)
                                             // && a.HoraMarcado.StartsWith(fechaHoyStr))
                                             .OrderByDescending(a => a.HoraMarcado) // Ordena los registros en orden descendente para obtener el más reciente; ordenamos por hora de marcado para validar datos integrados por postman

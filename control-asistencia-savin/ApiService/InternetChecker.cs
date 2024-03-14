@@ -32,10 +32,16 @@ namespace control_asistencia_savin.ApiService
 
         private void reLoad()
         {
-            _m.registrarAsistenciasTemporales();
-            _functionsDataBase.LimpiarDB();
-            _functionsDataBase.loadDataBase();
-            //MessageBox.Show("se ejecutó la tarea con éxito.");
+            if (_functionsDataBase.verifyConection())
+            {
+                _m.registrarAsistenciasTemporales();
+                _functionsDataBase.LimpiarDB();
+                _functionsDataBase.loadDataBase();
+                //MessageBox.Show("INTERNET CHECKER: se ejecutó la tarea con éxito.");
+            }
+            {
+                //MessageBox.Show("Aún no se obtiene conexión exitosa del servidor");
+            }
 
         }
 

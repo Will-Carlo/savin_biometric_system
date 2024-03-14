@@ -83,27 +83,41 @@ namespace control_asistencia_savin
         {
             //MessageBox.Show(_functionsDataBase.verifyConection().ToString());
             if (_functionsDataBase.verifyConection())
+            //if (_apiService._serverConexion)
             {
+
+                _m.registrarAsistenciasTemporales();
+
                 //MessageBox.Show("estado: " + _functionsDataBase.correctConection);
                 _functionsDataBase.LimpiarDB();
 
                 //this.Load += async (sender, e) => await _functionsDataBase.loadDataBase();
                 _functionsDataBase.loadDataBase();
-                int deleteBackupsMonth = int.Parse(DateTime.Now.ToString("MM")) - 2;
-                int deleteBackups = deleteBackupsMonth == 0 ? 12 : deleteBackupsMonth;
-                //MessageBox.Show("date: " + DateTime.Now.ToString("MM") + "\nInt: " + deleteBackups.ToString());
-                _functionsDataBase.DeleteBackupFiles(deleteBackups);
+
+                this.deleteOldsBackUps();
+
+
 
                 frmLoading loadingForm = new frmLoading();
                 Application.Run(loadingForm);
             }
             else
             {
-                //MessageBox.Show("Tu dirección MAC no está registrada.\nDir mac: " + _apiService._dirMac + "\nCerrando la aplicación.");
-                Environment.Exit(0);
+                // MessageBox.Show("Error de conexión en el servidor exitosa");
+
+                // Environment.Exit(0);
                 //this.Close();
             }
         }
+
+        private void deleteOldsBackUps()
+        {
+            int deleteBackupsMonth = int.Parse(DateTime.Now.ToString("MM")) - 2;
+            int deleteBackups = deleteBackupsMonth == 0 ? 12 : deleteBackupsMonth;
+            //MessageBox.Show("date: " + DateTime.Now.ToString("MM") + "\nInt: " + deleteBackups.ToString());
+            _functionsDataBase.DeleteBackupFiles(deleteBackups);
+        }
+
         private void tmrTime_Tick(object sender, EventArgs e)
         {
             lblTime.Text = DateTime.Now.ToString("HH:mm:ss");
@@ -227,7 +241,7 @@ namespace control_asistencia_savin
         private void LinksProduction(bool actionLink)
         {
             this.lnkInicio.Visible = actionLink;
-            //this.lnkMarcarCodigo.Visible = actionLink;
+            this.lnkMarcarCodigo.Visible = actionLink;
             //this.lnkVerAtrasos.Visible = actionLink;
             this.lnkRegistrar.Visible = actionLink;
             //this.lnkApiTest.Visible = actionLink;
@@ -390,26 +404,73 @@ namespace control_asistencia_savin
             {
                 //MAÑANA
                 new TimeSpan(9, 01, 01), // 12:30 PM
+                new TimeSpan(9, 11, 01), // 12:30 PM
+                new TimeSpan(9, 21, 01), // 12:30 PM
                 new TimeSpan(9, 31, 01), // 12:30 PM
+                new TimeSpan(9, 41, 01), // 12:30 PM
+                new TimeSpan(9, 51, 01), // 12:30 PM
+
                 new TimeSpan(10, 01, 01), // 12:30 PM
+                new TimeSpan(10, 11, 01), // 12:30 PM
+                new TimeSpan(10, 21, 01), // 12:30 PM
                 new TimeSpan(10, 31, 01), // 12:30 PM
+                new TimeSpan(10, 41, 01), // 12:30 PM
+                new TimeSpan(10, 51, 01), // 12:30 PM
+
                 new TimeSpan(11, 01, 01), // 12:30 PM
+                new TimeSpan(11, 11, 01), // 12:30 PM
+                new TimeSpan(11, 21, 01), // 12:30 PM
                 new TimeSpan(11, 31, 01), // 12:30 PM
+                new TimeSpan(11, 41, 01), // 12:30 PM
+                new TimeSpan(11, 51, 01), // 12:30 PM
+
                 new TimeSpan(12, 01, 01), // 12:30 PM
-                new TimeSpan(12, 29, 01), // 12:30 PM
+                new TimeSpan(12, 11, 01), // 12:30 PM
+                new TimeSpan(12, 21, 01), // 12:30 PM
+                new TimeSpan(12, 31, 01), // 12:30 PM
+                new TimeSpan(12, 41, 01), // 12:30 PM
+                new TimeSpan(12, 51, 01), // 12:30 PM
                 //TARDE
                 new TimeSpan(14, 01, 01),  // 2:00 PM
+                new TimeSpan(14, 11, 01),  // 2:00 PM
+                new TimeSpan(14, 21, 01),  // 2:00 PM
                 new TimeSpan(14, 31, 01),  // 2:00 PM
+                new TimeSpan(14, 41, 01),  // 2:00 PM
+                new TimeSpan(14, 51, 01),  // 2:00 PM
+
                 new TimeSpan(15, 01, 01),  // 2:00 PM
+                new TimeSpan(15, 11, 01),  // 2:00 PM
+                new TimeSpan(15, 21, 01),  // 2:00 PM
                 new TimeSpan(15, 31, 01),  // 2:00 PM
+                new TimeSpan(15, 41, 01),  // 2:00 PM
+                new TimeSpan(15, 51, 01),  // 2:00 PM
+
                 new TimeSpan(16, 01, 01),  // 2:00 PM
+                new TimeSpan(16, 11, 01),  // 2:00 PM
+                new TimeSpan(16, 21, 01),  // 2:00 PM
                 new TimeSpan(16, 31, 01),  // 2:00 PM
+                new TimeSpan(16, 41, 01),  // 2:00 PM
+                new TimeSpan(16, 51, 01),  // 2:00 PM
+
                 new TimeSpan(17, 01, 01),  // 2:00 PM
+                new TimeSpan(17, 11, 01),  // 2:00 PM
+                new TimeSpan(17, 21, 01),  // 2:00 PM
                 new TimeSpan(17, 31, 01),  // 2:00 PM
+                new TimeSpan(17, 41, 01),  // 2:00 PM
+                new TimeSpan(17, 51, 01),  // 2:00 PM
+
                 new TimeSpan(18, 01, 01),  // 6:30 PM
+                new TimeSpan(18, 11, 01),  // 6:30 PM
+                new TimeSpan(18, 21, 01),  // 6:30 PM
                 new TimeSpan(18, 31, 01),  // 6:30 PM
-                new TimeSpan(18, 59, 01),  // 6:30 PM
+                new TimeSpan(18, 41, 01),  // 6:30 PM
+                new TimeSpan(18, 51, 01),  // 6:30 PM
+
+                new TimeSpan(19, 01, 01),  // 6:30 PM
+                new TimeSpan(19, 11, 01),  // 6:30 PM
+                new TimeSpan(19, 21, 01),  // 6:30 PM
                 new TimeSpan(19, 31, 01),  // 6:30 PM
+                new TimeSpan(19, 41, 01),  // 6:30 PM
                 //new TimeSpan(12, 04, 0),  // PRUEBA
                 //new TimeSpan(12, 05, 0),  // PRUEBA
                 //new TimeSpan(12, 06, 0),  // PRUEBA
@@ -435,7 +496,8 @@ namespace control_asistencia_savin
         }
         private void reLoad()
         {
-            if (_apiService.IsInternetAvailable())
+            if (_functionsDataBase.verifyConection())
+          //if (_apiService.IsInternetAvailable())
             {
                 _m.registrarAsistenciasTemporales();
                 _functionsDataBase.LimpiarDB();

@@ -17,13 +17,17 @@ namespace control_asistencia_savin
     public partial class frmCodigo : VerifyForm
     {
         private MetodosAsistencia m = new MetodosAsistencia();
+        private MetodosAsistenciaTemporalTable mtt = new MetodosAsistenciaTemporalTable();
         private readonly ApiService.ApiService _apiService;
+        private ApiService.FunctionsDataBase _functionsDataBase = new FunctionsDataBase();
+
 
         public frmCodigo()
         {
             InitializeComponent();
             btnVerificarHuellaCod.Text = "Leer Código";
-            lblStatusProcess.Left = 770;
+            lblStatusProcess.Left = 620;
+            //lblStatusProcess.Top = 200;
             txtCodigo.Enabled = true;
             //lblStatusProcess.Enabled = false;
             _apiService = new ApiService.ApiService();
@@ -65,7 +69,12 @@ namespace control_asistencia_savin
 
         private void btnVerificarHuellaCod_Click(object sender, EventArgs e)
         {
-            m.setCapturaHoraMarcado(DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
+            //if (_functionsDataBase.verifyConection())
+            //{
+            //    m.registrarAsistenciasTemporales();
+            //    _functionsDataBase.LimpiarDB();
+            //    _functionsDataBase.loadDataBase();
+            //}
 
             try
             {
@@ -76,61 +85,14 @@ namespace control_asistencia_savin
                 txtCodigo.Text = "";
                 if (txtCod != "")
                 {
-                    if (PersonalName(IdPersonal) != null)
+                    // el sistema detecta cuando hay conexión a internet, 404 o 500.
+                    if (_functionsDataBase.verifyConection() || !_functionsDataBase.verifyAnteriorRegistroTT(IdPersonal))
                     {
-                        if (!m.EsRegistroDoble(IdPersonal))
-                        {
-                            string tipoMov = m.capturaTipoMovimiento(IdPersonal) == 461 ? "ENTRADA" : "SALIDA";
-                            lblStatusProcess.Text = tipoMov + " VERIFICADA";
-                            lblStatusProcess.ForeColor = Color.Green;
-                            lblStatusProcess.Visible = true;
-                            // carga los datos del empleado en el label
-                            lblNombre.Text = PersonalName(IdPersonal);
-                            lblHora.Text = m.getHora();
-                            //Muestra en pantalla los datos y hora
-                            lblNombre.Visible = true;
-                            lblHora.Visible = true;
-
-                            RrhhAsistencia regisAsis = new RrhhAsistencia()
-                            {
-                                IdTurno = m.getIdTurno(IdPersonal),
-                                IdPersonal = IdPersonal,
-                                HoraMarcado = m.getHoraMarcado(),
-                                MinutosAtraso = m.getMinutosAtraso(IdPersonal),
-                                IndTipoMovimiento = m.getIndTipoMovimiento(IdPersonal),
-                                IdPuntoAsistencia = m.getIdPuntoAsistencia()
-                            };
-
-                            // v1
-                            // m.setAddAsistencia(regisAsis);
-                            // Enviando datos al API REST
-                            // var response = _apiService.RegistrarAsistenciaAsync(regisAsis);
-                            // ----------
-
-                            //if (response != null)
-                            //{
-                            //    MessageBox.Show("Asistencia enviada al servidor con éxito: " + response.Status);
-                            //}
-
-                                // Enviando datos al API REST
-
-                            m.ValidarAsistencia(regisAsis);
-                        }
-                        else
-                        {
-                            string tipoMov2 = m.capturaTipoMovimiento(IdPersonal) != 461 ? "ENTRADA" : "SALIDA";
-                            m.NotificationMessage("Cuidado estás volviendo a marcar tu: " + tipoMov2, "alert");
-                            lblStatusProcess.Text = "RECHAZADO";
-                            lblStatusProcess.ForeColor = Color.Red;
-                            lblStatusProcess.Visible = true;
-                        }
+                        this.RegistroAsistencia(IdPersonal);
                     }
                     else
                     {
-                        lblStatusProcess.Text = "RECHAZADO";
-                        lblStatusProcess.ForeColor = Color.Red;
-                        lblStatusProcess.Visible = true;
-                        MessageBox.Show("Código incorrecto.", "Error");
+                        this.RegistroAsistenciaTemporalTable(IdPersonal);
                     }
 
                 }
@@ -139,6 +101,7 @@ namespace control_asistencia_savin
                     lblStatusProcess.Text = "";
                     lblStatusProcess.Visible = false;
                     MessageBox.Show("Debes ingresar un código.", "Error");
+                    this.CleanLabels();
                 }
 
             }
@@ -160,12 +123,124 @@ namespace control_asistencia_savin
             }
         }
 
+
+        private void RegistroAsistencia(int idPersonalVal)
+        {
+
+            m.setCapturaHoraMarcado(DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
+
+            if (PersonalName(idPersonalVal) != null)
+            {
+                if (!m.EsRegistroDoble(idPersonalVal))
+                {
+                    string tipoMov = m.capturaTipoMovimiento(idPersonalVal) == 461 ? "ENTRADA" : "SALIDA";
+                    ShowInOut(tipoMov);
+                    lblStatusProcess.Text = "CÓDIGO VERIFICADO";
+                    lblInOut.Text = tipoMov;
+                    lblStatusProcess.ForeColor = Color.Green;
+                    lblStatusProcess.Visible = true;
+                    // carga los datos del empleado en el label
+                    lblHora.Text = m.getHora();
+                    lblNombre.Text = PersonalName(idPersonalVal);
+                    //Muestra en pantalla los datos y hora
+                    lblNombre.Visible = true;
+                    lblHora.Visible = true;
+
+                    RrhhAsistencia regisAsis = new RrhhAsistencia()
+                    {
+                        IdTurno = m.getIdTurno(idPersonalVal),
+                        IdPersonal = idPersonalVal,
+                        HoraMarcado = m.getHoraMarcado(),
+                        MinutosAtraso = m.getMinutosAtraso(idPersonalVal),
+                        IndTipoMovimiento = m.getIndTipoMovimiento(idPersonalVal),
+                        IdPuntoAsistencia = m.getIdPuntoAsistencia()
+                    };
+
+                    // Enviando asistencia al servidor o a la tabla temporal
+
+                    m.ValidarAsistencia(regisAsis);
+                }
+                else
+                {
+                    string tipoMov2 = m.capturaTipoMovimiento(idPersonalVal) != 461 ? "ENTRADA" : "SALIDA";
+                    m.NotificationMessage("Cuidado estás volviendo a marcar tu: " + tipoMov2 + "\nDebes esperar al menos 5 min. para volver a marcar.", "alert");
+                    this.CleanLabels();
+                }
+            }
+            else
+            {
+                this.CleanLabels();
+                MessageBox.Show("Código incorrecto.", "Error");
+            }
+        }
+
+        private void RegistroAsistenciaTemporalTable(int idPersonalVal)
+        {
+
+            mtt.setCapturaHoraMarcado(DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
+
+            if (PersonalName(idPersonalVal) != null)
+            {
+                if (!mtt.EsRegistroDoble(idPersonalVal))
+                {
+                    string tipoMov = mtt.capturaTipoMovimiento(idPersonalVal) == 461 ? "ENTRADA" : "SALIDA";
+                    ShowInOut(tipoMov);
+                    lblStatusProcess.Text = "CÓDIGO VERIFICADO";
+                    lblInOut.Text = tipoMov;
+                    lblStatusProcess.ForeColor = Color.Green;
+                    lblStatusProcess.Visible = true;
+                    // carga los datos del empleado en el label
+                    lblHora.Text = mtt.getHora();
+                    lblNombre.Text = PersonalName(idPersonalVal);
+                    //Muestra en pantalla los datos y hora
+                    lblNombre.Visible = true;
+                    lblHora.Visible = true;
+
+                    RrhhAsistencia regisAsis = new RrhhAsistencia()
+                    {
+                        IdTurno = mtt.getIdTurno(idPersonalVal),
+                        IdPersonal = idPersonalVal,
+                        HoraMarcado = mtt.getHoraMarcado(),
+                        MinutosAtraso = mtt.getMinutosAtraso(idPersonalVal),
+                        IndTipoMovimiento = mtt.getIndTipoMovimiento(idPersonalVal),
+                        IdPuntoAsistencia = mtt.getIdPuntoAsistencia()
+                    };
+
+                    // Enviando asistencia al servidor o a la tabla temporal
+
+                    m.ValidarAsistencia(regisAsis);
+                }
+                else
+                {
+                    string tipoMov2 = mtt.capturaTipoMovimiento(idPersonalVal) != 461 ? "ENTRADA" : "SALIDA";
+                    mtt.NotificationMessage("Cuidado estás volviendo a marcar tu: " + tipoMov2 + "\nDebes esperar al menos 5 min. para volver a marcar.", "alert");
+                    this.CleanLabels();
+                }
+            }
+            else
+            {
+                this.CleanLabels();
+                MessageBox.Show("Código incorrecto.", "Error");
+            }
+        }
+
         private void txtCodigo_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Enter)
             {
                 btnVerificarHuellaCod.PerformClick();
             }
+        }
+
+        private void CleanLabels()
+        {
+            lblStatusProcess.Text = "CÓDIGO RECHAZADO";
+            lblStatusProcess.ForeColor = Color.Red;
+            lblStatusProcess.Visible = true;
+            // No muestra en pantalla los datos y hora por el rechazo
+            lblNombre.Visible = false;
+            lblHora.Visible = false;
+            ShowInOut("none");
         }
     }
 }

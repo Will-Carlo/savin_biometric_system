@@ -35,9 +35,9 @@ namespace control_asistencia_savin
                 { "SANTA CRUZ", 8 },
                 { "TARIJA", 9 },
                 { "ORURO", 10 },
-                //{ "POTOSÍ", 11 },
-                //{ "SUCRE", 12 },
-                //{ "TIENDA OBRAJES", 13 }
+                { "POTOSÍ", 11 },
+                { "SUCRE", 12 },
+                { "TIENDA OBRAJES", 13 }
             };
         public frmTestApi()
         {

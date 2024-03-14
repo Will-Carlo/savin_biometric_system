@@ -21,7 +21,10 @@ namespace control_asistencia_savin.ApiService
         //private readonly MetodosAsistencia _m = new MetodosAsistencia();
 
         public string _dirMac { get; set; }
-        public bool _esProduction = false;
+        public bool _esProduction = true;
+        // ----------------------------------
+        // NO MODIFICAR
+        public bool _serverConexion = false;
         public ApiService()
         {
             _credenciales = new Credenciales(_esProduction);
@@ -51,20 +54,79 @@ namespace control_asistencia_savin.ApiService
                 return false;
             }
         }
-        public async Task<ModelJson?> GetDataAsync()
+        //public async Task<ModelJson?> GetDataAsyncBU()
+        //{
+        //    try
+        //    {
+        //        //MessageBox.Show("m: " + IsInternetAvailable().ToString());
+        //        if (!IsInternetAvailable())
+        //        {
+        //            MessageBox.Show("No hay conexión a Internet: verifique su conexión a internet." +
+        //                "\nPuede marcar su asistencia, pero restablezca la conexión a internet lo antes posible.", "Error de conexión");
+        //            // Environment.Exit(0);
+        //            return null;
+        //        }
+
+        //        var response = await _httpClient.GetAsync(_credenciales._getApiLink);
+
+        //        if (response.StatusCode == HttpStatusCode.BadRequest)
+        //        {
+        //            MessageBox.Show("Tu dirección MAC no está registrada.\nDir mac: " + _credenciales._PssdMac + "\nCerrando la aplicación.");
+        //            Environment.Exit(0);
+        //            return null;
+        //        } else if (response.StatusCode == HttpStatusCode.NotFound || response.StatusCode == HttpStatusCode.InternalServerError)
+        //        {
+        //            // MessageBox.Show("Error de conexión en el servidor: "+ response.StatusCode.ToString()); // mensaje principal de error de conexión
+        //            return null;
+        //        }
+        //        else if (response.IsSuccessStatusCode)
+        //        {
+        //            var json = await response.Content.ReadAsStringAsync();
+
+        //            if (!string.IsNullOrEmpty(json))
+        //            {
+        //                var data = JsonConvert.DeserializeObject<ModelJson>(json);
+        //                _serverConexion = true;
+        //                return data;
+        //            }
+        //            else
+        //            {
+        //                return null;
+        //            }
+        //        }
+        //        else
+        //        {
+        //            return null;
+        //            //throw new HttpRequestException($"No se pudo conectar al servidor: {response.StatusCode}");
+        //        }
+        //    }
+        //    catch (HttpRequestException ex)
+        //    {
+        //        // Captura la excepción y maneja el error aquí
+        //        //MessageBox.Show("Error al conectar al servidor: " + ex.Message+ "\nContacte con el administrador.");
+        //        //if (this._esProduction)
+        //        //{
+        //        //    Environment.Exit(0);
+        //        //}
+        //        return null;
+        //    }
+        //}
+
+
+        public ModelJson GetDataAsync()
         {
             try
             {
-                //MessageBox.Show("m: " + IsInternetAvailable().ToString());
+                // Verificar la conexión a Internet
                 if (!IsInternetAvailable())
                 {
-                    MessageBox.Show("No hay conexión a Internet. Verifique su conexión e inténtelo de nuevo.", "Error de conexión");
-                    Environment.Exit(0);
-
+                    //MessageBox.Show("No hay conexión a Internet: verifique su conexión a internet." +
+                    //    "\n\nPuede marcar su asistencia, pero restablezca la conexión a internet lo antes posible.", "Error de conexión");
                     return null;
                 }
 
-                var response = await _httpClient.GetAsync(_credenciales._getApiLink);
+                // Realizar la solicitud HTTP de forma síncrona
+                var response = _httpClient.GetAsync(_credenciales._getApiLink).Result;
 
                 if (response.StatusCode == HttpStatusCode.BadRequest)
                 {
@@ -72,13 +134,19 @@ namespace control_asistencia_savin.ApiService
                     Environment.Exit(0);
                     return null;
                 }
+                else if (response.StatusCode == HttpStatusCode.NotFound || response.StatusCode == HttpStatusCode.InternalServerError)
+                {
+                    // MessageBox.Show("Error de conexión en el servidor: "+ response.StatusCode.ToString()); // mensaje principal de error de conexión
+                    return null;
+                }
                 else if (response.IsSuccessStatusCode)
                 {
-                    var json = await response.Content.ReadAsStringAsync();
+                    var json = response.Content.ReadAsStringAsync().Result;
 
                     if (!string.IsNullOrEmpty(json))
                     {
                         var data = JsonConvert.DeserializeObject<ModelJson>(json);
+                        _serverConexion = true;
                         return data;
                     }
                     else
@@ -89,20 +157,16 @@ namespace control_asistencia_savin.ApiService
                 else
                 {
                     return null;
-                    //throw new HttpRequestException($"No se pudo conectar al servidor: {response.StatusCode}");
                 }
             }
             catch (HttpRequestException ex)
             {
                 // Captura la excepción y maneja el error aquí
-                //MessageBox.Show("Error al conectar al servidor: " + ex.Message+ "\nContacte con el administrador.");
-                //if (this._esProduction)
-                //{
-                //    Environment.Exit(0);
-                //}
                 return null;
             }
         }
+
+
         public List<AuxAsistencia> GetDataAsistencia(int idPersonal)
         {
             this.CleanHeaders();

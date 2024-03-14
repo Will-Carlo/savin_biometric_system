@@ -1,4 +1,5 @@
-﻿using control_asistencia_savin.Frm;
+﻿using control_asistencia_savin.ApiService;
+using control_asistencia_savin.Frm;
 using control_asistencia_savin.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Migrations;
@@ -18,6 +19,9 @@ namespace control_asistencia_savin
     public partial class frmAsistencia : VerifyForm
     {
         private MetodosAsistencia m = new MetodosAsistencia();
+        private MetodosAsistenciaTemporalTable mtt = new MetodosAsistenciaTemporalTable(); 
+        private ApiService.FunctionsDataBase _functionsDataBase = new FunctionsDataBase();
+
         private readonly ApiService.ApiService _apiService;
 
         public frmAsistencia()
@@ -30,61 +34,27 @@ namespace control_asistencia_savin
 
         private void btnVerificarHuellaCod_Click_1(object sender, EventArgs e)
         {
+            //if (_functionsDataBase.verifyConection())
+            //{
+            //    m.registrarAsistenciasTemporales();
+            //    _functionsDataBase.LimpiarDB();
+            //    _functionsDataBase.loadDataBase();
+            //}
+
             frmVerificar verificar = new frmVerificar();
             verificar.ShowDialog();
 
-            m.setCapturaHoraMarcado(DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
             try
             {
-                // si la verificación es correcta muestra en verde 'VERIFICADO'
-                //if (verificar.statusProcess)
-                if (verificar.statusProcess)
+           
+                // el sistema detecta cuando hay conexión a internet, 404 o 500.
+                if (_functionsDataBase.verifyConection() || !_functionsDataBase.verifyAnteriorRegistroTT(verificar.idEncontrado))
                 {
-                    if (!m.EsRegistroDoble(verificar.idEncontrado))
-                    {
-                        string tipoMov = m.capturaTipoMovimiento(verificar.idEncontrado) == 461 ? "ENTRADA" : "SALIDA";
-                        ShowInOut(tipoMov);
-                        lblStatusProcess.Text = "HUELLA VERIFICADA";
-                        lblInOut.Text = tipoMov;
-                        lblStatusProcess.ForeColor = Color.Green;
-                        lblStatusProcess.Visible = true;
-                        // carga los datos del empleado en el label
-                        lblHora.Text = m.getHora();
-                        lblNombre.Text = verificar.personalName;
-                        //Muestra en pantalla los datos y hora
-                        lblNombre.Visible = true;
-                        lblHora.Visible = true;
-
-                        RrhhAsistencia regisAsis = new RrhhAsistencia()
-                        {
-                            IdTurno = m.getIdTurno(verificar.idEncontrado),
-                            IdPersonal = verificar.idEncontrado,
-                            HoraMarcado = m.getHoraMarcado(),
-                            MinutosAtraso = m.getMinutosAtraso(verificar.idEncontrado),
-                            IndTipoMovimiento = m.getIndTipoMovimiento(verificar.idEncontrado),
-                            IdPuntoAsistencia = m.getIdPuntoAsistencia()
-                        };
-
-                        // Enviando datos al API REST
-
-                        m.ValidarAsistencia(regisAsis);
-                    }
-                    else
-                    {
-                        string tipoMov2 = m.capturaTipoMovimiento(verificar.idEncontrado) != 461 ? "ENTRADA" : "SALIDA";
-                        m.NotificationMessage("Cuidado estás volviendo a marcar tu: " + tipoMov2+"\nDebes esperar al menos 5 min. para volver a marcar.", "alert");
-                        CleanLabels();
-                    }
-
-
-                    //if (response != null)
-                    //{
-                    //    MessageBox.Show("Asistencia enviada al servidor con éxito: " + response.Status);
-                    //}
+                    this.RegistroAsistencia(verificar.statusProcess, verificar.idEncontrado, verificar.personalName);
                 }
                 else
                 {
-                    CleanLabels();
+                    this.RegistroAsistenciaTemporalTable(verificar.statusProcess, verificar.idEncontrado, verificar.personalName);
                 }
             }
             catch (DbUpdateException ex)
@@ -105,6 +75,115 @@ namespace control_asistencia_savin
                 CleanLabels();
             }
 
+        }
+
+
+        private void RegistroAsistencia(bool statuProcessVal, int idPersonalVal, string NombrePersonalVal)
+        {
+            m.setCapturaHoraMarcado(DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
+
+            if (statuProcessVal)
+            {
+                if (!m.EsRegistroDoble(idPersonalVal))
+                {
+                    string tipoMov = m.capturaTipoMovimiento(idPersonalVal) == 461 ? "ENTRADA" : "SALIDA";
+                    ShowInOut(tipoMov);
+                    lblStatusProcess.Text = "HUELLA VERIFICADA";
+                    lblInOut.Text = tipoMov;
+                    lblStatusProcess.ForeColor = Color.Green;
+                    lblStatusProcess.Visible = true;
+                    // carga los datos del empleado en el label
+                    lblHora.Text = m.getHora();
+                    lblNombre.Text = NombrePersonalVal;
+                    //Muestra en pantalla los datos y hora
+                    lblNombre.Visible = true;
+                    lblHora.Visible = true;
+
+                    RrhhAsistencia regisAsis = new RrhhAsistencia()
+                    {
+                        IdTurno = m.getIdTurno(idPersonalVal),
+                        IdPersonal = idPersonalVal,
+                        HoraMarcado = m.getHoraMarcado(),
+                        MinutosAtraso = m.getMinutosAtraso(idPersonalVal),
+                        IndTipoMovimiento = m.getIndTipoMovimiento(idPersonalVal),
+                        IdPuntoAsistencia = m.getIdPuntoAsistencia()
+                    };
+
+                    // Enviando asistencia al servidor o a la tabla temporal
+
+                    m.ValidarAsistencia(regisAsis);
+                }
+                else
+                {
+                    string tipoMov2 = m.capturaTipoMovimiento(idPersonalVal) != 461 ? "ENTRADA" : "SALIDA";
+                    m.NotificationMessage("Cuidado estás volviendo a marcar tu: " + tipoMov2 + "\nDebes esperar al menos 1 min. para volver a marcar.", "alert");
+                    CleanLabels();
+                }
+
+
+                //if (response != null)
+                //{
+                //    MessageBox.Show("Asistencia enviada al servidor con éxito: " + response.Status);
+                //}
+            }
+            else
+            {
+                CleanLabels();
+            }
+        }
+
+        private void RegistroAsistenciaTemporalTable(bool statuProcessVal, int idPersonalVal, string NombrePersonalVal)
+        {
+            mtt.setCapturaHoraMarcado(DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
+
+            if (statuProcessVal)
+            {
+                if (!mtt.EsRegistroDoble(idPersonalVal))
+                {
+                    string tipoMov = mtt.capturaTipoMovimiento(idPersonalVal) == 461 ? "ENTRADA" : "SALIDA";
+                    ShowInOut(tipoMov);
+                    lblStatusProcess.Text = "HUELLA VERIFICADA";
+                    lblInOut.Text = tipoMov;
+                    lblStatusProcess.ForeColor = Color.Green;
+                    lblStatusProcess.Visible = true;
+                    // carga los datos del empleado en el label
+                    lblHora.Text = mtt.getHora();
+                    lblNombre.Text = NombrePersonalVal;
+                    //Muestra en pantalla los datos y hora
+                    lblNombre.Visible = true;
+                    lblHora.Visible = true;
+
+                    RrhhAsistencia regisAsis = new RrhhAsistencia()
+                    {
+                        IdTurno = mtt.getIdTurno(idPersonalVal),
+                        IdPersonal = idPersonalVal,
+                        HoraMarcado = mtt.getHoraMarcado(),
+                        MinutosAtraso = mtt.getMinutosAtraso(idPersonalVal),
+                        IndTipoMovimiento = mtt.getIndTipoMovimiento(idPersonalVal),
+                        IdPuntoAsistencia = mtt.getIdPuntoAsistencia()
+                    };
+
+                    // Enviando asistencia al servidor o a la tabla temporal
+
+                    m.ValidarAsistencia(regisAsis);
+                }
+                else
+                {
+                    string tipoMov2 = mtt.capturaTipoMovimiento(idPersonalVal) != 461 ? "ENTRADA" : "SALIDA";
+                    mtt.NotificationMessage("Cuidado estás volviendo a marcar tu: " + tipoMov2 + "\nDebes esperar al menos 5 min. para volver a marcar.", "alert");
+                    CleanLabels();
+                }
+
+
+                //if (response != null)
+                //{
+                //    MessageBox.Show("Asistencia enviada al servidor con éxito: " + response.Status);
+                //}
+            }
+            else
+            {
+                CleanLabels();
+            }
         }
 
         private void CleanLabels()

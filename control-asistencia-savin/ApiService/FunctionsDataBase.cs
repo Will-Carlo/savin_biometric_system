@@ -25,7 +25,8 @@ namespace control_asistencia_savin.ApiService
             try
             {
                 var data = _apiService.GetDataAsync();
-                //MessageBox.Show("respuesta: "+data.ToString());
+
+                //MessageBox.Show("respuesta: "+data);
                 if (data != null)
                 {
                     //MessageBox.Show("Conexión al servidor exitosa.", "Test de conexión", MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -35,16 +36,17 @@ namespace control_asistencia_savin.ApiService
             }
             catch (Exception ex)
             {
-                //MessageBox.Show($"No se pudo conectar al servidor: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                //MessageBox.Show($"No se pudo conectar al servidor: {ex.Message} \nDevolviendo False", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return false;
             }
             return false;
         }
 
-        public async Task loadDataBase()
+        public void loadDataBase()
         {
             try
             {
-                var data = await _apiService.GetDataAsync();
+                var data =  _apiService.GetDataAsync();
 
                 if (data != null)
                 {
@@ -61,11 +63,11 @@ namespace control_asistencia_savin.ApiService
             }
         }
 
-        public async Task loadDataBaseForMac(ApiService _apiService)
+        public void loadDataBaseForMac(ApiService _apiService)
         {
             try
             {
-                var data = await _apiService.GetDataAsync();
+                var data =  _apiService.GetDataAsync();
 
                 if (data != null)
                 {
@@ -429,6 +431,41 @@ namespace control_asistencia_savin.ApiService
                 }
             }
         }
+
+        public void ModificarHoraMarcadoTT(int IdPersonal, string HoraAnterior, int IdPuntoAsistencia)
+        {
+            using (var dbContext = new StoreContext())
+            {
+                // Buscar el registro que cumple con los criterios de búsqueda
+                var registro = dbContext.RrhhAsistenciaTemporals
+                    .FirstOrDefault(a => a.IdPersonal == IdPersonal &&
+                                         a.HoraMarcado == HoraAnterior &&
+                                         a.IdPuntoAsistencia == IdPuntoAsistencia);
+
+                // Verificar si se encontró el registro
+                if (registro != null)
+                {
+                    // Modificar los minutos_atraso a 0
+                    registro.MinutosAtraso = 0;
+
+                    // Guardar los cambios en la base de datos
+                    dbContext.SaveChanges();
+                }
+            }
+        }
+
+
+        public bool verifyAnteriorRegistroTT(int idPersonal)
+        {
+            using (var context = new StoreContext())
+            {
+                // Verifica si existe al menos un registro en la tabla rrhh_asistencia que coincida con el id_personal
+                bool existeRegistro = context.RrhhAsistenciaTemporals.Any(a => a.IdPersonal == idPersonal);
+
+                return existeRegistro;
+            }
+        }
+
 
         public int MinutosDeTolerancia()
         {
