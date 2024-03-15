@@ -3,6 +3,7 @@ using control_asistencia_savin.Models;
 using control_asistencia_savin.Notifications;
 using DPFP;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Conventions;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -24,6 +25,7 @@ namespace control_asistencia_savin.Frm
         public int getIdTurno(int idPersonal)
         {
             int idTurno = this.capturaIdTurno(idPersonal);
+            //MessageBox.Show("IdTurno capturado: " + idTurno);
             if (validarTurno(idPersonal, idTurno))
             {
                 return idTurno;
@@ -40,19 +42,20 @@ namespace control_asistencia_savin.Frm
         public int getMinutosAtraso(int IdPersonal)
         {
             // capturamos el tipo de turno para sumar si se atrasa o si sale antes
-            int indMov = capturaTipoMovimiento(IdPersonal);
+
             //MessageBox.Show("IndMov: " + indMov +
             //    "\nEsSalidaExtra?: " + EsSalidaExtra(IdPersonal).ToString());
             if (!EsSalidaExtra(IdPersonal))
             {
-                if (indMov == 461)
-                {
-                    return this.capturaMinutosAtrasoEntrada(IdPersonal);
-                }
-                else if (indMov == 462)
-                {
-                    return this.capturaMinutosAtrasoSalida(IdPersonal);
-                }
+                //if (indMov == 461)
+                //{
+                //    return this.capturaMinutosAtrasoEntrada(IdPersonal);
+                //}
+                //else if (indMov == 462)
+                //{
+                //    return this.capturaMinutosAtrasoSalida(IdPersonal);
+                //}
+                return this.capturaMinutosAtraso(IdPersonal);
             }
             else
             {
@@ -76,7 +79,8 @@ namespace control_asistencia_savin.Frm
             using (var context = new StoreContext())
             {
                 // Capturamos la fecha de hoy y la convertimos a su representación en cadena
-                string fechaHoyStr = DateTime.Today.ToString("yyyy-MM-dd");
+                DateTime getDateToString = DateTime.Parse(_capturaHoraMarcado);
+                string fechaHoyStr = getDateToString.ToString("yyyy-MM-dd");
 
                 var ultimoRegistro = context.RrhhAsistencia
                     .Where(a => a.IdPersonal == IdPersonal &&
@@ -208,6 +212,11 @@ namespace control_asistencia_savin.Frm
             {
                 return 3;
             }
+            else if (validarTurno(IdPersonal, 4))
+            {
+                // si el personal es de tipo "horario continuo"
+                return 4;
+            }
             else
             {
                 if (this.existeAnteriorIdTurno(IdPersonal))
@@ -287,14 +296,15 @@ namespace control_asistencia_savin.Frm
                 case 1: return "MAÑANA";
                 case 2: return "TARDE";
                 case 3: return "SÁBADO";
-                case 4: return "SAlIDA EXTRA MAÑNA";
-                case 5: return "SAlIDA EXTRA TARDE";
+                case 4: return "HORARIO CONTINUO";
             }
             return "";
         }
         public bool EsSabado()
         {
-            return DateTime.Today.DayOfWeek == DayOfWeek.Saturday;
+            DateTime fechaCapturada = DateTime.Parse(this._capturaHoraMarcado);
+            // return DateTime.Today.DayOfWeek == DayOfWeek.Saturday;
+            return fechaCapturada.DayOfWeek == DayOfWeek.Saturday;
         }
         // validamos si hoy es un día feriado para evitar que el sistema les marque falatas
         private bool EsFeriado()
@@ -330,6 +340,7 @@ namespace control_asistencia_savin.Frm
                 return false;
             }
         }
+
         // -------------------------------------------------------------------
         // SALIDAS EXTRAS
         // -------------------------------------------------------------------
@@ -350,7 +361,9 @@ namespace control_asistencia_savin.Frm
             using (var dbContext = new StoreContext())
             {
                 // Obtener la fecha de hoy en el formato de texto correcto para comparar con la base de datos
-                string fechaHoy = DateTime.Today.ToString("yyyy-MM-dd");
+                DateTime getDateToString = DateTime.Parse(_capturaHoraMarcado);
+                string fechaHoy = getDateToString.ToString("yyyy-MM-dd");
+                //string fechaHoy = DateTime.Today.ToString("yyyy-MM-dd");
 
                 // Consulta para obtener el ID del último registro para el IdPersonal dado y la fecha de hoy
                 var ultimoRegistro = dbContext.RrhhAsistencia
@@ -374,7 +387,9 @@ namespace control_asistencia_savin.Frm
             using (var context = new StoreContext())
             {
                 // Obtener la fecha de hoy
-                string fechaHoy = DateTime.Today.ToString("yyyy-MM-dd");
+                DateTime getDateToString = DateTime.Parse(_capturaHoraMarcado);
+                string fechaHoy = getDateToString.ToString("yyyy-MM-dd");
+                //string fechaHoy = DateTime.Today.ToString("yyyy-MM-dd");
 
                 // Consulta LINQ para obtener el ind_tipo_movimiento del último registro para el IdPersonal dado
                 var ultimoRegistro = context.RrhhAsistencia
@@ -462,7 +477,7 @@ namespace control_asistencia_savin.Frm
 
 
             // comparamos y hacemos la sumatoria de minutos
-            if (idTurno == 1)
+            if (idTurno == 1 || idTurno == 4)
             {
                 // 08:30:00
                 return horaMarcada > tiempoInicioTurno1 ? this.alertPersonal(horaMarcada, tiempoInicioTurno1, IdPersonal, "Estás llegando tarde") : 0;
@@ -483,6 +498,60 @@ namespace control_asistencia_savin.Frm
             // por default
             return 0;
         }
+
+        private int capturaMinutosAtraso(int IdPersonal)
+        {
+            // reconvertirmos la hora capturada del personal
+            DateTime fechaMarcada = DateTime.Parse(this._capturaHoraMarcado);
+            TimeSpan horaMarcada = fechaMarcada.TimeOfDay;
+            int idTurno = capturaIdTurno(IdPersonal);
+            int indMov = capturaTipoMovimiento(IdPersonal);
+
+            int MinTol = _functionsDataBase.MinutosDeTolerancia();
+            var tiempoEntrada = capturaHoraEntrada(idTurno);
+            tiempoEntrada = tiempoEntrada.Add(TimeSpan.FromMinutes(MinTol));
+
+            var tiempoSalida = capturaHoraSalida(idTurno);
+
+            if (indMov == 461)
+            {
+                // 08:30:00
+                return horaMarcada > tiempoEntrada ? this.alertPersonalLate(horaMarcada, tiempoEntrada, IdPersonal) : 0;
+            }
+            else if (indMov == 462)
+            {
+                // 12:30:00
+                return horaMarcada < tiempoSalida ? this.alertPersonalEarly(horaMarcada, tiempoSalida, IdPersonal): 0;
+            }
+
+            // por default
+            return 0;
+        }
+
+        private TimeSpan capturaHoraEntrada(int idTurno)
+        {
+            using (var context = new StoreContext())
+            {
+                var horaEntrada = context.RrhhTurnos
+                    .Where(a => a.Id == idTurno)
+                    .Select(a => a.HoraIngreso)
+                    .FirstOrDefault(); // Devuelve el primer elemento o 0 si la secuencia está vacía.
+
+                return horaEntrada??TimeSpan.Zero;
+            }
+        }
+        private TimeSpan capturaHoraSalida(int idTurno)
+        {
+            using (var context = new StoreContext())
+            {
+                var horaEntrada = context.RrhhTurnos
+                    .Where(a => a.Id == idTurno)
+                    .Select(a => a.HoraSalida)
+                    .FirstOrDefault(); // Devuelve el primer elemento o 0 si la secuencia está vacía.
+
+                return horaEntrada ?? TimeSpan.Zero;
+            }
+        }
         private int capturaMinutosAtrasoSalida(int IdPersonal)
         {
             // reconvertirmos la hora capturada del personal
@@ -498,17 +567,17 @@ namespace control_asistencia_savin.Frm
             // comparamos y hacemos la sumatoria de minutos
             if (idTurno == 1)
             {
-                // 08:30:00
+                // 12:30:00
                 return horaMarcada < tiempoInicioTurno1 ? (int)(tiempoInicioTurno1 - horaMarcada).TotalMinutes : 0;
             }
-            else if (idTurno == 2)
+            else if (idTurno == 2 || idTurno == 4)
             {
-                // 14:30:00
+                // 19:00:00
                 return horaMarcada < tiempoInicioTurno2 ? (int)(tiempoInicioTurno2 - horaMarcada).TotalMinutes : 0;
             }
             else if (idTurno == 3)
             {
-                // 09:00:00
+                // 13:00:00
                 return horaMarcada < tiempoInicioTurno3 ? (int)(tiempoInicioTurno3 - horaMarcada).TotalMinutes : 0;
             }
 
@@ -565,6 +634,24 @@ namespace control_asistencia_savin.Frm
             frmNotification customMessage = new frmNotification(MessageUser, TypeMessage);
             customMessage.ShowDialog();
             //customMessage.ShowWarningNotification(MessageUser);
+        }
+        private int alertPersonalLate(TimeSpan horaMarcada, TimeSpan tiempoEntrada, int IdPersonal)
+        {
+            int min = (int)(horaMarcada - tiempoEntrada).TotalMinutes;
+            if (min > 0)
+            {
+                this.NotificationMessage(this.NombrePersonal(IdPersonal) + "\nEstás llegando tarde por " + min + " minutos.", "alert");
+            }
+            return min;
+        }
+        private int alertPersonalEarly(TimeSpan horaMarcada, TimeSpan tiempoSalida, int IdPersonal)
+        {
+            int min = (int)(tiempoSalida - horaMarcada).TotalMinutes;
+            if (min > 0)
+            {
+                this.NotificationMessage(this.NombrePersonal(IdPersonal) + "\nEstás saliendo antes por " + min + " minutos.", "alert");
+            }
+            return min;
         }
         // -------------------------------------------------------------------
         // FUNCIONES PARA CAPTURAR EL IDTURNO

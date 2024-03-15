@@ -170,7 +170,7 @@ namespace control_asistencia_savin
                 else
                 {
                     string tipoMov2 = mtt.capturaTipoMovimiento(idPersonalVal) != 461 ? "ENTRADA" : "SALIDA";
-                    mtt.NotificationMessage("Cuidado estás volviendo a marcar tu: " + tipoMov2 + "\nDebes esperar al menos 5 min. para volver a marcar.", "alert");
+                    mtt.NotificationMessage("Cuidado estás volviendo a marcar tu: " + tipoMov2 + "\nDebes esperar al menos 1 min. para volver a marcar.", "alert");
                     CleanLabels();
                 }
 
