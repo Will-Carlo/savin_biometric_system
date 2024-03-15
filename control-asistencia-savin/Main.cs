@@ -1,4 +1,5 @@
 ﻿using control_asistencia_savin.Frm;
+using control_asistencia_savin.Frm.admin_frm;
 using control_asistencia_savin.Models;
 using control_asistencia_savin.Notifications;
 using System;
@@ -201,6 +202,12 @@ namespace control_asistencia_savin
             AbrirForm(new frmVerificarNew());
 
         }
+
+        private void lnkVerAsistencias_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            AbrirForm(new frmAsistenciasPersonal());
+
+        }
         // FUNCIONES PARA CERRAR LA APLICACIÓN CON EL LOGOUT   
         private void lblLogOut_Click(object sender, EventArgs e)
         {
@@ -237,6 +244,8 @@ namespace control_asistencia_savin
             this.lnkApiTest.Visible = actionLink;
             this.lnkFakeRegister.Visible = actionLink;
             this.lnkMarcar2.Visible = actionLink;
+            this.lnkVerAsistencias.Visible = actionLink;
+
         }
         private void LinksProduction(bool actionLink)
         {
@@ -247,6 +256,7 @@ namespace control_asistencia_savin
             //this.lnkApiTest.Visible = actionLink;
             //this.lnkFakeRegister.Visible = actionLink;
             //this.lnkMarcar2.Visible = actionLink;
+            //this.lnkVerAsistencias.Visible = actionLink;
 
         }
         // -------------------------------------------------------------------
@@ -505,9 +515,6 @@ namespace control_asistencia_savin
             }
         }
 
-        private void lnkVerAsistencias_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
-        {
-
-        }
+       
     }
 }

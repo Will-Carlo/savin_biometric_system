@@ -501,9 +501,29 @@ namespace control_asistencia_savin.ApiService
             MessageBox.Show(messageMac);
 
             return "Punto Asistencia: " + this.GetPuntoAsistencia(cd._mac) +
-                "\nNombre de la tienda: " + this.GetNombreTienda(cd._mac);
+                "\nNombre de la tienda: \n" + this.GetNombreTienda(cd._mac);
         }
 
+        public int? LoadRegistersNew(int n)
+        {
+            this.LimpiarDB();
+            Credenciales cd = new Credenciales(n);
+            //MessageBox.Show("MAC: "+cd._mac);
+            ApiService ap = new ApiService(true, cd._mac);
+            this.loadDataBaseForMac(ap);
+
+
+            return this.GetPuntoAsistenciaNew(cd._mac);
+        }
+        public int? GetPuntoAsistenciaNew(string _dirMac)
+        {
+            using (var context = new StoreContext())
+            {
+                var puntoAsistencia = context.RrhhPuntoAsistencia
+                                            .FirstOrDefault(pa => pa.DireccionMac == _dirMac);
+                return puntoAsistencia?.Id;
+            }
+        }
         public string? GetPuntoAsistencia(string _dirMac)
         {
             using (var context = new StoreContext())
