@@ -19,6 +19,7 @@ namespace control_asistencia_savin.Frm
         private readonly ApiService.ApiService _apiService = new ApiService.ApiService();
         //private MetodosAsistencia _m = new MetodosAsistencia();
         private string _capturaHoraMarcado = "";
+        private bool existeConexion = true;
         // -------------------------------------------------------------------
         // PROCEDIMIENTOS PARA EL REGISTRO DE ASISTENCIA
         // -------------------------------------------------------------------
@@ -61,7 +62,6 @@ namespace control_asistencia_savin.Frm
             {
                 return this.capturaMinutosSalidaExtra(IdPersonal);
             }
-            return 0;
         }
         public int getIndTipoMovimiento(int IdPersonal)
         {
@@ -82,15 +82,31 @@ namespace control_asistencia_savin.Frm
                 DateTime getDateToString = DateTime.Parse(_capturaHoraMarcado);
                 string fechaHoyStr = getDateToString.ToString("yyyy-MM-dd");
 
-                var ultimoRegistro = context.RrhhAsistencia
-                    .Where(a => a.IdPersonal == IdPersonal &&
-                                 a.HoraMarcado.StartsWith(fechaHoyStr) && a.IndTipoMovimiento != 469)  // no usamos los registros de faltas
-                    .OrderByDescending(a => a.HoraMarcado) // Asumiendo que 'Id' es un autoincremento y representa el más reciente; ordenamos por Hora de marcado por si se agregó por postman
-                    .Select(a => a.IndTipoMovimiento)
-                    .FirstOrDefault(); // Devuelve el primer elemento o 0 si la secuencia está vacía.
+                if (existeConexion)
+                {
+                    var ultimoRegistro = context.RrhhAsistencia
+                        .Where(a => a.IdPersonal == IdPersonal &&
+                                     a.HoraMarcado.StartsWith(fechaHoyStr) && a.IndTipoMovimiento != 469)  // no usamos los registros de faltas
+                        .OrderByDescending(a => a.HoraMarcado) // Asumiendo que 'Id' es un autoincremento y representa el más reciente; ordenamos por Hora de marcado por si se agregó por postman
+                        .Select(a => a.IndTipoMovimiento)
+                        .FirstOrDefault(); // Devuelve el primer elemento o 0 si la secuencia está vacía,
 
-                // Si el valor es 1, devolver 2. Si el valor es 2 o no hay registros, devolver 1.
-                return ultimoRegistro == 461 ? 462 : 461;
+                    // Si el valor es 1, devolver 2. Si el valor es 2 o no hay registros, devolver 1.
+                    return ultimoRegistro == 461 ? 462 : 461;
+                }
+                else
+                {
+                    var ultimoRegistro = context.RrhhAsistenciaTemporals
+                   .Where(a => a.IdPersonal == IdPersonal &&
+                                a.HoraMarcado.StartsWith(fechaHoyStr) && a.IndTipoMovimiento != 469)  // no usamos los registros de faltas
+                   .OrderByDescending(a => a.HoraMarcado) // Asumiendo que 'Id' es un autoincremento y representa el más reciente; ordenamos por Hora de marcado por si se agregó por postman
+                   .Select(a => a.IndTipoMovimiento)
+                   .FirstOrDefault(); // Devuelve el primer elemento o 0 si la secuencia está vacía.
+
+                    // Si el valor es 1, devolver 2. Si el valor es 2 o no hay registros, devolver 1.
+                    return ultimoRegistro == 461 ? 462 : 461;
+                }
+
             }
         }
         public void setCapturaHoraMarcado(string capturaHoraMarcado)
@@ -134,7 +150,6 @@ namespace control_asistencia_savin.Frm
         }
         public void ValidarAsistencia(RrhhAsistencia item)
         {
-            
             //if (_apiService.IsInternetAvailable())
             if (_functionsDataBase.verifyConection())
             {
@@ -181,7 +196,14 @@ namespace control_asistencia_savin.Frm
                 context.SaveChanges();
             }
         }
-
+        public bool getExisteConexion()
+        {
+            return this.existeConexion;
+        }
+        public void setExisteConexion(bool existeConexion)
+        {
+            this.existeConexion = existeConexion;
+        }
         // -------------------------------------------------------------------
         // 
         // -------------------------------------------------------------------
@@ -340,7 +362,6 @@ namespace control_asistencia_savin.Frm
                 return false;
             }
         }
-
         // -------------------------------------------------------------------
         // SALIDAS EXTRAS
         // -------------------------------------------------------------------
@@ -366,15 +387,33 @@ namespace control_asistencia_savin.Frm
                 //string fechaHoy = DateTime.Today.ToString("yyyy-MM-dd");
 
                 // Consulta para obtener el ID del último registro para el IdPersonal dado y la fecha de hoy
-                var ultimoRegistro = dbContext.RrhhAsistencia
+
+                if (existeConexion)
+                {
+                    var ultimoRegistro = dbContext.RrhhAsistencia
+                        .Where(a => a.IdPersonal == IdPersonal && a.HoraMarcado.StartsWith(fechaHoy) && a.IndTipoMovimiento != 469) // Filtrar por fecha de hoy
+                        .OrderByDescending(a => a.HoraMarcado) // Ordenar por el ID en orden descendente para obtener el último registro
+                        .FirstOrDefault();
+
+                    if (ultimoRegistro != null)
+                    {
+                        ultimoIdTurno = ultimoRegistro.IdTurno;
+                    }
+                }
+                else
+                {
+                    var ultimoRegistro = dbContext.RrhhAsistenciaTemporals
                     .Where(a => a.IdPersonal == IdPersonal && a.HoraMarcado.StartsWith(fechaHoy) && a.IndTipoMovimiento != 469) // Filtrar por fecha de hoy
                     .OrderByDescending(a => a.HoraMarcado) // Ordenar por el ID en orden descendente para obtener el último registro
                     .FirstOrDefault();
 
-                if (ultimoRegistro != null)
-                {
-                    ultimoIdTurno = ultimoRegistro.IdTurno;
+                    if (ultimoRegistro != null)
+                    {
+                        ultimoIdTurno = ultimoRegistro.IdTurno;
+                    }
                 }
+
+
             }
 
             return ultimoIdTurno;
@@ -392,14 +431,29 @@ namespace control_asistencia_savin.Frm
                 //string fechaHoy = DateTime.Today.ToString("yyyy-MM-dd");
 
                 // Consulta LINQ para obtener el ind_tipo_movimiento del último registro para el IdPersonal dado
-                var ultimoRegistro = context.RrhhAsistencia
+                if (existeConexion)
+                {
+                    var ultimoRegistro = context.RrhhAsistencia
+                        .Where(a => a.IdPersonal == IdPersonal && a.HoraMarcado.StartsWith(fechaHoy) && a.IndTipoMovimiento != 469)
+                        .OrderByDescending(a => a.HoraMarcado)
+                        .FirstOrDefault(); // Obtiene el primer elemento o null si no hay registros
+
+                    if (ultimoRegistro != null)
+                    {
+                        indTipoMovimiento = (int)ultimoRegistro.IndTipoMovimiento;
+                    }
+                }
+                else
+                {
+                    var ultimoRegistro = context.RrhhAsistenciaTemporals
                     .Where(a => a.IdPersonal == IdPersonal && a.HoraMarcado.StartsWith(fechaHoy) && a.IndTipoMovimiento != 469)
                     .OrderByDescending(a => a.HoraMarcado)
                     .FirstOrDefault(); // Obtiene el primer elemento o null si no hay registros
 
-                if (ultimoRegistro != null)
-                {
-                    indTipoMovimiento = (int)ultimoRegistro.IndTipoMovimiento;
+                    if (ultimoRegistro != null)
+                    {
+                        indTipoMovimiento = (int)ultimoRegistro.IndTipoMovimiento;
+                    }
                 }
             }
 
@@ -413,16 +467,18 @@ namespace control_asistencia_savin.Frm
             DateTime horaAnterior = DateTime.Parse(this.getAnteriorHora(IdPersonal)); // 15:00:00
 
             // Hacemos las modificaciones en la base de datos local y en la API
-
-            _functionsDataBase.ModificarHoraMarcado(IdPersonal, this.getAnteriorHora(IdPersonal), this.capturaIdPuntoAsistencia());
-            if (_functionsDataBase.verifyConection())
+            if (existeConexion)
             {
-                _apiService.ModificarAsistenciaAsync(IdPersonal, this.getAnteriorHora(IdPersonal), this.capturaIdPuntoAsistencia());
+                _functionsDataBase.ModificarHoraMarcado(IdPersonal, this.getAnteriorHora(IdPersonal), this.capturaIdPuntoAsistencia());
+                if (_functionsDataBase.verifyConection())
+                {
+                    _apiService.ModificarAsistenciaAsync(IdPersonal, this.getAnteriorHora(IdPersonal), this.capturaIdPuntoAsistencia());
+                }
             }
-            //else
-            //{
-            //    _functionsDataBase.ModificarHoraMarcadoTT(IdPersonal, this.getAnteriorHora(IdPersonal), this.capturaIdPuntoAsistencia());
-            //}
+            else
+            {
+                _functionsDataBase.ModificarHoraMarcadoTT(IdPersonal, this.getAnteriorHora(IdPersonal), this.capturaIdPuntoAsistencia());
+            }
 
 
             // comparamos y hacemos la sumatoria de minutos
@@ -436,17 +492,36 @@ namespace control_asistencia_savin.Frm
 
             using (var dbContext = new StoreContext())
             {
-                // Consulta para obtener el último registro de asistencia para el idPersonal dado
-                var ultimoRegistro = dbContext.RrhhAsistencia
-                    .Where(a => a.IdPersonal == IdPersonal && a.IndTipoMovimiento != 469)
-                    .OrderByDescending(a => a.HoraMarcado)
-                    .FirstOrDefault();
-
-                // Verificar si se encontró un registro
-                if (ultimoRegistro != null)
+                if (existeConexion)
                 {
-                    horaMarcado = ultimoRegistro.HoraMarcado;
+                    // Consulta para obtener el último registro de asistencia para el idPersonal dado
+                    var ultimoRegistro = dbContext.RrhhAsistencia
+                        .Where(a => a.IdPersonal == IdPersonal && a.IndTipoMovimiento != 469)
+                        .OrderByDescending(a => a.HoraMarcado)
+                        .FirstOrDefault();
+
+                    // Verificar si se encontró un registro
+                    if (ultimoRegistro != null)
+                    {
+                        horaMarcado = ultimoRegistro.HoraMarcado;
+                    }
                 }
+                else
+                {
+                    // Consulta para obtener el último registro de asistencia para el idPersonal dado
+                    var ultimoRegistro = dbContext.RrhhAsistenciaTemporals
+                        .Where(a => a.IdPersonal == IdPersonal && a.IndTipoMovimiento != 469)
+                        .OrderByDescending(a => a.HoraMarcado)
+                        .FirstOrDefault();
+
+                    // Verificar si se encontró un registro
+                    if (ultimoRegistro != null)
+                    {
+                        horaMarcado = ultimoRegistro.HoraMarcado;
+                    }
+                }
+
+
             }
 
             return horaMarcado;
@@ -498,7 +573,6 @@ namespace control_asistencia_savin.Frm
             // por default
             return 0;
         }
-
         private int capturaMinutosAtraso(int IdPersonal)
         {
             // reconvertirmos la hora capturada del personal
@@ -527,7 +601,6 @@ namespace control_asistencia_savin.Frm
             // por default
             return 0;
         }
-
         private TimeSpan capturaHoraEntrada(int idTurno)
         {
             using (var context = new StoreContext())
@@ -662,16 +735,28 @@ namespace control_asistencia_savin.Frm
             using (var context = new StoreContext())
             {
                 // Obtener la fecha de hoy
-                DateTime fechaHoy = DateTime.Today;
+                DateTime fechaHoy = DateTime.Parse(_capturaHoraMarcado);
 
                 // Convertir la fecha de hoy a su representación en cadena
                 string fechaHoyStr = fechaHoy.ToString("yyyy-MM-dd");
 
-                // Verificar si hay algún registro para la fecha de hoy
-                bool existeRegistroHoy = context.RrhhAsistencia
-                    .Any(a => a.IdPersonal == IdPersonal && a.HoraMarcado.StartsWith(fechaHoyStr));
+                if (existeConexion)
+                {
+                    // Verificar si hay algún registro para la fecha de hoy
+                    bool existeRegistroHoy = context.RrhhAsistencia
+                        .Any(a => a.IdPersonal == IdPersonal && a.HoraMarcado.StartsWith(fechaHoyStr));
 
-                return existeRegistroHoy;
+                    return existeRegistroHoy;
+                }
+                else
+                {
+                    // Verificar si hay algún registro para la fecha de hoy
+                    bool existeRegistroHoy = context.RrhhAsistenciaTemporals
+                        .Any(a => a.IdPersonal == IdPersonal && a.HoraMarcado.StartsWith(fechaHoyStr));
+
+                    return existeRegistroHoy;
+                }
+
             }
         }
         // -------------------------------------------------------------------
@@ -874,12 +959,24 @@ namespace control_asistencia_savin.Frm
                 DateTime horaMarcado = DateTime.ParseExact(this._capturaHoraMarcado, "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture);
                 string fechaHoyStr = horaMarcado.ToString("yyyy-MM-dd");
 
-                // Verificar si existe al menos un registro con el IdPersonal y el IdTurno dados para la fecha de hoy
-                bool marcoHoy = context.RrhhAsistencia
-                    .Any(a => a.IdPersonal == IdPersonal &&
-                              a.HoraMarcado.StartsWith(fechaHoyStr));
+                if (existeConexion)
+                {
+                    // Verificar si existe al menos un registro con el IdPersonal y el IdTurno dados para la fecha de hoy
+                    bool marcoHoy = context.RrhhAsistencia
+                        .Any(a => a.IdPersonal == IdPersonal &&
+                                  a.HoraMarcado.StartsWith(fechaHoyStr));
 
-                return marcoHoy;
+                    return marcoHoy;
+                }
+                else
+                {
+                    // Verificar si existe al menos un registro con el IdPersonal y el IdTurno dados para la fecha de hoy
+                    bool marcoHoy = context.RrhhAsistenciaTemporals
+                        .Any(a => a.IdPersonal == IdPersonal &&
+                                  a.HoraMarcado.StartsWith(fechaHoyStr));
+
+                    return marcoHoy;
+                }
             }
         }
         private bool MarcoHacePoco(int IdPersonal)
@@ -891,31 +988,62 @@ namespace control_asistencia_savin.Frm
 
 
                 // Obtener el último registro de hora_marcado para el IdPersonal dado
-                var ultimoRegistro = context.RrhhAsistencia
+                if (existeConexion)
+                {
+                    var ultimoRegistro = context.RrhhAsistencia
+                                            .Where(a => a.IdPersonal == IdPersonal && a.IndTipoMovimiento != 469)
+                                            // && a.HoraMarcado.StartsWith(fechaHoyStr))
+                                            .OrderByDescending(a => a.HoraMarcado) // Ordena los registros en orden descendente para obtener el más reciente; ordenamos por hora de marcado para validar datos integrados por postman
+                                            .Select(a => a.HoraMarcado)
+                                            .FirstOrDefault();
+                    if (!string.IsNullOrEmpty(ultimoRegistro))
+                    {
+                        // Convertir el último registro de hora_marcado a un formato de fecha y hora
+                        DateTime horaAnterior = DateTime.ParseExact(ultimoRegistro, "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture);
+                        DateTime horaMarcado = DateTime.ParseExact(this._capturaHoraMarcado, "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture);
+
+                        // Calcular la diferencia de tiempo entre la hora de marcado y la hora actual
+                        TimeSpan diferenciaTiempo = horaMarcado - horaAnterior;
+                        // MessageBox.Show("Actual: "+ horaMarcado + "\nAnterior: "+ horaAnterior + "\nDiferencia: "+diferenciaTiempo.ToString());
+                        // Si la diferencia de tiempo es menor o igual a 15 minutos, devuelve true
+                        if (diferenciaTiempo.TotalMinutes <= 1)
+                        {
+                            return true;
+                        }
+                    }
+
+                    // Si no se encuentra ningún registro o la diferencia de tiempo es mayor a 15 minutos, devuelve false
+                    return false;
+                }
+                else
+                {
+                    var ultimoRegistro = context.RrhhAsistenciaTemporals
                                             .Where(a => a.IdPersonal == IdPersonal && a.IndTipoMovimiento != 469)
                                             // && a.HoraMarcado.StartsWith(fechaHoyStr))
                                             .OrderByDescending(a => a.HoraMarcado) // Ordena los registros en orden descendente para obtener el más reciente; ordenamos por hora de marcado para validar datos integrados por postman
                                             .Select(a => a.HoraMarcado)
                                             .FirstOrDefault();
 
-                if (!string.IsNullOrEmpty(ultimoRegistro))
-                {
-                    // Convertir el último registro de hora_marcado a un formato de fecha y hora
-                    DateTime horaAnterior = DateTime.ParseExact(ultimoRegistro, "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture);
-                    DateTime horaMarcado = DateTime.ParseExact(this._capturaHoraMarcado, "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture);
-
-                    // Calcular la diferencia de tiempo entre la hora de marcado y la hora actual
-                    TimeSpan diferenciaTiempo = horaMarcado - horaAnterior;
-                    // MessageBox.Show("Actual: "+ horaMarcado + "\nAnterior: "+ horaAnterior + "\nDiferencia: "+diferenciaTiempo.ToString());
-                    // Si la diferencia de tiempo es menor o igual a 15 minutos, devuelve true
-                    if (diferenciaTiempo.TotalMinutes <= 1)
+                    if (!string.IsNullOrEmpty(ultimoRegistro))
                     {
-                        return true;
+                        // Convertir el último registro de hora_marcado a un formato de fecha y hora
+                        DateTime horaAnterior = DateTime.ParseExact(ultimoRegistro, "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture);
+                        DateTime horaMarcado = DateTime.ParseExact(this._capturaHoraMarcado, "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture);
+
+                        // Calcular la diferencia de tiempo entre la hora de marcado y la hora actual
+                        TimeSpan diferenciaTiempo = horaMarcado - horaAnterior;
+                        // MessageBox.Show("Actual: "+ horaMarcado + "\nAnterior: "+ horaAnterior + "\nDiferencia: "+diferenciaTiempo.ToString());
+                        // Si la diferencia de tiempo es menor o igual a 15 minutos, devuelve true
+                        if (diferenciaTiempo.TotalMinutes <= 1)
+                        {
+                            return true;
+                        }
                     }
+
+                    // Si no se encuentra ningún registro o la diferencia de tiempo es mayor a 15 minutos, devuelve false
+                    return false;
                 }
 
-                // Si no se encuentra ningún registro o la diferencia de tiempo es mayor a 15 minutos, devuelve false
-                return false;
             }
         }
 

@@ -45,6 +45,7 @@
             lnkOpciones = new LinkLabel();
             pictureBox1 = new PictureBox();
             panel1 = new Panel();
+            lnkMarcar2 = new LinkLabel();
             lnkFakeRegister = new LinkLabel();
             panel2 = new Panel();
             lblLogOut = new Label();
@@ -52,7 +53,7 @@
             pnlInfoStore = new Panel();
             pnlHora = new Panel();
             pnlBase = new Panel();
-            lnkMarcar2 = new LinkLabel();
+            lnkVerAsistencias = new LinkLabel();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
             panel1.SuspendLayout();
             panel2.SuspendLayout();
@@ -260,6 +261,7 @@
             // panel1
             // 
             panel1.BackColor = Color.FromArgb(0, 37, 105);
+            panel1.Controls.Add(lnkVerAsistencias);
             panel1.Controls.Add(lnkMarcar2);
             panel1.Controls.Add(lnkFakeRegister);
             panel1.Controls.Add(panel2);
@@ -275,6 +277,23 @@
             panel1.Name = "panel1";
             panel1.Size = new Size(225, 729);
             panel1.TabIndex = 26;
+            // 
+            // lnkMarcar2
+            // 
+            lnkMarcar2.Anchor = AnchorStyles.Left;
+            lnkMarcar2.AutoSize = true;
+            lnkMarcar2.BackColor = Color.FromArgb(10, 38, 102);
+            lnkMarcar2.Font = new Font("Segoe UI", 9F);
+            lnkMarcar2.LinkColor = Color.FromArgb(241, 206, 0);
+            lnkMarcar2.Location = new Point(66, 482);
+            lnkMarcar2.Margin = new Padding(4, 0, 4, 0);
+            lnkMarcar2.Name = "lnkMarcar2";
+            lnkMarcar2.Size = new Size(118, 15);
+            lnkMarcar2.TabIndex = 30;
+            lnkMarcar2.TabStop = true;
+            lnkMarcar2.Text = "Marcar por huella 2.0";
+            lnkMarcar2.Visible = false;
+            lnkMarcar2.LinkClicked += lnkMarcar2_LinkClicked;
             // 
             // lnkFakeRegister
             // 
@@ -361,22 +380,22 @@
             pnlBase.Size = new Size(1125, 457);
             pnlBase.TabIndex = 29;
             // 
-            // lnkMarcar2
+            // lnkVerAsistencias
             // 
-            lnkMarcar2.Anchor = AnchorStyles.Left;
-            lnkMarcar2.AutoSize = true;
-            lnkMarcar2.BackColor = Color.FromArgb(10, 38, 102);
-            lnkMarcar2.Font = new Font("Segoe UI", 9F);
-            lnkMarcar2.LinkColor = Color.FromArgb(241, 206, 0);
-            lnkMarcar2.Location = new Point(66, 482);
-            lnkMarcar2.Margin = new Padding(4, 0, 4, 0);
-            lnkMarcar2.Name = "lnkMarcar2";
-            lnkMarcar2.Size = new Size(118, 15);
-            lnkMarcar2.TabIndex = 30;
-            lnkMarcar2.TabStop = true;
-            lnkMarcar2.Text = "Marcar por huella 2.0";
-            lnkMarcar2.Visible = false;
-            lnkMarcar2.LinkClicked += lnkMarcar2_LinkClicked;
+            lnkVerAsistencias.Anchor = AnchorStyles.Left;
+            lnkVerAsistencias.AutoSize = true;
+            lnkVerAsistencias.BackColor = Color.FromArgb(10, 38, 102);
+            lnkVerAsistencias.Font = new Font("Segoe UI", 9F);
+            lnkVerAsistencias.LinkColor = Color.FromArgb(241, 206, 0);
+            lnkVerAsistencias.Location = new Point(66, 510);
+            lnkVerAsistencias.Margin = new Padding(4, 0, 4, 0);
+            lnkVerAsistencias.Name = "lnkVerAsistencias";
+            lnkVerAsistencias.Size = new Size(82, 15);
+            lnkVerAsistencias.TabIndex = 31;
+            lnkVerAsistencias.TabStop = true;
+            lnkVerAsistencias.Text = "Ver asistencias";
+            lnkVerAsistencias.Visible = false;
+            lnkVerAsistencias.LinkClicked += lnkVerAsistencias_LinkClicked;
             // 
             // Main
             // 
@@ -434,6 +453,7 @@
         private Panel panel2;
         private LinkLabel lnkFakeRegister;
         private LinkLabel lnkMarcar2;
+        private LinkLabel lnkVerAsistencias;
     }
 }
 

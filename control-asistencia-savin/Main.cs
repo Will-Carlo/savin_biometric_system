@@ -497,7 +497,7 @@ namespace control_asistencia_savin
         private void reLoad()
         {
             if (_functionsDataBase.verifyConection())
-          //if (_apiService.IsInternetAvailable())
+            //if (_apiService.IsInternetAvailable())
             {
                 _m.registrarAsistenciasTemporales();
                 _functionsDataBase.LimpiarDB();
@@ -505,6 +505,9 @@ namespace control_asistencia_savin
             }
         }
 
-    
+        private void lnkVerAsistencias_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+
+        }
     }
 }

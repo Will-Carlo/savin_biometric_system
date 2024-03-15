@@ -17,7 +17,6 @@ namespace control_asistencia_savin
     public partial class frmCodigo : VerifyForm
     {
         private MetodosAsistencia m = new MetodosAsistencia();
-        private MetodosAsistenciaTemporalTable mtt = new MetodosAsistenciaTemporalTable();
         private readonly ApiService.ApiService _apiService;
         private ApiService.FunctionsDataBase _functionsDataBase = new FunctionsDataBase();
 
@@ -85,6 +84,15 @@ namespace control_asistencia_savin
                 txtCodigo.Text = "";
                 if (txtCod != "")
                 {
+                    //if (_functionsDataBase.verifyConection() || !_functionsDataBase.verifyAnteriorRegistroTT(IdPersonal))
+                    //{
+                    //    this.RegistroAsistencia(IdPersonal);
+                    //}
+                    //else
+                    //{
+                    //    this.RegistroAsistenciaTemporalTable(IdPersonal);
+                    //}
+
                     // el sistema detecta cuando hay conexión a internet, 404 o 500.
                     if (_functionsDataBase.verifyConection() || !_functionsDataBase.verifyAnteriorRegistroTT(IdPersonal))
                     {
@@ -92,7 +100,8 @@ namespace control_asistencia_savin
                     }
                     else
                     {
-                        this.RegistroAsistenciaTemporalTable(IdPersonal);
+                        m.setExisteConexion(false);
+                        this.RegistroAsistencia(IdPersonal);
                     }
 
                 }
@@ -174,55 +183,55 @@ namespace control_asistencia_savin
             }
         }
 
-        private void RegistroAsistenciaTemporalTable(int idPersonalVal)
-        {
+        //private void RegistroAsistenciaTemporalTable(int idPersonalVal)
+        //{
 
-            mtt.setCapturaHoraMarcado(DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
+        //    mtt.setCapturaHoraMarcado(DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
 
-            if (PersonalName(idPersonalVal) != null)
-            {
-                if (!mtt.EsRegistroDoble(idPersonalVal))
-                {
-                    string tipoMov = mtt.capturaTipoMovimiento(idPersonalVal) == 461 ? "ENTRADA" : "SALIDA";
-                    ShowInOut(tipoMov);
-                    lblStatusProcess.Text = "CÓDIGO VERIFICADO";
-                    lblInOut.Text = tipoMov;
-                    lblStatusProcess.ForeColor = Color.Green;
-                    lblStatusProcess.Visible = true;
-                    // carga los datos del empleado en el label
-                    lblHora.Text = mtt.getHora();
-                    lblNombre.Text = PersonalName(idPersonalVal);
-                    //Muestra en pantalla los datos y hora
-                    lblNombre.Visible = true;
-                    lblHora.Visible = true;
+        //    if (PersonalName(idPersonalVal) != null)
+        //    {
+        //        if (!mtt.EsRegistroDoble(idPersonalVal))
+        //        {
+        //            string tipoMov = mtt.capturaTipoMovimiento(idPersonalVal) == 461 ? "ENTRADA" : "SALIDA";
+        //            ShowInOut(tipoMov);
+        //            lblStatusProcess.Text = "CÓDIGO VERIFICADO";
+        //            lblInOut.Text = tipoMov;
+        //            lblStatusProcess.ForeColor = Color.Green;
+        //            lblStatusProcess.Visible = true;
+        //            // carga los datos del empleado en el label
+        //            lblHora.Text = mtt.getHora();
+        //            lblNombre.Text = PersonalName(idPersonalVal);
+        //            //Muestra en pantalla los datos y hora
+        //            lblNombre.Visible = true;
+        //            lblHora.Visible = true;
 
-                    RrhhAsistencia regisAsis = new RrhhAsistencia()
-                    {
-                        IdTurno = mtt.getIdTurno(idPersonalVal),
-                        IdPersonal = idPersonalVal,
-                        HoraMarcado = mtt.getHoraMarcado(),
-                        MinutosAtraso = mtt.getMinutosAtraso(idPersonalVal),
-                        IndTipoMovimiento = mtt.getIndTipoMovimiento(idPersonalVal),
-                        IdPuntoAsistencia = mtt.getIdPuntoAsistencia()
-                    };
+        //            RrhhAsistencia regisAsis = new RrhhAsistencia()
+        //            {
+        //                IdTurno = mtt.getIdTurno(idPersonalVal),
+        //                IdPersonal = idPersonalVal,
+        //                HoraMarcado = mtt.getHoraMarcado(),
+        //                MinutosAtraso = mtt.getMinutosAtraso(idPersonalVal),
+        //                IndTipoMovimiento = mtt.getIndTipoMovimiento(idPersonalVal),
+        //                IdPuntoAsistencia = mtt.getIdPuntoAsistencia()
+        //            };
 
-                    // Enviando asistencia al servidor o a la tabla temporal
+        //            // Enviando asistencia al servidor o a la tabla temporal
 
-                    m.ValidarAsistencia(regisAsis);
-                }
-                else
-                {
-                    string tipoMov2 = mtt.capturaTipoMovimiento(idPersonalVal) != 461 ? "ENTRADA" : "SALIDA";
-                    mtt.NotificationMessage("Cuidado estás volviendo a marcar tu: " + tipoMov2 + "\nDebes esperar al menos 1 min. para volver a marcar.", "alert");
-                    this.CleanLabels();
-                }
-            }
-            else
-            {
-                this.CleanLabels();
-                MessageBox.Show("Código incorrecto.", "Error");
-            }
-        }
+        //            m.ValidarAsistencia(regisAsis);
+        //        }
+        //        else
+        //        {
+        //            string tipoMov2 = mtt.capturaTipoMovimiento(idPersonalVal) != 461 ? "ENTRADA" : "SALIDA";
+        //            mtt.NotificationMessage("Cuidado estás volviendo a marcar tu: " + tipoMov2 + "\nDebes esperar al menos 1 min. para volver a marcar.", "alert");
+        //            this.CleanLabels();
+        //        }
+        //    }
+        //    else
+        //    {
+        //        this.CleanLabels();
+        //        MessageBox.Show("Código incorrecto.", "Error");
+        //    }
+        //}
 
         private void txtCodigo_KeyDown(object sender, KeyEventArgs e)
         {

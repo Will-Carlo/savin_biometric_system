@@ -459,7 +459,7 @@ namespace control_asistencia_savin.ApiService
         {
             using (var context = new StoreContext())
             {
-                // Verifica si existe al menos un registro en la tabla rrhh_asistencia que coincida con el id_personal
+                // Verifica si existe al menos un registro en la tabla rrhh_asistencia_temporal que coincida con el id_personal
                 bool existeRegistro = context.RrhhAsistenciaTemporals.Any(a => a.IdPersonal == idPersonal);
 
                 return existeRegistro;
