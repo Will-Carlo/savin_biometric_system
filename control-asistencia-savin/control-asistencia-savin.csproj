@@ -35,6 +35,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Remove="Frm\MetodosAsistenciaTemporalTable.cs" />
     <Compile Remove="StoreContext.cs" />
   </ItemGroup>
 

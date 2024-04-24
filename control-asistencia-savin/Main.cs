@@ -59,6 +59,9 @@ namespace control_asistencia_savin
 
             lblPunto.Text = "Punto: " + _functionsDataBase.GetNombreTienda();
 
+            //pctWarning.Visible = false;
+            //lnkSincronizarRegistros.Visible = false;
+
             //CENTRANDO TÍTULOS
             lblSisAsis.AutoSize = true;
             lblPunto.AutoSize = true;
@@ -75,7 +78,7 @@ namespace control_asistencia_savin
             SetupScheduledTask();
 
 
-           
+
 
         }
         private void loadSystem()
@@ -102,6 +105,10 @@ namespace control_asistencia_savin
             }
             else
             {
+                if (_functionsDataBase.existenRegistrosSinSincronizar())
+                {
+                    advertenciaDeSincronizacion(true);
+                }
                 _logger.LogError("Error al cargar el sistema.");
 
                 // Environment.Exit(0);
@@ -115,7 +122,7 @@ namespace control_asistencia_savin
         private void deleteOldsBackUps()
         {
             int deleteBackupsMonth = int.Parse(DateTime.Now.ToString("MM")) - 2;
-            
+
             int deleteBackups = deleteBackupsMonth == 0 ? 12 : deleteBackupsMonth;
             //_logger.LogInformation($"Eliminando old backups. Mes: {deleteBackupsMonth}, Mes a enviar: {deleteBackups}");
 
@@ -268,7 +275,7 @@ namespace control_asistencia_savin
             this.Close();
         }
 
-       
+
         private void Main_FormClosing(object sender, FormClosingEventArgs e)
         {
             var result = MessageBox.Show("¿Estás seguro de que quieres cerrar la aplicación?", "Confirmar salida", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
@@ -294,7 +301,7 @@ namespace control_asistencia_savin
         // -------------------------------------------------------------------
         // REGISTRAR FALTAS
         // -------------------------------------------------------------------
-     
+
         // -------------------------------------------------------------------
         // REGISTRAR ASISTENCIAS TEMPORALES Y RECARGAR PARA ASISTENCIAS DE PERSONAL DE TIPO VARIABLE V2
         // -------------------------------------------------------------------
@@ -431,16 +438,82 @@ namespace control_asistencia_savin
         }
         private void reLoad()
         {
-            _logger.LogInformation("-> TAREA PROGRAMADA: Iniciando la sincronización automática del sistema...");
+            _logger.LogInformation("\n-> TAREA PROGRAMADA: \nIniciando la sincronización automática del sistema...");
             if (_functionsDataBase.verifyConection())
             //if (_apiService.IsInternetAvailable())
             {
                 _m.registrarAsistenciasTemporales();
                 _functionsDataBase.LimpiarDB();
                 _functionsDataBase.loadDataBase();
+            }else{
+                _logger.LogDebug("No hay conexión a internet.");
+                if (_functionsDataBase.existenRegistrosSinSincronizar())
+                {
+                    advertenciaDeSincronizacion(true);
+                }
+
             }
         }
 
-       
+
+
+        private void advertenciaDeSincronizacion(bool mostrarAdvertencia)
+        {
+            if (this.InvokeRequired)
+            {
+                // Si el llamado viene de un hilo diferente al hilo de la UI,
+                // usar el método Invoke con una expresión lambda para ejecutar mostrarAdvertenciaInterfaz en el hilo de la UI.
+                this.Invoke((MethodInvoker)delegate {
+                    mostrarAdvertenciaInterfaz(mostrarAdvertencia);
+                });
+            }
+            else
+            {
+                // Este código se ejecuta solo si estamos en el hilo de la UI.
+                mostrarAdvertenciaInterfaz(mostrarAdvertencia);
+            }
+        }
+
+
+
+        private void mostrarAdvertenciaInterfaz(bool mostrarAdvertencia)
+        {
+            pctWarning.Visible = mostrarAdvertencia;
+            lnkSincronizarRegistros.Visible = mostrarAdvertencia;
+        }
+
+        private void lnkSincronizarRegistros_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            _logger.LogInformation("--- INICIA EL PROCESO DE SINCRONIZACIÓN (clic) ---");
+            if (_functionsDataBase.existenRegistrosSinSincronizar())
+            {
+                if (_functionsDataBase.verifyConection())
+                //if (_apiService.IsInternetAvailable())
+                {
+                    _m.registrarAsistenciasTemporales();
+                    _functionsDataBase.LimpiarDB();
+                    _functionsDataBase.loadDataBase();
+                    advertenciaDeSincronizacion(false);
+                    MessageBox.Show("Se ha sincronizado con éxito.");
+                }
+                else
+                {
+                    _logger.LogDebug("No se pudo sincronizar el backup.");
+                    MessageBox.Show("No se pudo conectar a la red. \nInténtalo más tarde", "Sincronizar datos");
+                }
+                
+            }
+            else
+            {
+                MessageBox.Show("Se ha sincronizado con éxito.");
+
+                _logger.LogInformation("No existen datos para sincronizar.");
+                advertenciaDeSincronizacion(false);
+            }
+
+            _logger.LogInformation("--- FINALIZA EL PROCESO DE SINCRONIZACIÓN ---");
+
+
+        }
     }
 }

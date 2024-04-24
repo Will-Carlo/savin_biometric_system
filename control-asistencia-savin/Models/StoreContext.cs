@@ -135,6 +135,7 @@ public partial class StoreContext : DbContext
             entity.Property(e => e.IndTipoMovimiento).HasColumnName("ind_tipo_movimiento");
             entity.Property(e => e.MinutosAtraso).HasColumnName("minutos_atraso");
             entity.Property(e => e.Observaciones).HasColumnName("observaciones");
+            entity.Property(e => e.RegistroApi).HasColumnName("registro_api");
 
             entity.HasOne(d => d.IdPersonalNavigation).WithMany(p => p.RrhhAsistencia)
                 .HasForeignKey(d => d.IdPersonal)

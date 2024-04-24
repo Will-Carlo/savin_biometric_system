@@ -49,6 +49,8 @@
             lnkMarcar2 = new LinkLabel();
             lnkFakeRegister = new LinkLabel();
             panel2 = new Panel();
+            lnkSincronizarRegistros = new LinkLabel();
+            pctWarning = new PictureBox();
             lblLogOut = new Label();
             pictureBox2 = new PictureBox();
             pnlInfoStore = new Panel();
@@ -57,6 +59,7 @@
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
             panel1.SuspendLayout();
             panel2.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)pctWarning).BeginInit();
             ((System.ComponentModel.ISupportInitialize)pictureBox2).BeginInit();
             pnlInfoStore.SuspendLayout();
             pnlHora.SuspendLayout();
@@ -331,13 +334,43 @@
             // 
             // panel2
             // 
+            panel2.Controls.Add(lnkSincronizarRegistros);
+            panel2.Controls.Add(pctWarning);
             panel2.Controls.Add(lblLogOut);
             panel2.Controls.Add(pictureBox2);
             panel2.Dock = DockStyle.Bottom;
-            panel2.Location = new Point(0, 654);
+            panel2.Location = new Point(0, 602);
             panel2.Name = "panel2";
-            panel2.Size = new Size(225, 75);
+            panel2.Size = new Size(225, 127);
             panel2.TabIndex = 28;
+            // 
+            // lnkSincronizarRegistros
+            // 
+            lnkSincronizarRegistros.Anchor = AnchorStyles.Left;
+            lnkSincronizarRegistros.AutoSize = true;
+            lnkSincronizarRegistros.BackColor = Color.FromArgb(10, 38, 102);
+            lnkSincronizarRegistros.Font = new Font("Segoe UI", 8.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            lnkSincronizarRegistros.LinkColor = Color.FromArgb(241, 206, 0);
+            lnkSincronizarRegistros.Location = new Point(67, 34);
+            lnkSincronizarRegistros.Margin = new Padding(4, 0, 4, 0);
+            lnkSincronizarRegistros.Name = "lnkSincronizarRegistros";
+            lnkSincronizarRegistros.Size = new Size(112, 13);
+            lnkSincronizarRegistros.TabIndex = 32;
+            lnkSincronizarRegistros.TabStop = true;
+            lnkSincronizarRegistros.Text = "Sincronizar registros";
+            lnkSincronizarRegistros.Visible = false;
+            lnkSincronizarRegistros.LinkClicked += lnkSincronizarRegistros_LinkClicked;
+            // 
+            // pctWarning
+            // 
+            pctWarning.Image = (Image)resources.GetObject("pctWarning.Image");
+            pctWarning.Location = new Point(34, 27);
+            pctWarning.Name = "pctWarning";
+            pctWarning.Size = new Size(29, 29);
+            pctWarning.SizeMode = PictureBoxSizeMode.Zoom;
+            pctWarning.TabIndex = 23;
+            pctWarning.TabStop = false;
+            pctWarning.Visible = false;
             // 
             // lblLogOut
             // 
@@ -345,7 +378,7 @@
             lblLogOut.Cursor = Cursors.Hand;
             lblLogOut.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 0);
             lblLogOut.ForeColor = Color.FromArgb(241, 206, 0);
-            lblLogOut.Location = new Point(79, 21);
+            lblLogOut.Location = new Point(67, 73);
             lblLogOut.Name = "lblLogOut";
             lblLogOut.Size = new Size(103, 21);
             lblLogOut.TabIndex = 27;
@@ -356,9 +389,9 @@
             // 
             pictureBox2.Cursor = Cursors.Hand;
             pictureBox2.Image = (Image)resources.GetObject("pictureBox2.Image");
-            pictureBox2.Location = new Point(42, 14);
+            pictureBox2.Location = new Point(30, 66);
             pictureBox2.Name = "pictureBox2";
-            pictureBox2.Size = new Size(33, 34);
+            pictureBox2.Size = new Size(34, 34);
             pictureBox2.SizeMode = PictureBoxSizeMode.Zoom;
             pictureBox2.TabIndex = 26;
             pictureBox2.TabStop = false;
@@ -419,6 +452,7 @@
             panel1.PerformLayout();
             panel2.ResumeLayout(false);
             panel2.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)pctWarning).EndInit();
             ((System.ComponentModel.ISupportInitialize)pictureBox2).EndInit();
             pnlInfoStore.ResumeLayout(false);
             pnlInfoStore.PerformLayout();
@@ -454,6 +488,10 @@
         private LinkLabel lnkFakeRegister;
         private LinkLabel lnkMarcar2;
         private LinkLabel lnkVerAsistencias;
+        private Label label1;
+        private PictureBox picWarning;
+        private LinkLabel lnkSincronizarRegistros;
+        private PictureBox pctWarning;
     }
 }
 

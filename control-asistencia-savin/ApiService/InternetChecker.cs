@@ -28,7 +28,7 @@ namespace control_asistencia_savin.ApiService
         {
             if (e.IsAvailable)
             {
-                _logger.LogInformation("-> TAREA PROGRAMADA: Se ha recuperado la conexión a internet.");
+                _logger.LogInformation("\n-> TAREA PROGRAMADA: \nSe ha recuperado la conexión a internet.");
                 reLoad();
             }
         }
@@ -39,8 +39,8 @@ namespace control_asistencia_savin.ApiService
             if (_functionsDataBase.verifyConection())
             {
                 _m.registrarAsistenciasTemporales();
-                _functionsDataBase.LimpiarDB();
-                _functionsDataBase.loadDataBase();
+                //_functionsDataBase.LimpiarDB();
+                //_functionsDataBase.loadDataBase();
                 //MessageBox.Show("INTERNET CHECKER: se ejecutó la tarea con éxito.");
             }
             {

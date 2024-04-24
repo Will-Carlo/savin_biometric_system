@@ -42,6 +42,7 @@ namespace control_asistencia_savin
             //    _functionsDataBase.LimpiarDB();
             //    _functionsDataBase.loadDataBase();
             //}
+            _logger.LogInformation("\n-------------------- INICIO DE REGISTRO DE ASISTENCIA --------------------");
             _logger.LogDebug("Leyendo huella...");
             frmVerificar verificar = new frmVerificar();
             verificar.ShowDialog();
@@ -80,15 +81,15 @@ namespace control_asistencia_savin
                 // 0 0: no hay conexión         !existe registro
 
                 // el sistema detecta cuando hay conexión a internet, 404 o 500.
-                if (_functionsDataBase.verifyConection() || !_functionsDataBase.verifyAnteriorRegistroTT(verificar.idEncontrado))
-                {
+                //if (_functionsDataBase.verifyConection() || !_functionsDataBase.verifyAnteriorRegistroTT(verificar.idEncontrado))
+                //{
+                //    this.RegistroAsistencia(verificar.statusProcess, verificar.idEncontrado, verificar.personalName);
+                //}
+                //else
+                //{
+                //    m.setExisteConexion(false);
                     this.RegistroAsistencia(verificar.statusProcess, verificar.idEncontrado, verificar.personalName);
-                }
-                else
-                {
-                    m.setExisteConexion(false);
-                    this.RegistroAsistencia(verificar.statusProcess, verificar.idEncontrado, verificar.personalName);
-                }
+                //}
             }
             catch (DbUpdateException ex)
             {
@@ -134,7 +135,7 @@ namespace control_asistencia_savin
                     //Muestra en pantalla los datos y hora
                     lblNombre.Visible = true;
                     lblHora.Visible = true;
-
+                    _logger.LogDebug("################ validaciones de asistencia ################");
                     RrhhAsistencia regisAsis = new RrhhAsistencia()
                     {
                         IdTurno = m.getIdTurno(idPersonalVal),
@@ -146,8 +147,10 @@ namespace control_asistencia_savin
                     };
 
                     // Enviando asistencia al servidor o a la tabla temporal
+                    _logger.LogDebug("################ fin validaciones de asistencia ################");
 
                     m.ValidarAsistencia(regisAsis);
+                    _logger.LogInformation("\n-------------------- FIN DE REGISTRO DE ASISTENCIA --------------------");
                 }
                 else
                 {

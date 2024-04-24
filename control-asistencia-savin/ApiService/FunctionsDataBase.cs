@@ -472,33 +472,33 @@ namespace control_asistencia_savin.ApiService
             }
         }
 
-        public void ModificarHoraMarcadoTT(int IdPersonal, string HoraAnterior, int IdPuntoAsistencia)
-        {
-            using (var dbContext = new StoreContext())
-            {
-                // Buscar el registro que cumple con los criterios de búsqueda
-                var registro = dbContext.RrhhAsistenciaTemporals
-                    .FirstOrDefault(a => a.IdPersonal == IdPersonal &&
-                                         a.HoraMarcado == HoraAnterior &&
-                                         a.IdPuntoAsistencia == IdPuntoAsistencia);
+        //public void ModificarHoraMarcadoTT(int IdPersonal, string HoraAnterior, int IdPuntoAsistencia)
+        //{
+        //    using (var dbContext = new StoreContext())
+        //    {
+        //        // Buscar el registro que cumple con los criterios de búsqueda
+        //        var registro = dbContext.RrhhAsistenciaTemporals
+        //            .FirstOrDefault(a => a.IdPersonal == IdPersonal &&
+        //                                 a.HoraMarcado == HoraAnterior &&
+        //                                 a.IdPuntoAsistencia == IdPuntoAsistencia);
 
-                // Verificar si se encontró el registro
-                if (registro != null)
-                {
-                    _logger.LogDebug($"Seteando a cero 'min de atraso' en backup del personal: {IdPersonal}.");
+        //        // Verificar si se encontró el registro
+        //        if (registro != null)
+        //        {
+        //            _logger.LogDebug($"Seteando a cero 'min de atraso' en backup del personal: {IdPersonal}.");
 
-                    // Modificar los minutos_atraso a 0
-                    registro.MinutosAtraso = 0;
+        //            // Modificar los minutos_atraso a 0
+        //            registro.MinutosAtraso = 0;
 
-                    // Guardar los cambios en la base de datos
-                    dbContext.SaveChanges();
-                }
-                else
-                {
-                    _logger.LogError($"Error al setear a cero en backup del personal: {IdPersonal}.");
-                }
-            }
-        }
+        //            // Guardar los cambios en la base de datos
+        //            dbContext.SaveChanges();
+        //        }
+        //        else
+        //        {
+        //            _logger.LogError($"Error al setear a cero en backup del personal: {IdPersonal}.");
+        //        }
+        //    }
+        //}
 
 
         public bool verifyAnteriorRegistroTT(int idPersonal)
@@ -618,5 +618,34 @@ namespace control_asistencia_savin.ApiService
 
         }
 
+        // ---------------------------- FIN FUNCIONES PARA VALIDAR BACKUP ----------------------------
+        public List<RrhhAsistencia> ObtenerAsistenciasNoEnviadas()
+        {
+            using (var context = new StoreContext())
+            {
+                // Filtrar los registros donde RegistroApi es específicamente 'false'
+                var asistenciasNoEnviadas = context.RrhhAsistencia
+                    .Where(a => a.RegistroApi.HasValue && a.RegistroApi.Value == false)
+                    .ToList();
+           
+                return asistenciasNoEnviadas;
+            }
+        }
+
+        public bool existenRegistrosSinSincronizar()
+        {
+            List<RrhhAsistencia> registros = ObtenerAsistenciasNoEnviadas();
+            if (registros.Any())
+            {
+                _logger.LogDebug($"Hay {registros.Count} registros en el backup.");
+            }
+            else
+            {
+                _logger.LogDebug("No hay datos en backup.");
+            }
+
+
+            return registros.Any();
+        }
     }
 }

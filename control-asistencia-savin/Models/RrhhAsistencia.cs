@@ -20,6 +20,7 @@ public partial class RrhhAsistencia
     public int IdPuntoAsistencia { get; set; }
 
     public string? Observaciones { get; set; }
+    public Boolean? RegistroApi { get; set; }
 
     public virtual RrhhPersonal IdPersonalNavigation { get; set; } = null!;
 
