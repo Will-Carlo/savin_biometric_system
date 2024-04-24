@@ -2,10 +2,13 @@
 using control_asistencia_savin.Frm.admin_frm;
 using control_asistencia_savin.Models;
 using control_asistencia_savin.Notifications;
+using Microsoft.Extensions.Logging;
+using Serilog;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Net.NetworkInformation;
@@ -24,6 +27,8 @@ namespace control_asistencia_savin
         private readonly ApiService.ApiService _apiService = new ApiService.ApiService();
         private ApiService.FunctionsDataBase _functionsDataBase = new ApiService.FunctionsDataBase();
         private MetodosAsistencia _m = new MetodosAsistencia();
+        private readonly Microsoft.Extensions.Logging.ILogger _logger;
+        private ApiService.Credenciales _cd = new ApiService.Credenciales();
 
         private string _hora = "";
         private string _fecha = "";
@@ -31,6 +36,13 @@ namespace control_asistencia_savin
         public Main()
         {
             InitializeComponent();
+
+            _logger = LoggingManager.GetLogger<Main>();
+            _logger.LogInformation($"\n------------------ INICIANDO LA APLICACIÓN {_cd._versionApp} ------------------");
+            string typeConexion = _apiService._esProduction ? "production" : "development";
+            _logger.LogDebug($"-> Loading data for {typeConexion}...");
+            this.Text = $"SAVIN {_cd._versionApp} - CONTROL BIOMÉTRICO";
+
             //InitializeDelayTimer();
             tmrTime.Start();
             //this.FormBorderStyle = FormBorderStyle.None; // Remueve los bordes de la ventana
@@ -39,7 +51,7 @@ namespace control_asistencia_savin
             loadSystem();
             AbrirForm(new frmAsistencia());
 
-
+            _logger.LogDebug($"-> Punto: {_functionsDataBase.GetNombreTienda()}.");
             // Pidiendo datos de la tienda por dirección MAC
             //MessageBox.Show("BIENVENIDOS");
             //_m.NotificationMessage("BIENVENIDOS", "welcome");
@@ -58,26 +70,12 @@ namespace control_asistencia_savin
             lblSisAsis.Location = new System.Drawing.Point(x1, y1);
             lblPunto.Location = new System.Drawing.Point(x2, y2);
 
-
-            //--------------------------------------------------------------
-            // temporizador para registro de asistencias temporales y de tipo variable
-            //timer = new System.Timers.Timer();
-
-            //// Establece el intervalo de tiempo (en milisegundos) antes de que se dispare el evento
-            //// En este ejemplo, configuramos el temporizador para que se ejecute cada día a las
-            //TimeSpan timeUntilNextRun = CalculateTimeUntilNextRun();
-            //timer.Interval = timeUntilNextRun.TotalMilliseconds;
-
-            //// Manejador de evento para el temporizador
-            //timer.Elapsed += Timer_Elapsed;
-
-            //// Inicia el temporizador
-            //timer.Start();
-
-
             //---------------------------------------------------------------
             // verifica la conexión cada 20 minutos v2
             SetupScheduledTask();
+
+
+           
 
         }
         private void loadSystem()
@@ -97,24 +95,30 @@ namespace control_asistencia_savin
 
                 this.deleteOldsBackUps();
 
-
+                _logger.LogInformation("Sistema cargado correctamente.");
 
                 frmLoading loadingForm = new frmLoading();
                 Application.Run(loadingForm);
             }
             else
             {
-                // MessageBox.Show("Error de conexión en el servidor exitosa");
+                _logger.LogError("Error al cargar el sistema.");
 
                 // Environment.Exit(0);
                 //this.Close();
             }
         }
+        // -------------------------------------------------------------------
+        // BACKUP
+        // -------------------------------------------------------------------
 
         private void deleteOldsBackUps()
         {
             int deleteBackupsMonth = int.Parse(DateTime.Now.ToString("MM")) - 2;
+            
             int deleteBackups = deleteBackupsMonth == 0 ? 12 : deleteBackupsMonth;
+            //_logger.LogInformation($"Eliminando old backups. Mes: {deleteBackupsMonth}, Mes a enviar: {deleteBackups}");
+
             //MessageBox.Show("date: " + DateTime.Now.ToString("MM") + "\nInt: " + deleteBackups.ToString());
             _functionsDataBase.DeleteBackupFiles(deleteBackups);
         }
@@ -133,6 +137,35 @@ namespace control_asistencia_savin
             lblTime.Location = new System.Drawing.Point(x1, y1);
             lblFecha.Location = new System.Drawing.Point(x2, y2);
         }
+
+        // -------------------------------------------------------------------
+        // GAME OF LINKS
+        // -------------------------------------------------------------------
+
+        private void LinksDevelopment(bool actionLink)
+        {
+            this.lnkInicio.Visible = actionLink;
+            this.lnkMarcarCodigo.Visible = actionLink;
+            this.lnkVerAtrasos.Visible = actionLink;
+            this.lnkRegistrar.Visible = actionLink;
+            this.lnkApiTest.Visible = actionLink;
+            this.lnkFakeRegister.Visible = actionLink;
+            this.lnkMarcar2.Visible = actionLink;
+            this.lnkVerAsistencias.Visible = actionLink;
+
+        }
+        private void LinksProduction(bool actionLink)
+        {
+            this.lnkInicio.Visible = actionLink;
+            this.lnkMarcarCodigo.Visible = actionLink;
+            //this.lnkVerAtrasos.Visible = actionLink;
+            this.lnkRegistrar.Visible = actionLink;
+            //this.lnkApiTest.Visible = actionLink;
+            //this.lnkFakeRegister.Visible = actionLink;
+            //this.lnkMarcar2.Visible = actionLink;
+            //this.lnkVerAsistencias.Visible = actionLink;
+
+        }
         public void AbrirForm(object subForm)
         {
             if (this.pnlBase.Controls.Count > 0)
@@ -144,6 +177,10 @@ namespace control_asistencia_savin
             f.Dock = DockStyle.Fill;
             this.pnlBase.Controls.Add(f);
             this.pnlBase.Tag = f;
+
+            string formName = f.GetType().Name;
+            _logger.LogDebug($"Abriendo formulario: {formName}");
+
             f.Show();
         }
         private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
@@ -190,7 +227,6 @@ namespace control_asistencia_savin
         private void lnkApiTest_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             AbrirForm(new frmTestApi());
-
         }
         private void lnkFakeRegister_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
@@ -208,18 +244,31 @@ namespace control_asistencia_savin
             AbrirForm(new frmAsistenciasPersonal());
 
         }
-        // FUNCIONES PARA CERRAR LA APLICACIÓN CON EL LOGOUT   
+
+        // -------------------------------------------------------------------
+        // FUNCIONES PARA CERRAR LA APLICACIÓN CON EL LOGOUT 
+        // -------------------------------------------------------------------
+
         private void lblLogOut_Click(object sender, EventArgs e)
         {
             //Environment.Exit(0);
+            _logger.LogInformation("Cerrando aplicación por logout");
+            _logger.LogInformation("\n------------------ CERRANDO LA APLICACIÓN ------------------");
+            LoggingManager.CloseAndFlush();
+
             this.Close();
         }
         private void pictureBox2_Click(object sender, EventArgs e)
         {
             //Environment.Exit(0);
+            _logger.LogInformation("Cerrando aplicación por logout");
+            _logger.LogInformation("\n------------------ CERRANDO LA APLICACIÓN ------------------");
+            LoggingManager.CloseAndFlush();
+
             this.Close();
         }
-        // BACKUP
+
+       
         private void Main_FormClosing(object sender, FormClosingEventArgs e)
         {
             var result = MessageBox.Show("¿Estás seguro de que quieres cerrar la aplicación?", "Confirmar salida", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
@@ -227,156 +276,25 @@ namespace control_asistencia_savin
             if (result == DialogResult.No)
             {
                 e.Cancel = true;
+
+                _logger.LogWarning("Cerrando la aplicación. (false)");
             }
             else
             {
                 _hora = DateTime.Now.ToString("HH:mm:ss");
                 _fecha = DateTime.Now.ToString("dd/MM/yyyy");
                 _functionsDataBase.BackUpDB(_fecha.Replace("/", "_") + "_" + _hora.Replace(":", "_"));
+                _logger.LogWarning("Cerrando la aplicación. (true)");
+                _logger.LogInformation("\n------------------ CERRANDO LA APLICACIÓN ------------------");
+                LoggingManager.CloseAndFlush();
+
             }
         }
-        private void LinksDevelopment(bool actionLink)
-        {
-            this.lnkInicio.Visible = actionLink;
-            this.lnkMarcarCodigo.Visible = actionLink;
-            this.lnkVerAtrasos.Visible = actionLink;
-            this.lnkRegistrar.Visible = actionLink;
-            this.lnkApiTest.Visible = actionLink;
-            this.lnkFakeRegister.Visible = actionLink;
-            this.lnkMarcar2.Visible = actionLink;
-            this.lnkVerAsistencias.Visible = actionLink;
 
-        }
-        private void LinksProduction(bool actionLink)
-        {
-            this.lnkInicio.Visible = actionLink;
-            this.lnkMarcarCodigo.Visible = actionLink;
-            //this.lnkVerAtrasos.Visible = actionLink;
-            this.lnkRegistrar.Visible = actionLink;
-            //this.lnkApiTest.Visible = actionLink;
-            //this.lnkFakeRegister.Visible = actionLink;
-            //this.lnkMarcar2.Visible = actionLink;
-            //this.lnkVerAsistencias.Visible = actionLink;
-
-        }
         // -------------------------------------------------------------------
         // REGISTRAR FALTAS
         // -------------------------------------------------------------------
-        //private TimeSpan CalculateTimeUntilNextRun()
-        //{
-        //    // Obtenemos la hora actual
-        //    DateTime now = DateTime.Now;
-
-        //    // Establecemos la hora específica en la que deseamos que se ejecute la tarea
-        //    DateTime scheduledTime;
-
-        //    if (_m.EsSabado())
-        //    {
-        //        scheduledTime = new DateTime(now.Year, now.Month, now.Day, 13, 00, 01); // 1:00 PM
-        //    }
-        //    else
-        //    {
-        //        scheduledTime = new DateTime(now.Year, now.Month, now.Day, 19, 00, 01); // 7:00 PM
-        //    }
-
-        //    // Si ya pasó la hora programada de hoy, programamos la tarea para mañana a la misma hora
-        //    if (now > scheduledTime)
-        //    {
-        //        // aquí iniiamos el procedimiento si ya pasó la hora y el programa estaba cerrado
-        //        _m.RegistrarFaltasDelDiaAfterClose();
-        //        scheduledTime = scheduledTime.AddDays(1);
-        //    }
-
-        //    // Calculamos el tiempo hasta la próxima ejecución
-        //    TimeSpan timeUntilNextRun = scheduledTime - now;
-
-        //    return timeUntilNextRun;
-        //}
-        //private void Timer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
-        //{
-        //    // Detenemos el temporizador para que no vuelva a ejecutarse automáticamente
-        //    timer.Stop();
-
-        //    _m.RegistrarFaltasDelDiaAfterClose();
-        //    // Reiniciamos el temporizador para el próximo día
-        //    timer.Interval = 24 * 60 * 60 * 1000; // 24 horas en milisegundos
-        //    timer.Start();
-        //}
-
-
-        // -------------------------------------------------------------------
-        // INICIAR ENTRE 5 A 10
-        // -------------------------------------------------------------------
-
-        // -------------------------------------------------------------------
-        // REGISTRAR ASISTENCIAS TEMPORALES Y RECARGAR PARA ASISTENCIAS DE PERSONAL DE TIPO VARIABLE
-        // -------------------------------------------------------------------
-        //private TimeSpan CalculateTimeUntilNextRun()
-        //{
-        //    // Obtenemos la hora actual
-        //    DateTime now = DateTime.Now;
-
-        //    // Establecemos la hora específica en la que deseamos que se ejecute la tarea
-        //    DateTime scheduledTime;
-
-        //    if (_m.EsSabado())
-        //    {
-        //        scheduledTime = new DateTime(now.Year, now.Month, now.Day, 12, 30, 01); // 12:30 PM
-        //    }   
-        //    else
-        //    {
-        //        if (now.TimeOfDay > new TimeSpan(11, 20, 0)) // Si es después de las 12:00 PM
-        //        {
-        //            scheduledTime = new DateTime(now.Year, now.Month, now.Day, 11, 54, 1); // 12:00 PM
-        //        }
-        //        else if (now.TimeOfDay > new TimeSpan(11, 50, 0)) // Si es después de las 2:00 PM
-        //        {
-        //            //scheduledTime = new DateTime(now.Year, now.Month, now.Day, 9, 47, 1); // 12:00 PM
-        //            scheduledTime = new DateTime(now.Year, now.Month, now.Day, 11, 56, 1); // 2:00 PM
-        //        }
-        //        else if (now.TimeOfDay > new TimeSpan(18, 30, 0)) // Si es después de las 2:00 PM
-        //        {
-        //            //scheduledTime = new DateTime(now.Year, now.Month, now.Day, 9, 47, 1); // 12:00 PM
-        //            scheduledTime = new DateTime(now.Year, now.Month, now.Day, 18, 30, 1); // 6:30 PM
-        //        }
-        //        else
-        //        {
-        //            scheduledTime = new DateTime(now.Year, now.Month, now.Day, 18, 50, 1); // caso por defecto
-        //        }
-        //    }
-
-        //    // Si ya pasó la hora programada de hoy, programamos la tarea para mañana a la misma hora
-        //    if (now > scheduledTime && _apiService.IsInternetAvailable())
-        //    {
-        //        // aquí iniiamos el procedimiento si ya pasó la hora y el programa estaba cerrado
-        //        this.reLoad();
-        //        scheduledTime = scheduledTime.AddDays(1);
-        //    }
-
-        //    // Calculamos el tiempo hasta la próxima ejecución
-        //    TimeSpan timeUntilNextRun = scheduledTime - now;
-
-        //    return timeUntilNextRun;
-        //}
-        //private void Timer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
-        //{
-        //    // Detenemos el temporizador para que no vuelva a ejecutarse automáticamente
-        //    timer.Stop();
-        //    this.reLoad();
-        //    // Reiniciamos el temporizador para el próximo día
-        //    timer.Interval = 24 * 60 * 60 * 1000; // 24 horas en milisegundos
-        //    timer.Start();
-        //}
-        //private void reLoad()
-        //{
-        //    if (_apiService.IsInternetAvailable())
-        //    {
-        //        _m.registrarAsistenciasTemporales();
-        //        _functionsDataBase.LimpiarDB();
-        //        _functionsDataBase.loadDataBase();
-        //    }
-        //}
-
+     
         // -------------------------------------------------------------------
         // REGISTRAR ASISTENCIAS TEMPORALES Y RECARGAR PARA ASISTENCIAS DE PERSONAL DE TIPO VARIABLE V2
         // -------------------------------------------------------------------
@@ -413,8 +331,15 @@ namespace control_asistencia_savin
             TimeSpan[] scheduledTimes = new TimeSpan[]
             {
                 //MAÑANA
-                new TimeSpan(9, 01, 01), // 12:30 PM
-                new TimeSpan(9, 11, 01), // 12:30 PM
+                new TimeSpan(8, 01, 01), // 12:30 PM
+                new TimeSpan(8, 11, 01), // 12:30 PM
+                //new TimeSpan(8, 21, 01), // 12:30 PM
+                //new TimeSpan(8, 31, 01), // 12:30 PM
+                //new TimeSpan(8, 41, 01), // 12:30 PM
+                //new TimeSpan(8, 51, 01), // 12:30 PM
+
+                //new TimeSpan(9, 01, 01), // 12:30 PM
+                //new TimeSpan(9, 11, 01), // 12:30 PM
                 new TimeSpan(9, 21, 01), // 12:30 PM
                 new TimeSpan(9, 31, 01), // 12:30 PM
                 new TimeSpan(9, 41, 01), // 12:30 PM
@@ -437,16 +362,16 @@ namespace control_asistencia_savin
                 new TimeSpan(12, 01, 01), // 12:30 PM
                 new TimeSpan(12, 11, 01), // 12:30 PM
                 new TimeSpan(12, 21, 01), // 12:30 PM
-                new TimeSpan(12, 31, 01), // 12:30 PM
-                new TimeSpan(12, 41, 01), // 12:30 PM
+                //new TimeSpan(12, 31, 01), // 12:30 PM
+                //new TimeSpan(12, 41, 01), // 12:30 PM
                 new TimeSpan(12, 51, 01), // 12:30 PM
                 //TARDE
                 new TimeSpan(14, 01, 01),  // 2:00 PM
                 new TimeSpan(14, 11, 01),  // 2:00 PM
-                new TimeSpan(14, 21, 01),  // 2:00 PM
-                new TimeSpan(14, 31, 01),  // 2:00 PM
-                new TimeSpan(14, 41, 01),  // 2:00 PM
-                new TimeSpan(14, 51, 01),  // 2:00 PM
+                //new TimeSpan(14, 21, 01),  // 2:00 PM
+                //new TimeSpan(14, 31, 01),  // 2:00 PM
+                //new TimeSpan(14, 41, 01),  // 2:00 PM
+                //new TimeSpan(14, 51, 01),  // 2:00 PM
 
                 new TimeSpan(15, 01, 01),  // 2:00 PM
                 new TimeSpan(15, 11, 01),  // 2:00 PM
@@ -476,11 +401,11 @@ namespace control_asistencia_savin
                 new TimeSpan(18, 41, 01),  // 6:30 PM
                 new TimeSpan(18, 51, 01),  // 6:30 PM
 
-                new TimeSpan(19, 01, 01),  // 6:30 PM
-                new TimeSpan(19, 11, 01),  // 6:30 PM
-                new TimeSpan(19, 21, 01),  // 6:30 PM
-                new TimeSpan(19, 31, 01),  // 6:30 PM
-                new TimeSpan(19, 41, 01),  // 6:30 PM
+                //new TimeSpan(19, 01, 01),  // 7:30 PM
+                //new TimeSpan(19, 11, 01),  // 7:30 PM
+                //new TimeSpan(19, 21, 01),  // 7:30 PM
+                new TimeSpan(19, 31, 01),  // 7:30 PM
+                new TimeSpan(19, 41, 01),  // 7:30 PM
                 //new TimeSpan(12, 04, 0),  // PRUEBA
                 //new TimeSpan(12, 05, 0),  // PRUEBA
                 //new TimeSpan(12, 06, 0),  // PRUEBA
@@ -506,6 +431,7 @@ namespace control_asistencia_savin
         }
         private void reLoad()
         {
+            _logger.LogInformation("-> TAREA PROGRAMADA: Iniciando la sincronización automática del sistema...");
             if (_functionsDataBase.verifyConection())
             //if (_apiService.IsInternetAvailable())
             {

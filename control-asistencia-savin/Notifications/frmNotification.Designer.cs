@@ -31,6 +31,7 @@
             lblMessage = new Label();
             btnOk = new Button();
             pnlNotification = new Panel();
+            txtObservacion = new TextBox();
             pnlNotification.SuspendLayout();
             SuspendLayout();
             // 
@@ -38,19 +39,19 @@
             // 
             lblMessage.Anchor = AnchorStyles.Top;
             lblMessage.AutoSize = true;
-            lblMessage.Font = new Font("Segoe UI", 9F);
-            lblMessage.Location = new Point(52, 41);
+            lblMessage.Font = new Font("Segoe UI", 14.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            lblMessage.Location = new Point(71, 20);
             lblMessage.Name = "lblMessage";
-            lblMessage.Size = new Size(66, 15);
+            lblMessage.Size = new Size(110, 25);
             lblMessage.TabIndex = 0;
             lblMessage.Text = "lblMessage";
             // 
             // btnOk
             // 
             btnOk.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
-            btnOk.Location = new Point(204, 91);
+            btnOk.Location = new Point(391, 112);
             btnOk.Name = "btnOk";
-            btnOk.Size = new Size(75, 23);
+            btnOk.Size = new Size(89, 23);
             btnOk.TabIndex = 1;
             btnOk.Text = "Ok";
             btnOk.UseVisualStyleBackColor = true;
@@ -58,19 +59,32 @@
             // 
             // pnlNotification
             // 
+            pnlNotification.Controls.Add(txtObservacion);
             pnlNotification.Controls.Add(lblMessage);
             pnlNotification.Controls.Add(btnOk);
             pnlNotification.Dock = DockStyle.Fill;
             pnlNotification.Location = new Point(0, 0);
             pnlNotification.Name = "pnlNotification";
-            pnlNotification.Size = new Size(291, 126);
+            pnlNotification.Size = new Size(492, 143);
             pnlNotification.TabIndex = 2;
+            // 
+            // txtObservacion
+            // 
+            txtObservacion.Font = new Font("Segoe UI", 14.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            txtObservacion.Location = new Point(13, 80);
+            txtObservacion.Margin = new Padding(4, 3, 4, 3);
+            txtObservacion.Multiline = true;
+            txtObservacion.Name = "txtObservacion";
+            txtObservacion.PlaceholderText = "Escribe tu justificativo...";
+            txtObservacion.Size = new Size(466, 107);
+            txtObservacion.TabIndex = 4;
+            txtObservacion.Visible = false;
             // 
             // frmNotification
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(291, 126);
+            ClientSize = new Size(492, 143);
             Controls.Add(pnlNotification);
             Name = "frmNotification";
             Text = "Notification";
@@ -84,5 +98,6 @@
         private Label lblMessage;
         private Button btnOk;
         private Panel pnlNotification;
+        private TextBox txtObservacion;
     }
 }

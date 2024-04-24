@@ -1,9 +1,12 @@
 ﻿using control_asistencia_savin.Frm;
 using control_asistencia_savin.Models;
+using control_asistencia_savin.Notifications;
+using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using RestSharp;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Net;
 using System.Net.Http.Headers;
@@ -18,13 +21,14 @@ namespace control_asistencia_savin.ApiService
     {
         private readonly HttpClient _httpClient = new HttpClient();
         private Credenciales _credenciales;
+        private readonly Microsoft.Extensions.Logging.ILogger _logger = LoggingManager.GetLogger<ApiService>();
         //private readonly MetodosAsistencia _m = new MetodosAsistencia();
 
         public string _dirMac { get; set; }
         public bool _esProduction = false;
         // ----------------------------------
         // NO MODIFICAR
-        public bool _serverConexion = false;
+        //public bool _serverConexion = false;
         public ApiService()
         {
             _credenciales = new Credenciales(_esProduction);
@@ -45,12 +49,14 @@ namespace control_asistencia_savin.ApiService
                 {
                     using (client.OpenRead("http://clients3.google.com/generate_204"))
                     {
+                        _logger.LogInformation("-> La conexión a internet es correcta.");
                         return true;
                     }
                 }
             }
             catch
             {
+                _logger.LogCritical("-> Se ha perdido la conexión a internet.");
                 return false;
             }
         }
@@ -113,15 +119,113 @@ namespace control_asistencia_savin.ApiService
         //}
 
 
+
+
         public ModelJson GetDataAsync()
         {
             try
             {
+
+                var response = _httpClient.GetAsync(_credenciales._getApiLink).Result;
+
+ 
+                if (response.IsSuccessStatusCode)
+                {
+                    var json = response.Content.ReadAsStringAsync().Result;
+
+                    if (!string.IsNullOrEmpty(json))
+                    {
+                        var data = JsonConvert.DeserializeObject<ModelJson>(json);
+
+                        _logger.LogInformation("Datos recibidos desde la API correctamente.");
+                        return data;
+                    }
+                    else
+                    {
+                        _logger.LogError("Error al recibir datos de la API.");
+                        return null;
+                    }
+                }
+                else
+                {
+                    return null;
+                }
+            }
+            catch (HttpRequestException ex)
+            {
+                _logger.LogError(ex, "Error de conexión en el servidor.");
+                return null;
+            }
+        }
+
+        public bool GetDataConexion()
+        {
+            try
+            {
+                _logger.LogInformation("-> Verificando conexión a internet y servidor...");
                 // Verificar la conexión a Internet
                 if (!IsInternetAvailable())
                 {
-                    //MessageBox.Show("No hay conexión a Internet: verifique su conexión a internet." +
-                    //    "\n\nPuede marcar su asistencia, pero restablezca la conexión a internet lo antes posible.", "Error de conexión");
+                    _logger.LogCritical("-> No hay conexión a Internet.");
+                    return false;
+                }
+
+                // Realizar la solicitud HTTP de forma síncrona
+                var response = _httpClient.GetAsync(_credenciales._getApiLink).Result;
+
+                if (response.StatusCode == HttpStatusCode.BadRequest)
+                {
+                    MessageBox.Show("Tu dirección MAC no está registrada.\nDir mac: " + _credenciales._PssdMac + "\nCerrando la aplicación.");
+                    _logger.LogError($"-> La dirección MAC no está registrada. Mac: {_credenciales._PssdMac}.");
+                    _logger.LogCritical("\n------------------ CERRANDO LA APLICACIÓN POR MAC NO REGISTRADA ------------------");
+                    LoggingManager.CloseAndFlush();
+
+                    Environment.Exit(0);
+                    return false;
+                }
+                else if (response.StatusCode == HttpStatusCode.NotFound || response.StatusCode == HttpStatusCode.InternalServerError)
+                {
+                    _logger.LogCritical($"-> No hay conexión con el servidor: {response.StatusCode}."); // mensaje principal de error de conexión
+                    return false;
+                }
+                else if (response.IsSuccessStatusCode)
+                {
+                    var json = response.Content.ReadAsStringAsync().Result;
+
+                    //if (!string.IsNullOrEmpty(json))
+                    //{
+                    //    //var data = JsonConvert.DeserializeObject<ModelJson>(json);
+                    // //   _serverConexion = true;
+                    _logger.LogInformation("-> La conexión al servidor es correcta.");
+                    return true;
+                    //}
+                    //else
+                    //{
+                    //    return false;
+                    //}
+                }
+                //else
+                //{
+                    return false;
+                //}
+            }
+            catch (HttpRequestException ex)
+            {
+                _logger.LogError(ex, "Error de conexión en el servidor.");
+                return false;
+            }
+        }
+
+
+        public ModelJson GetDataForMac()
+        {
+            try
+            {
+                _logger.LogInformation("-> Verificando conexión a internet y servidor...");
+                // Verificar la conexión a Internet
+                if (!IsInternetAvailable())
+                {
+                    _logger.LogCritical("-> No hay conexión a Internet.");
                     return null;
                 }
 
@@ -131,12 +235,16 @@ namespace control_asistencia_savin.ApiService
                 if (response.StatusCode == HttpStatusCode.BadRequest)
                 {
                     MessageBox.Show("Tu dirección MAC no está registrada.\nDir mac: " + _credenciales._PssdMac + "\nCerrando la aplicación.");
+                    _logger.LogError($"-> La dirección MAC no está registrada. Mac: {_credenciales._PssdMac}.");
+                    _logger.LogCritical("\n------------------ CERRANDO LA APLICACIÓN POR MAC NO REGISTRADA ------------------");
+                    LoggingManager.CloseAndFlush();
+
                     Environment.Exit(0);
                     return null;
                 }
                 else if (response.StatusCode == HttpStatusCode.NotFound || response.StatusCode == HttpStatusCode.InternalServerError)
                 {
-                    // MessageBox.Show("Error de conexión en el servidor: "+ response.StatusCode.ToString()); // mensaje principal de error de conexión
+                    _logger.LogCritical($"-> No hay conexión con el servidor: {response.StatusCode}."); // mensaje principal de error de conexión
                     return null;
                 }
                 else if (response.IsSuccessStatusCode)
@@ -146,7 +254,8 @@ namespace control_asistencia_savin.ApiService
                     if (!string.IsNullOrEmpty(json))
                     {
                         var data = JsonConvert.DeserializeObject<ModelJson>(json);
-                        _serverConexion = true;
+                        //_serverConexion = true;
+                        _logger.LogInformation("-> La conexión al servidor es correcta.");
                         return data;
                     }
                     else
@@ -161,98 +270,119 @@ namespace control_asistencia_savin.ApiService
             }
             catch (HttpRequestException ex)
             {
-                // Captura la excepción y maneja el error aquí
+                _logger.LogError(ex, "Error de conexión en el servidor.");
+                return null;
+            }
+        }
+
+        public List<AuxAsistencia> GetDataAsistencia(int idPersonal)
+        {
+            try
+            {
+                _logger.LogInformation("------ VER ASISTENCIAS POR PERSONAL API ------");
+                this.CleanHeaders();
+                _httpClient.DefaultRequestHeaders.Add("IdPersonal", idPersonal.ToString());
+                var response = _httpClient.GetAsync(_credenciales._getAsistenciaLink).Result;
+                if (response.IsSuccessStatusCode)
+                {
+                    _logger.LogInformation($"Respuesta: {response.StatusCode}");
+                    //_logger.LogInformation($"Extrayendo asistencias del personal: {_m.NombrePersonal(idPersonal)}");
+                    _logger.LogInformation($"Extrayendo asistencias del personal: {idPersonal.ToString()}");
+
+                    var json = response.Content.ReadAsStringAsync().Result;
+                    var asistencias = JsonConvert.DeserializeObject<List<AuxAsistencia>>(json);
+                    if (asistencias != null && asistencias.Any())
+                    {
+                        _logger.LogInformation("Mostrando asistencias registradas...");
+                        return asistencias;
+                    }
+                    else
+                    {
+                        _logger.LogInformation("El personal no tiene asistencias registradas.");
+                        return new List<AuxAsistencia>();
+                    }
+                }
+                else
+                {
+                    _logger.LogError($"Error al obtener los datos de asistencia por personal: {response.StatusCode}");
+                }
+                _logger.LogInformation("------ FIN VER ASISTENCIAS POR PERSONAL API ------");
+            }
+            catch (HttpRequestException ex)
+            {
+                _logger.LogError(ex, "Error al obtener los datos de asistencia por personal.");
+            }
+
+            return new List<AuxAsistencia>();
+
+        }
+        public async Task<HttpResponseMessage> RegistrarAsistenciaAsync(RrhhAsistencia asistencia)
+        {
+
+            try
+            {
+
+                //if (!this.IsInternetAvailable())
+                //{
+                //    MessageBox.Show("No hay conexión a internet, se registrará en la tabla de TemporalAsistencia", "Estado de la respuesta del servidor");
+                //    //_m.setAddAsistenciaTemporal(asistencia);
+                //}
+
+
+                this.CleanHeaders();
+
+                var regAsistencia = new
+                {
+                    idTurno = asistencia.IdTurno,
+                    idPersonal = asistencia.IdPersonal,
+                    horaMarcado = asistencia.HoraMarcado,
+                    minutosAtraso = asistencia.MinutosAtraso,
+                    indTipoMovimiento = asistencia.IndTipoMovimiento,
+                    idPuntoAsistencia = asistencia.IdPuntoAsistencia,
+                    observaciones = asistencia.Observaciones
+                };
+
+                string jsonContent = JsonConvert.SerializeObject(regAsistencia);
+
+
+                var content = new StringContent(jsonContent, Encoding.UTF8, "application/json");
+
+                _logger.LogInformation("------ REGISTRO DE ASISTENCIA API ------");
+                _logger.LogDebug("Asistencia: " + regAsistencia);
+
+                // Realiza la solicitud POST a la API
+                var response = await _httpClient.PostAsync(_credenciales._postApiLink, content);
+                var responseBody = await response.Content.ReadAsStringAsync();
+
+                _logger.LogDebug($"Estado de la respuesta: {response.StatusCode}, Contenido de la respuesta: {responseBody}.");
+                _logger.LogInformation("------ FIN REGISTRO DE ASISTENCIA API ------");
+
+                //_m.setAddAsistencia(asistencia);
+
+
+                if (!response.IsSuccessStatusCode)
+                {
+                    MessageBox.Show("Error al registrar la asistencia: " + response.StatusCode + "\nDetalles: " + responseBody + "\nContactar con el administrador.");
+                    _logger.LogCritical($"Error al registrar la asistencia: {response.StatusCode} \nDetalles: {responseBody}.");
+
+                    //throw new HttpRequestException($"Error al registrar a la asistencia: {response.StatusCode}" + "\nDetalles: " + responseBody);
+                }
+
+                return response;
+            }
+            catch (HttpRequestException ex)
+            {
+                _logger.LogError(ex, "Error al registrar asistencia.");
                 return null;
             }
         }
 
 
-        public List<AuxAsistencia> GetDataAsistencia(int idPersonal)
-        {
-            this.CleanHeaders();
-            _httpClient.DefaultRequestHeaders.Add("IdPersonal", idPersonal.ToString());
-            var response = _httpClient.GetAsync(_credenciales._getAsistenciaLink).Result;
-
-            if (response.IsSuccessStatusCode)
-            {
-                var json = response.Content.ReadAsStringAsync().Result;
-                var asistencias = JsonConvert.DeserializeObject<List<AuxAsistencia>>(json);
-                if (asistencias != null && asistencias.Any())
-                {
-                    return asistencias;
-                }
-                else
-                {
-                    // Devuelve una lista vacía si no hay asistencias
-                    return new List<AuxAsistencia>();
-                }
-            }
-            else
-            {
-                throw new HttpRequestException($"Error al obtener los datos de asistencia: {response.StatusCode}");
-                //MessageBox.Show($"Error al obtener los datos de asistencia: {response.StatusCode}","error");
-            }
-        }
-        public async Task<HttpResponseMessage> RegistrarAsistenciaAsync(RrhhAsistencia asistencia)
-        {
-            //if (!this.IsInternetAvailable())
-            //{
-            //    MessageBox.Show("No hay conexión a internet, se registrará en la tabla de TemporalAsistencia", "Estado de la respuesta del servidor");
-            //    //_m.setAddAsistenciaTemporal(asistencia);
-            //}
-
-            this.CleanHeaders();
-
-            var regAsistencia = new
-            {
-                idTurno = asistencia.IdTurno,
-                idPersonal = asistencia.IdPersonal,
-                horaMarcado = asistencia.HoraMarcado,
-                minutosAtraso = asistencia.MinutosAtraso,
-                indTipoMovimiento = asistencia.IndTipoMovimiento,
-                idPuntoAsistencia = asistencia.IdPuntoAsistencia
-            };
-
-            string jsonContent = JsonConvert.SerializeObject(regAsistencia);
-
-            //MessageBox.Show("json" + asistencia 
-            //                    + "\nIdTurno: "+ asistencia.IdTurno
-            //                    + "\nIdPersonal: " + asistencia.IdPersonal
-            //                    + "\nHoraMarcado: " + asistencia.HoraMarcado
-            //                    + "\nMinutosAtraso: " + asistencia.MinutosAtraso
-            //                    + "\nIndTipoMovimiento: " + asistencia.IndTipoMovimiento
-            //                );
-
-            //MessageBox.Show("json" + regAsistencia);
-
-            var content = new StringContent(jsonContent, Encoding.UTF8, "application/json");
-
-            // Realiza la solicitud POST a la API
-            var response = await _httpClient.PostAsync(_credenciales._postApiLink, content);
-            var responseBody = await response.Content.ReadAsStringAsync();
-
-            //string message = $"Estado de la respuesta: {response.StatusCode}\n";
-            //message += $"Contenido de la respuesta: {responseBody}";
-
-            //MessageBox.Show(message, "Estado de la respuesta del servidor");
-
-            //_m.setAddAsistencia(asistencia);
-
-
-            if (!response.IsSuccessStatusCode)
-            {
-                MessageBox.Show("Error al registrar a la asistencia: " + response.StatusCode + "\nDetalles: " + responseBody + "\nContactar con el administrador.");
-
-                //throw new HttpRequestException($"Error al registrar a la asistencia: {response.StatusCode}" + "\nDetalles: " + responseBody);
-            }
-
-            return response;
-    
-        }
         public async Task<HttpResponseMessage> ModificarAsistenciaAsync(int IdPersonal, string HoraMarcado, int IdPuntoAsistencia)
         {
             try
             {
+                _logger.LogInformation("------ REGISTRO DE SALIDA EXTRA API ------");
                 this.CleanHeaders();
 
                 // Asignar los datos al encabezado de la solicitud
@@ -264,17 +394,20 @@ namespace control_asistencia_savin.ApiService
                 var response = await _httpClient.PutAsync(_credenciales._putSalidasLink, null);
 
                 // Verificar si la solicitud fue exitosa
-                if (!response.IsSuccessStatusCode)
+                if (response.IsSuccessStatusCode)
+                {
+                    _logger.LogInformation("Se ha hecho el registro de salida extra correctamente.");
+                } else
                 {
                     var responseBody = await response.Content.ReadAsStringAsync();
-                    //MessageBox.Show("Error al modificar el registro: " + response.StatusCode + "\nDetalles: " + responseBody + "\nContactar con el administrador.");
+                    _logger.LogError($"Error al modificar el registro: {response.StatusCode} \nDetalles: {responseBody}.");
                 }
-
+                _logger.LogInformation("------ FIN REGISTRO DE SALIDA EXTRA API ------");
                 return response;
             }
             catch (Exception ex)
             {
-                //MessageBox.Show("Error al realizar la solicitud PUT: " + ex.Message);
+                _logger.LogError(ex.Message, "Error al realizar la solicitud PUT para el registro de salida extra.");
                 return null;
             }
         }

@@ -139,7 +139,7 @@ namespace control_asistencia_savin
                         _functionsDataBase.LimpiarAuxAsistencia();
                         _functionsDataBase.LoadDataBaseAsistencia(_idPersonal);
 
-                       if (ExisteDatos())
+                        if (ExisteDatos())
                         {
                             CargarMesesEnComboBox(_idPersonal);
                             //mostrar valores por defecto
@@ -343,6 +343,7 @@ namespace control_asistencia_savin
                 //CargarDatosEnDataGridView(mesAnio, _idPersonal);
                 CargarDatosEnDataGridView(_idPersonal, mesAnio);
                 TotalAtrasos();
+                filtrosDGV();
             }
         }
         private void txtCodigo_Click(object sender, EventArgs e)
@@ -510,12 +511,106 @@ namespace control_asistencia_savin
         }
         public bool ExisteDatos()
         {
-            using (var context = new StoreContext()) 
+            using (var context = new StoreContext())
             {
                 return context.AuxAsistencia.Any();
             }
         }
 
+        private void btnShowRegisters_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                // guardamos el código en una variaable
+                limpiarCampos();
+
+                // buscamos el id de la persona según su código
+                _idPersonal = int.Parse(txtIdPersonalRegisters.Text);
+
+                //txtCodigo.Text = txtCod;
+
+                if (PersonalName(_idPersonal) != null)
+                {
+                    //lblStatusProcess.Left = _xStatus + 150;
+                    lblStatusProcess.Text = "VERIFICADO.";
+                    lblStatusProcess.ForeColor = Color.Green;
+                    lblStatusProcess.Visible = true;
+                    // carga los datos del empleado en el label
+                    lblNombre.Text = PersonalName(_idPersonal);
+                    //Muestra en pantalla los datos y hora
+                    lblNombre.Visible = true;
+
+
+                    _functionsDataBase = new ApiService.FunctionsDataBase();
+                    _functionsDataBase.LimpiarAuxAsistencia();
+                    _functionsDataBase.LoadDataBaseAsistencia(_idPersonal);
+
+                    if (ExisteDatos())
+                    {
+                        CargarMesesEnComboBox(_idPersonal);
+                        //mostrar valores por defecto
+                        if (cbxPersonalMonth.Items.Count > 0)
+                        {
+                            cbxPersonalMonth.SelectedIndex = 0;
+                        }
+                    }
+                    else
+                    {
+                        MessageBox.Show("El personal no tiene datos de asistencia registrados");
+                    }
+
+                }
+                else
+                {
+                    //lblStatusProcess.Left = _xStatus + 50;
+                    lblStatusProcess.Text = "RECHAZADO.";
+                    lblStatusProcess.ForeColor = Color.Red;
+                    lblStatusProcess.Visible = true;
+
+                    //txtCodigo.Text = "";
+                    MessageBox.Show("El personal no está cargado.", "Error");
+                }
+            }
+            catch (DbUpdateException ex)
+            {
+                // Si hay una excepción interna, muestra su mensaje; de lo contrario, muestra el mensaje de la excepción principal.
+                MessageBox.Show(ex.InnerException?.Message ?? ex.Message, "Error al guardar datos");
+            }
+            catch (Exception ex)
+            {
+                //MessageBox.Show(ex.Message);
+                lblNombre.Visible = false;
+                MessageBox.Show("error: " + ex.Message, "Error");
+
+            }
+        }
+
+        private void filtrosDGV()
+        {
+            // Iterar sobre las filas y aplicar el formato deseado
+            foreach (DataGridViewRow fila in dgvListDelay.Rows)
+            {
+                fila.DefaultCellStyle.Font = new Font(dgvListDelay.Font, FontStyle.Bold); // Texto en negrita
+                fila.DefaultCellStyle.ForeColor = Color.Black; // Color del texto en negro
+
+            }
+
+            // Deshabilitar la capacidad del usuario para cambiar la altura de la fila
+            dgvListDelay.AllowUserToResizeRows = false;
+
+            // Ocultar la primera fila que muestra la flecha de ordenamiento
+            dgvListDelay.RowHeadersVisible = false;
+
+
+
+            dgvListDelay.MultiSelect = false;
+
+
+            // Establecer la propiedad DataGridView.AutoGenerateColumns en true si no se ha hecho previamente
+            dgvListDelay.AutoGenerateColumns = true;
+
+
+        }
     }
 }
 

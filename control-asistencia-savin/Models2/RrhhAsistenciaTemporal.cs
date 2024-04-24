@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace control_asistencia_savin.Models;
 
-public partial class RrhhAsistencia
+public partial class RrhhAsistenciaTemporal
 {
     public int Id { get; set; }
 
@@ -18,6 +18,8 @@ public partial class RrhhAsistencia
     public int? IndTipoMovimiento { get; set; }
 
     public int IdPuntoAsistencia { get; set; }
+
+    public string? Observacion { get; set; }
 
     public virtual RrhhPersonal IdPersonalNavigation { get; set; } = null!;
 

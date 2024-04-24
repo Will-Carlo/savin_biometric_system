@@ -40,6 +40,7 @@
             cbxStore = new ComboBox();
             btnCargarRegistros = new Button();
             lblPuntoAsistencia = new Label();
+            txtBackupMonth = new TextBox();
             SuspendLayout();
             // 
             // btnVerificarApi
@@ -154,12 +155,20 @@
             lblPuntoAsistencia.TabIndex = 12;
             lblPuntoAsistencia.Text = "Punto asistencia: ";
             // 
+            // txtBackupMonth
+            // 
+            txtBackupMonth.Location = new Point(338, 252);
+            txtBackupMonth.Name = "txtBackupMonth";
+            txtBackupMonth.Size = new Size(137, 23);
+            txtBackupMonth.TabIndex = 13;
+            // 
             // frmTestApi
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.White;
             ClientSize = new Size(688, 295);
+            Controls.Add(txtBackupMonth);
             Controls.Add(lblPuntoAsistencia);
             Controls.Add(btnCargarRegistros);
             Controls.Add(cbxStore);
@@ -193,5 +202,6 @@
         private ComboBox cbxStore;
         private Button btnCargarRegistros;
         private Label lblPuntoAsistencia;
+        private TextBox txtBackupMonth;
     }
 }

@@ -21,6 +21,8 @@ public partial class RrhhPuntoAsistencia
 
     public int? IdAlmacen { get; set; }
 
+    public Boolean? PermiteObservacion { get; set; }
+
     public virtual ICollection<RrhhAsistencia> RrhhAsistencia { get; set; } = new List<RrhhAsistencia>();
 
     public virtual ICollection<RrhhAsistenciaTemporal> RrhhAsistenciaTemporals { get; set; } = new List<RrhhAsistenciaTemporal>();

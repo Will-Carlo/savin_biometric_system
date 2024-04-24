@@ -1,11 +1,15 @@
 ﻿using control_asistencia_savin;
+using control_asistencia_savin.ApiService;
 using control_asistencia_savin.Models;
+using control_asistencia_savin.Notifications;
+using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using System;
 
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
 using System.Globalization;
 using System.Linq;
@@ -17,14 +21,22 @@ namespace control_asistencia_savin
 {
     public partial class frmRegistrar : Form
     {
+        private ApiService.FunctionsDataBase _functionsDataBase = new ApiService.FunctionsDataBase();
+        private readonly Microsoft.Extensions.Logging.ILogger _logger = LoggingManager.GetLogger<frmRegistrar>();
+
+
         private DPFP.Template? TemplateIndDer = null;
         private DPFP.Template? TemplateIndIzq = null;
         private DPFP.Template? TemplatePulDer = null;
         private DPFP.Template? TemplatePulIzq = null;
         private Models.StoreContext? contexto;
+
+        string fileName = "";
+
         public frmRegistrar()
         {
             InitializeComponent();
+            // this.Text = "Registro de huellas para personal nuevo";
         }
         private void frmRegistrar_Load(object sender, EventArgs e)
         {
@@ -141,6 +153,7 @@ namespace control_asistencia_savin
             }
             catch (Exception ex)
             {
+                _logger.LogError($"Error: {ex.Message}");
                 MessageBox.Show(ex.Message);
             }
 
@@ -170,7 +183,7 @@ namespace control_asistencia_savin
                     PulgarIzquierdo = streamHuella4,
                 };
                 AddPersonal(personal);
-                //MessageBox.Show("Registro agregado a la BD correctamente.");
+                _logger.LogDebug("Registro agregado a la BD correctamente.");
                 Limpiar();
                 Listar();
                 TemplateIndDer = null;
@@ -183,7 +196,7 @@ namespace control_asistencia_savin
             {
                 // Obtener detalles completos del error, incluyendo la InnerException
                 string errorMessage = ex.InnerException != null ? ex.InnerException.Message : ex.Message;
-
+                _logger.LogError($"Error: {errorMessage}");
                 MessageBox.Show(errorMessage, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
@@ -191,7 +204,8 @@ namespace control_asistencia_savin
         {
             try
             {
-                string filePath = "fingers.js";
+                string nameStore = _functionsDataBase.GetNombreTienda() ?? "store";
+                string filePath = "huellas_"+ nameStore.Replace(' ', '_').ToLower() + ".js";
                 string name = txtNombre.Text + " " + txtPaterno.Text + " " + txtMaterno.Text;
 
 
@@ -252,8 +266,8 @@ namespace control_asistencia_savin
 
                 // Concatenar el nuevo registro al contenido actual y escribir en el archivo
                 File.AppendAllText(filePath, json);
-
-                MessageBox.Show("Datos guardados en personal.js correctamente.", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                _logger.LogDebug("Se ha creado el archivo .js del nuevo personal.");
+                MessageBox.Show("Datos guardados del personal correctamente.", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
             }
             catch (Exception ex)
@@ -265,7 +279,16 @@ namespace control_asistencia_savin
         {
             try
             {
-                string fileName = "huellas.js";
+                //string fileName = "huellas.js";
+                var gebCiudadCbx = GetSelectedCiudad();
+                //string nameStore = _functionsDataBase.GetNombreTienda() ?? "store";
+                string nameStore = gebCiudadCbx.Text ?? "store";
+                nameStore = nameStore.Replace(" ", "_").Replace("(", "").Replace(")", "").ToLower();
+                fileName = "huellas_" + nameStore + ".js";
+                // string name = txtNombre.Text + " " + txtPaterno.Text + " " + txtMaterno.Text;
+
+
+
                 //string name = item.Nombres + " " + item.Paterno + " " + item.Materno;
                 // Obtener la ruta del escritorio del usuario actual
                 string desktopPath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
@@ -332,11 +355,10 @@ namespace control_asistencia_savin
                 // Concatenar el nuevo registro al contenido actual y escribir en el archivo
                 File.AppendAllText(filePath, json);
 
-                //MessageBox.Show("Datos guardados en personal.js correctamente.", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
-
             }
             catch (Exception ex)
             {
+                _logger.LogError($"Error al guardar en el archivo .js: {ex.Message}");
                 MessageBox.Show($"Error al guardar en el archivo: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
@@ -356,7 +378,13 @@ namespace control_asistencia_savin
                 foreach (var item in personal)
                 {
                     SaveFingerInArray(item.Name, item.RightIndexFinger, item.LeftIndexFinger, item.RightThumb, item.LeftThumb);
+                    _logger.LogDebug($"Se ha registrado las huellas del personal: {item.Name}");
+
                 }
+
+                _logger.LogDebug($"-> El archivo {fileName} se ha creado con éxito.");
+
+                MessageBox.Show("Datos guardados del personal correctamente.", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
 
                 //if (personal != null)
@@ -368,7 +396,7 @@ namespace control_asistencia_savin
             {
 
                 MessageBox.Show(ex.Message);
-
+                _logger.LogError($"Error: {ex.Message}");
             }
         }
         private void AddPersonal(RrhhPersonal item)
@@ -379,26 +407,54 @@ namespace control_asistencia_savin
                 db.SaveChanges();
             }
         }
+        private void AddCiudad()
+        {
+            try
+            {
+                var gebCiudadCbx = GetSelectedCiudad();
+
+                GenCiudad genCiudad = new GenCiudad();
+                genCiudad.Id = gebCiudadCbx.Id;
+                genCiudad.Nombre = gebCiudadCbx.Text;
+
+
+                using (var db = new StoreContext())
+                {
+                    db.GenCiudads.Add(genCiudad);
+                    db.SaveChanges();
+                }
+                _logger.LogDebug($"-> ID {gebCiudadCbx.Id}, Nombre {gebCiudadCbx.Text}");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Error: {ex.ToString}");
+            }
+
+        }
         private void btnRegIndDer_Click(object sender, EventArgs e)
         {
+            _logger.LogDebug("Registrando huella 'índice derecho'...");
             CapturarHuella capturar = new CapturarHuella();
             capturar.OnTemplate += this.OnTemplateIndDer;
             capturar.ShowDialog();
         }
         private void btnRegIndIzq_Click(object sender, EventArgs e)
         {
+            _logger.LogDebug("Registrando huella 'índice izquierdo'...");
             CapturarHuella capturar = new CapturarHuella();
             capturar.OnTemplate += this.OnTemplateIndIzq;
             capturar.ShowDialog();
         }
         private void btnRegPulDer_Click(object sender, EventArgs e)
         {
+            _logger.LogDebug("Registrando huella 'pulgar derecho'...");
             CapturarHuella capturar = new CapturarHuella();
             capturar.OnTemplate += this.OnTemplatePulDer;
             capturar.ShowDialog();
         }
         private void btnRegPulIzq_Click(object sender, EventArgs e)
         {
+            _logger.LogDebug("Registrando huella 'pulgar izquierdo'...");
             CapturarHuella capturar = new CapturarHuella();
             capturar.OnTemplate += this.OnTemplatePulIzq;
             capturar.ShowDialog();
@@ -407,7 +463,7 @@ namespace control_asistencia_savin
         {
             SaveReportJS();
         }
-        
+
         // PARA CARGAR DATOS EN COMBO BOX
         public bool ExisteDatos()
         {
@@ -425,19 +481,17 @@ namespace control_asistencia_savin
 
             // Agregamos los departamentos uno por uno con valores del 1 al 9
             cbxCiudad.Items.Add(new { Value = 1, Text = "Zapata (La Paz)" });
-            cbxCiudad.Items.Add(new { Value = 1, Text = "Loayza (La Paz)" });
-            cbxCiudad.Items.Add(new { Value = 1, Text = "Oficina (La Paz)" });
-            cbxCiudad.Items.Add(new { Value = 1, Text = "Ceibo (El Alto)" });
-            cbxCiudad.Items.Add(new { Value = 1, Text = "Satélite (El Alto)" });
-            cbxCiudad.Items.Add(new { Value = 1, Text = "Almacén (El Alto)" });
-            cbxCiudad.Items.Add(new { Value = 1, Text = "Cochabamba" });
-            cbxCiudad.Items.Add(new { Value = 1, Text = "Santa Cruz" });
-            cbxCiudad.Items.Add(new { Value = 1, Text = "Oruro" });
-            cbxCiudad.Items.Add(new { Value = 1, Text = "Potosí" });
-            cbxCiudad.Items.Add(new { Value = 1, Text = "Chuquisaca" });
-            cbxCiudad.Items.Add(new { Value = 1, Text = "Tarija" });
-            
-
+            cbxCiudad.Items.Add(new { Value = 2, Text = "Loayza (La Paz)" });
+            cbxCiudad.Items.Add(new { Value = 3, Text = "Oficina (La Paz)" });
+            cbxCiudad.Items.Add(new { Value = 4, Text = "Ceibo (El Alto)" });
+            cbxCiudad.Items.Add(new { Value = 5, Text = "Satélite (El Alto)" });
+            cbxCiudad.Items.Add(new { Value = 6, Text = "Almacén (El Alto)" });
+            cbxCiudad.Items.Add(new { Value = 7, Text = "Cochabamba" });
+            cbxCiudad.Items.Add(new { Value = 8, Text = "Santa Cruz" });
+            cbxCiudad.Items.Add(new { Value = 9, Text = "Oruro" });
+            cbxCiudad.Items.Add(new { Value = 10, Text = "Potosí" });
+            cbxCiudad.Items.Add(new { Value = 11, Text = "Sucre" });
+            cbxCiudad.Items.Add(new { Value = 12, Text = "Tarija" });
 
 
             // Establecemos DisplayMember en "Text" para mostrar solo el nombre del departamento
@@ -448,6 +502,21 @@ namespace control_asistencia_savin
             var selectedItem = (dynamic)cbxCiudad.SelectedItem;
             //string selectedText = selectedItem.Text;
             return selectedItem.Value;
+        }
+
+        public (int Id, string Text) GetSelectedCiudad()
+        {
+            var selectedItem = (dynamic)cbxCiudad.SelectedItem;
+            int selectedValue = selectedItem.Value;
+            string selectedText = selectedItem.Text;
+            return (selectedValue, selectedText);
+        }
+
+        private void cbxCiudad_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            _functionsDataBase.LimpiarDB();
+            AddCiudad();
+            Listar();
         }
     }
 }

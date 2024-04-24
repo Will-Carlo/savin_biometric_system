@@ -45,6 +45,7 @@
             lnkOpciones = new LinkLabel();
             pictureBox1 = new PictureBox();
             panel1 = new Panel();
+            lnkVerAsistencias = new LinkLabel();
             lnkMarcar2 = new LinkLabel();
             lnkFakeRegister = new LinkLabel();
             panel2 = new Panel();
@@ -53,7 +54,6 @@
             pnlInfoStore = new Panel();
             pnlHora = new Panel();
             pnlBase = new Panel();
-            lnkVerAsistencias = new LinkLabel();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
             panel1.SuspendLayout();
             panel2.SuspendLayout();
@@ -278,6 +278,23 @@
             panel1.Size = new Size(225, 729);
             panel1.TabIndex = 26;
             // 
+            // lnkVerAsistencias
+            // 
+            lnkVerAsistencias.Anchor = AnchorStyles.Left;
+            lnkVerAsistencias.AutoSize = true;
+            lnkVerAsistencias.BackColor = Color.FromArgb(10, 38, 102);
+            lnkVerAsistencias.Font = new Font("Segoe UI", 9F);
+            lnkVerAsistencias.LinkColor = Color.FromArgb(241, 206, 0);
+            lnkVerAsistencias.Location = new Point(66, 510);
+            lnkVerAsistencias.Margin = new Padding(4, 0, 4, 0);
+            lnkVerAsistencias.Name = "lnkVerAsistencias";
+            lnkVerAsistencias.Size = new Size(82, 15);
+            lnkVerAsistencias.TabIndex = 31;
+            lnkVerAsistencias.TabStop = true;
+            lnkVerAsistencias.Text = "Ver asistencias";
+            lnkVerAsistencias.Visible = false;
+            lnkVerAsistencias.LinkClicked += lnkVerAsistencias_LinkClicked;
+            // 
             // lnkMarcar2
             // 
             lnkMarcar2.Anchor = AnchorStyles.Left;
@@ -380,23 +397,6 @@
             pnlBase.Size = new Size(1125, 457);
             pnlBase.TabIndex = 29;
             // 
-            // lnkVerAsistencias
-            // 
-            lnkVerAsistencias.Anchor = AnchorStyles.Left;
-            lnkVerAsistencias.AutoSize = true;
-            lnkVerAsistencias.BackColor = Color.FromArgb(10, 38, 102);
-            lnkVerAsistencias.Font = new Font("Segoe UI", 9F);
-            lnkVerAsistencias.LinkColor = Color.FromArgb(241, 206, 0);
-            lnkVerAsistencias.Location = new Point(66, 510);
-            lnkVerAsistencias.Margin = new Padding(4, 0, 4, 0);
-            lnkVerAsistencias.Name = "lnkVerAsistencias";
-            lnkVerAsistencias.Size = new Size(82, 15);
-            lnkVerAsistencias.TabIndex = 31;
-            lnkVerAsistencias.TabStop = true;
-            lnkVerAsistencias.Text = "Ver asistencias";
-            lnkVerAsistencias.Visible = false;
-            lnkVerAsistencias.LinkClicked += lnkVerAsistencias_LinkClicked;
-            // 
             // Main
             // 
             AutoScaleDimensions = new SizeF(96F, 96F);
@@ -412,7 +412,7 @@
             Icon = (Icon)resources.GetObject("$this.Icon");
             Margin = new Padding(4, 3, 4, 3);
             Name = "Main";
-            Text = "Main";
+            Text = "Savin";
             FormClosing += Main_FormClosing;
             ((System.ComponentModel.ISupportInitialize)pictureBox1).EndInit();
             panel1.ResumeLayout(false);

@@ -1,6 +1,8 @@
 ﻿using control_asistencia_savin.ApiService;
 using control_asistencia_savin.Models;
+using control_asistencia_savin.Notifications;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -21,6 +23,7 @@ namespace control_asistencia_savin.Frm
 
         private readonly ApiService.ApiService _apiService;
         private ApiService.FunctionsDataBase _functionsDataBase = new FunctionsDataBase();
+        private readonly Microsoft.Extensions.Logging.ILogger _logger = LoggingManager.GetLogger<frmAsistenciaSimulation>();
 
         public frmAsistenciaSimulation()
         {
@@ -59,18 +62,22 @@ namespace control_asistencia_savin.Frm
             }
             catch (DbUpdateException ex)
             {
+                // Si hay una excepción interna, muestra su mensaje; de lo contrario, muestra el mensaje de la excepción principal.
                 MessageBox.Show(ex.InnerException?.Message ?? ex.Message, "Error al guardar datos");
+                _logger.LogError("Error al registrar asistencia: " + ex.Message);
                 //CleanLabels();
 
             }
             catch (HttpRequestException ex)
             {
                 m.NotificationMessage("Error: " + ex.Message, "alert");
+                _logger.LogError("Error al registrar asistencia: " + ex.Message);
                 //CleanLabels();
             }
             catch (Exception ex)
             {
                 m.NotificationMessage("error: " + ex.Message, "alert");
+                _logger.LogError("Error al registrar asistencia: " + ex.Message);
                 //CleanLabels();
             }
 
@@ -102,9 +109,10 @@ namespace control_asistencia_savin.Frm
             {
                 string tipoMov2 = m.capturaTipoMovimiento(idPersonalVal) != 461 ? "ENTRADA" : "SALIDA";
                 m.NotificationMessage("Cuidado estás volviendo a marcar tu: " + tipoMov2 + "\nDebes esperar al menos 1 min. para volver a marcar.", "alert");
-              
+                _logger.LogInformation($"El usuario {idPersonalVal} está marcando por segunda vez su asistencia.");
+
             }
-          
+
         }
 
         private void RegistroAsistenciaTemporalTable(int idPersonalVal)

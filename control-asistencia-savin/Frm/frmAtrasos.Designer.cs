@@ -29,7 +29,6 @@
         private void InitializeComponent()
         {
             components = new System.ComponentModel.Container();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmAtrasos));
             tmrTime = new System.Windows.Forms.Timer(components);
             lblTitOption = new Label();
             lblTitPersonal = new Label();
@@ -51,6 +50,8 @@
             panel2 = new Panel();
             panel3 = new Panel();
             panel4 = new Panel();
+            txtIdPersonalRegisters = new TextBox();
+            btnShowRegisters = new Button();
             pictureBox1 = new PictureBox();
             panel5 = new Panel();
             panel6 = new Panel();
@@ -72,12 +73,12 @@
             // 
             lblTitOption.Anchor = AnchorStyles.Top;
             lblTitOption.AutoSize = true;
-            lblTitOption.Font = new Font("Segoe UI", 36F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            lblTitOption.Font = new Font("Segoe UI", 24F, FontStyle.Bold, GraphicsUnit.Point, 0);
             lblTitOption.ForeColor = Color.FromArgb(10, 38, 102);
-            lblTitOption.Location = new Point(272, 9);
+            lblTitOption.Location = new Point(395, 0);
             lblTitOption.Margin = new Padding(4, 0, 4, 0);
             lblTitOption.Name = "lblTitOption";
-            lblTitOption.Size = new Size(601, 65);
+            lblTitOption.Size = new Size(404, 45);
             lblTitOption.TabIndex = 34;
             lblTitOption.Text = "MINUTOS ACUMULADOS";
             // 
@@ -87,7 +88,7 @@
             lblTitPersonal.AutoSize = true;
             lblTitPersonal.Font = new Font("Microsoft Sans Serif", 24F, FontStyle.Bold);
             lblTitPersonal.ForeColor = Color.FromArgb(10, 38, 102);
-            lblTitPersonal.Location = new Point(171, 16);
+            lblTitPersonal.Location = new Point(144, 2);
             lblTitPersonal.Margin = new Padding(4, 0, 4, 0);
             lblTitPersonal.Name = "lblTitPersonal";
             lblTitPersonal.Size = new Size(148, 37);
@@ -100,7 +101,7 @@
             lblNombre.AutoSize = true;
             lblNombre.Font = new Font("Segoe UI", 21.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
             lblNombre.ForeColor = Color.FromArgb(10, 38, 102);
-            lblNombre.Location = new Point(327, 16);
+            lblNombre.Location = new Point(300, 2);
             lblNombre.Margin = new Padding(4, 0, 4, 0);
             lblNombre.Name = "lblNombre";
             lblNombre.Size = new Size(154, 40);
@@ -113,7 +114,7 @@
             btnVerificarHuella.Anchor = AnchorStyles.Top;
             btnVerificarHuella.Font = new Font("Segoe UI", 14.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
             btnVerificarHuella.ForeColor = Color.FromArgb(10, 38, 102);
-            btnVerificarHuella.Location = new Point(126, 15);
+            btnVerificarHuella.Location = new Point(126, 0);
             btnVerificarHuella.Margin = new Padding(4, 3, 4, 3);
             btnVerificarHuella.Name = "btnVerificarHuella";
             btnVerificarHuella.Size = new Size(138, 34);
@@ -130,7 +131,7 @@
             lblStatusProcess.FlatStyle = FlatStyle.System;
             lblStatusProcess.Font = new Font("Segoe UI", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
             lblStatusProcess.ForeColor = Color.FromArgb(10, 38, 102);
-            lblStatusProcess.Location = new Point(278, 22);
+            lblStatusProcess.Location = new Point(278, 9);
             lblStatusProcess.Name = "lblStatusProcess";
             lblStatusProcess.Size = new Size(134, 21);
             lblStatusProcess.TabIndex = 38;
@@ -143,7 +144,7 @@
             txtCodigo.BackColor = Color.Ivory;
             txtCodigo.BorderStyle = BorderStyle.FixedSingle;
             txtCodigo.Font = new Font("Segoe UI", 15.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            txtCodigo.Location = new Point(272, 15);
+            txtCodigo.Location = new Point(272, 2);
             txtCodigo.Margin = new Padding(4, 3, 4, 3);
             txtCodigo.Name = "txtCodigo";
             txtCodigo.Size = new Size(735, 35);
@@ -158,7 +159,7 @@
             lblTitHora.AutoSize = true;
             lblTitHora.Font = new Font("Microsoft Sans Serif", 24F, FontStyle.Bold);
             lblTitHora.ForeColor = Color.FromArgb(10, 38, 102);
-            lblTitHora.Location = new Point(175, 54);
+            lblTitHora.Location = new Point(148, 40);
             lblTitHora.Margin = new Padding(4, 0, 4, 0);
             lblTitHora.Name = "lblTitHora";
             lblTitHora.Size = new Size(144, 37);
@@ -173,7 +174,7 @@
             dgvListDelay.Location = new Point(135, 3);
             dgvListDelay.Name = "dgvListDelay";
             dgvListDelay.RowHeadersVisible = false;
-            dgvListDelay.Size = new Size(881, 140);
+            dgvListDelay.Size = new Size(881, 233);
             dgvListDelay.TabIndex = 40;
             dgvListDelay.CellFormatting += dgvListDelay_CellFormatting;
             // 
@@ -183,7 +184,7 @@
             cbxPersonalMonth.DropDownStyle = ComboBoxStyle.DropDownList;
             cbxPersonalMonth.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 0);
             cbxPersonalMonth.FormattingEnabled = true;
-            cbxPersonalMonth.Location = new Point(327, 59);
+            cbxPersonalMonth.Location = new Point(300, 45);
             cbxPersonalMonth.Name = "cbxPersonalMonth";
             cbxPersonalMonth.Size = new Size(225, 29);
             cbxPersonalMonth.TabIndex = 41;
@@ -194,7 +195,7 @@
             btnVerificarCode.Anchor = AnchorStyles.Top;
             btnVerificarCode.Font = new Font("Segoe UI", 14.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
             btnVerificarCode.ForeColor = Color.FromArgb(10, 38, 102);
-            btnVerificarCode.Location = new Point(126, 16);
+            btnVerificarCode.Location = new Point(126, 1);
             btnVerificarCode.Margin = new Padding(4, 3, 4, 3);
             btnVerificarCode.Name = "btnVerificarCode";
             btnVerificarCode.Size = new Size(138, 34);
@@ -208,7 +209,7 @@
             // 
             lblAtrasosMin.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             lblAtrasosMin.AutoSize = true;
-            lblAtrasosMin.Location = new Point(973, 8);
+            lblAtrasosMin.Location = new Point(983, 3);
             lblAtrasosMin.Name = "lblAtrasosMin";
             lblAtrasosMin.Size = new Size(80, 15);
             lblAtrasosMin.TabIndex = 43;
@@ -219,7 +220,7 @@
             // 
             lblAtrasos.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             lblAtrasos.AutoSize = true;
-            lblAtrasos.Location = new Point(847, 8);
+            lblAtrasos.Location = new Point(857, 3);
             lblAtrasos.Name = "lblAtrasos";
             lblAtrasos.Size = new Size(120, 15);
             lblAtrasos.TabIndex = 44;
@@ -229,7 +230,7 @@
             // 
             label3.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             label3.AutoSize = true;
-            label3.Location = new Point(831, 33);
+            label3.Location = new Point(841, 20);
             label3.Name = "label3";
             label3.Size = new Size(136, 15);
             label3.TabIndex = 45;
@@ -239,7 +240,7 @@
             // 
             lblAtrasosHoras.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             lblAtrasosHoras.AutoSize = true;
-            lblAtrasosHoras.Location = new Point(973, 33);
+            lblAtrasosHoras.Location = new Point(983, 20);
             lblAtrasosHoras.Name = "lblAtrasosHoras";
             lblAtrasosHoras.Size = new Size(90, 15);
             lblAtrasosHoras.TabIndex = 46;
@@ -249,10 +250,10 @@
             // btnCerrar
             // 
             btnCerrar.Anchor = AnchorStyles.Top;
-            btnCerrar.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            btnCerrar.Location = new Point(510, 11);
+            btnCerrar.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            btnCerrar.Location = new Point(497, 8);
             btnCerrar.Name = "btnCerrar";
-            btnCerrar.Size = new Size(99, 37);
+            btnCerrar.Size = new Size(151, 22);
             btnCerrar.TabIndex = 47;
             btnCerrar.Text = "Cerrar";
             btnCerrar.UseVisualStyleBackColor = true;
@@ -269,7 +270,7 @@
             // 
             panel1.Anchor = AnchorStyles.Top;
             panel1.BackColor = Color.Black;
-            panel1.Location = new Point(63, 149);
+            panel1.Location = new Point(63, 242);
             panel1.Name = "panel1";
             panel1.Size = new Size(1000, 2);
             panel1.TabIndex = 48;
@@ -280,7 +281,7 @@
             panel2.Dock = DockStyle.Top;
             panel2.Location = new Point(0, 0);
             panel2.Name = "panel2";
-            panel2.Size = new Size(1125, 81);
+            panel2.Size = new Size(1125, 46);
             panel2.TabIndex = 49;
             panel2.Click += panel2_Click;
             // 
@@ -291,34 +292,52 @@
             panel3.Controls.Add(btnVerificarCode);
             panel3.Controls.Add(btnVerificarHuella);
             panel3.Dock = DockStyle.Top;
-            panel3.Location = new Point(0, 81);
+            panel3.Location = new Point(0, 46);
             panel3.Name = "panel3";
-            panel3.Size = new Size(1125, 61);
+            panel3.Size = new Size(1125, 44);
             panel3.TabIndex = 50;
             panel3.Click += panel3_Click;
             // 
             // panel4
             // 
+            panel4.Controls.Add(txtIdPersonalRegisters);
+            panel4.Controls.Add(btnShowRegisters);
             panel4.Controls.Add(pictureBox1);
             panel4.Controls.Add(cbxPersonalMonth);
             panel4.Controls.Add(lblTitHora);
             panel4.Controls.Add(lblNombre);
             panel4.Controls.Add(lblTitPersonal);
             panel4.Dock = DockStyle.Top;
-            panel4.Location = new Point(0, 142);
+            panel4.Location = new Point(0, 90);
             panel4.Name = "panel4";
-            panel4.Size = new Size(1125, 100);
+            panel4.Size = new Size(1125, 82);
             panel4.TabIndex = 51;
             panel4.Click += panel4_Click;
+            // 
+            // txtIdPersonalRegisters
+            // 
+            txtIdPersonalRegisters.Location = new Point(894, 12);
+            txtIdPersonalRegisters.Name = "txtIdPersonalRegisters";
+            txtIdPersonalRegisters.Size = new Size(100, 23);
+            txtIdPersonalRegisters.TabIndex = 44;
+            // 
+            // btnShowRegisters
+            // 
+            btnShowRegisters.Location = new Point(894, 42);
+            btnShowRegisters.Name = "btnShowRegisters";
+            btnShowRegisters.Size = new Size(100, 30);
+            btnShowRegisters.TabIndex = 43;
+            btnShowRegisters.Text = "ver registro";
+            btnShowRegisters.UseVisualStyleBackColor = true;
+            btnShowRegisters.Click += btnShowRegisters_Click;
             // 
             // pictureBox1
             // 
             pictureBox1.Anchor = AnchorStyles.Top;
-            pictureBox1.Image = (Image)resources.GetObject("pictureBox1.Image");
-            pictureBox1.Location = new Point(862, 16);
+            pictureBox1.Location = new Point(1012, 16);
             pictureBox1.Margin = new Padding(0);
             pictureBox1.Name = "pictureBox1";
-            pictureBox1.Size = new Size(145, 72);
+            pictureBox1.Size = new Size(104, 72);
             pictureBox1.SizeMode = PictureBoxSizeMode.Zoom;
             pictureBox1.TabIndex = 42;
             pictureBox1.TabStop = false;
@@ -328,9 +347,9 @@
             panel5.Controls.Add(dgvListDelay);
             panel5.Controls.Add(panel1);
             panel5.Dock = DockStyle.Top;
-            panel5.Location = new Point(0, 242);
+            panel5.Location = new Point(0, 172);
             panel5.Name = "panel5";
-            panel5.Size = new Size(1125, 160);
+            panel5.Size = new Size(1125, 247);
             panel5.TabIndex = 52;
             panel5.Click += panel5_Click;
             // 
@@ -342,9 +361,9 @@
             panel6.Controls.Add(label3);
             panel6.Controls.Add(lblAtrasosMin);
             panel6.Dock = DockStyle.Top;
-            panel6.Location = new Point(0, 402);
+            panel6.Location = new Point(0, 419);
             panel6.Name = "panel6";
-            panel6.Size = new Size(1125, 56);
+            panel6.Size = new Size(1125, 53);
             panel6.TabIndex = 41;
             panel6.Click += panel6_Click;
             // 
@@ -403,5 +422,7 @@
         private PictureBox pictureBox1;
         private Panel panel5;
         private Panel panel6;
+        private TextBox txtIdPersonalRegisters;
+        private Button btnShowRegisters;
     }
 }

@@ -19,6 +19,8 @@ public partial class RrhhAsistenciaTemporal
 
     public int IdPuntoAsistencia { get; set; }
 
+    public string? Observaciones { get; set; }
+
     public virtual RrhhPersonal IdPersonalNavigation { get; set; } = null!;
 
     public virtual RrhhPuntoAsistencia IdPuntoAsistenciaNavigation { get; set; } = null!;

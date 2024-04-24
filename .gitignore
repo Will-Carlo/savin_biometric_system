@@ -34,6 +34,14 @@ control-asistencia-savin/ApiService/Credenciales.cs
 # Archivos del software
 control-asistencia-savin.sln
 control-asistencia-savin/Properties/launchSettings.json
-control-asistencia-savin/Properties/PublishProfiles/FolderProfile.pubxml|
+control-asistencia-savin/Properties/PublishProfiles/FolderProfile.pubxml
+control-asistencia-savin/logs/
+
+
+
+
+
+
+
 
 

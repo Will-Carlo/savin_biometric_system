@@ -1,4 +1,5 @@
-﻿using System;
+﻿using control_asistencia_savin.ApiService;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -12,11 +13,16 @@ namespace control_asistencia_savin.Notifications
 {
     public partial class frmNotification : Form
     {
+
+        private ApiService.FunctionsDataBase _functionsDataBase = new FunctionsDataBase();
+        public string observacionPersonal = "";
+
+
         public frmNotification(string message, string typeMessage)
         {
             InitializeComponent();
             InitializeFormProperties();
-
+          
 
 
             switch (typeMessage)
@@ -35,6 +41,19 @@ namespace control_asistencia_savin.Notifications
                     this.ForeColor = Color.White;
                     this.Icon = SystemIcons.Warning; // Icono de advertencia
                     break;
+                case "alertLateEarly":
+                    lblMessage.Text = message;
+                    this.Text = "Alerta"; // Cambiar el texto del título del formulario
+                    this.BackColor = Color.Red;
+                    this.ForeColor = Color.White;
+                    this.Icon = SystemIcons.Warning; // Icono de advertencia
+                    if (_functionsDataBase.esConObservacion())
+                    {
+                        this.txtObservacion.Visible = true;
+                        this.Size = new System.Drawing.Size(this.Size.Width,269);
+                        this.btnOk.Text = "Guardar";
+                    }
+                    break;
                 default:
                     lblMessage.Text = message;
                     this.Text = "Error"; // Cambiar el texto del título del formulario
@@ -46,7 +65,7 @@ namespace control_asistencia_savin.Notifications
 
 
             CentrarMensaje();
-            btnOk.ForeColor = Color.Black;  
+            btnOk.ForeColor = Color.Black;
         }
         private void InitializeFormProperties()
         {
@@ -58,6 +77,7 @@ namespace control_asistencia_savin.Notifications
         }
         private void btnOk_Click(object sender, EventArgs e)
         {
+            this.observacionPersonal = txtObservacion.Text;
             this.Close(); // Cierra el formulario cuando se hace clic en "Aceptar"
         }
 
@@ -69,5 +89,6 @@ namespace control_asistencia_savin.Notifications
 
             lblMessage.Location = new System.Drawing.Point(x1, y1);
         }
+
     }
 }

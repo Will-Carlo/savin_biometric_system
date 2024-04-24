@@ -106,6 +106,7 @@ public partial class StoreContext : DbContext
             entity.Property(e => e.IdTurno).HasColumnName("id_turno");
             entity.Property(e => e.IndTipoMovimiento).HasColumnName("ind_tipo_movimiento");
             entity.Property(e => e.MinutosAtraso).HasColumnName("minutos_atraso");
+            entity.Property(e => e.Observaciones).HasColumnName("observaciones");
 
             entity.HasOne(d => d.IdPersonalNavigation).WithMany(p => p.RrhhAsistenciaTemporals)
                 .HasForeignKey(d => d.IdPersonal)
@@ -133,6 +134,7 @@ public partial class StoreContext : DbContext
             entity.Property(e => e.IdTurno).HasColumnName("id_turno");
             entity.Property(e => e.IndTipoMovimiento).HasColumnName("ind_tipo_movimiento");
             entity.Property(e => e.MinutosAtraso).HasColumnName("minutos_atraso");
+            entity.Property(e => e.Observaciones).HasColumnName("observaciones");
 
             entity.HasOne(d => d.IdPersonalNavigation).WithMany(p => p.RrhhAsistencia)
                 .HasForeignKey(d => d.IdPersonal)
@@ -196,6 +198,7 @@ public partial class StoreContext : DbContext
             entity.Property(e => e.IdSucursal).HasColumnName("id_sucursal");
             entity.Property(e => e.MinutosTolerancia).HasColumnName("minutos_tolerancia");
             entity.Property(e => e.Nombre).HasColumnName("nombre");
+            entity.Property(e => e.PermiteObservacion).HasColumnName("permite_observacion");
         });
 
         modelBuilder.Entity<RrhhTurno>(entity =>

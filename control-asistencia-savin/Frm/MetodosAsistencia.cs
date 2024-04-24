@@ -4,8 +4,10 @@ using control_asistencia_savin.Notifications;
 using DPFP;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Conventions;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
 using System.Text;
@@ -17,9 +19,11 @@ namespace control_asistencia_savin.Frm
     {
         private ApiService.FunctionsDataBase _functionsDataBase = new FunctionsDataBase();
         private readonly ApiService.ApiService _apiService = new ApiService.ApiService();
+        private readonly Microsoft.Extensions.Logging.ILogger _logger = LoggingManager.GetLogger<MetodosAsistencia>();
         //private MetodosAsistencia _m = new MetodosAsistencia();
         private string _capturaHoraMarcado = "";
         private bool existeConexion = true;
+        private string guardarObservacionPersonal = "";
         // -------------------------------------------------------------------
         // PROCEDIMIENTOS PARA EL REGISTRO DE ASISTENCIA
         // -------------------------------------------------------------------
@@ -123,14 +127,43 @@ namespace control_asistencia_savin.Frm
         // -------------------------------------------------------------------        
         public void setAddAsistencia(RrhhAsistencia item)
         {
+            _logger.LogInformation("-------------- REGISTRO DE ASISTENCIA BD --------------");
+
+
+            var regAsistenciaForLog = new
+            {
+                idTurno = item.IdTurno,
+                idPersonal = item.IdPersonal,
+                horaMarcado = item.HoraMarcado,
+                minutosAtraso = item.MinutosAtraso,
+                indTipoMovimiento = item.IndTipoMovimiento,
+                idPuntoAsistencia = item.IdPuntoAsistencia,
+                observaciones = item.Observaciones
+            };
+
             using (var db = new StoreContext())
             {
                 db.RrhhAsistencia.Add(item);
                 db.SaveChanges();
             }
+            _logger.LogDebug("Asistencia: " + regAsistenciaForLog);
+            _logger.LogInformation("-------------- FIN REGISTRO DE ASISTENCIA BD --------------");
+
         }
         public void setAddAsistenciaTemporal(RrhhAsistencia item)
         {
+            _logger.LogInformation("-------------- REGISTRO DE ASISTENCIA BD BACKUP --------------");
+
+            var regAsistenciaForLog = new
+            {
+                idTurno = item.IdTurno,
+                idPersonal = item.IdPersonal,
+                horaMarcado = item.HoraMarcado,
+                minutosAtraso = item.MinutosAtraso,
+                indTipoMovimiento = item.IndTipoMovimiento,
+                idPuntoAsistencia = item.IdPuntoAsistencia,
+                observaciones = item.Observaciones
+            };
 
             RrhhAsistenciaTemporal regAsistencia = new RrhhAsistenciaTemporal()
             {
@@ -139,7 +172,8 @@ namespace control_asistencia_savin.Frm
                 HoraMarcado = item.HoraMarcado,
                 MinutosAtraso = item.MinutosAtraso,
                 IndTipoMovimiento = item.IndTipoMovimiento,
-                IdPuntoAsistencia = item.IdPuntoAsistencia
+                IdPuntoAsistencia = item.IdPuntoAsistencia,
+                Observaciones = item.Observaciones
             };
 
             using (var db = new StoreContext())
@@ -147,10 +181,15 @@ namespace control_asistencia_savin.Frm
                 db.RrhhAsistenciaTemporals.Add(regAsistencia);
                 db.SaveChanges();
             }
+            _logger.LogDebug("Asistencia: " + regAsistenciaForLog);
+            _logger.LogInformation("-------------- FIN REGISTRO DE ASISTENCIA BD BACKUP --------------");
         }
         public void ValidarAsistencia(RrhhAsistencia item)
         {
             //if (_apiService.IsInternetAvailable())
+            item.Observaciones = this.guardarObservacionPersonal;
+            this.guardarObservacionPersonal = "";
+
             if (_functionsDataBase.verifyConection())
             {
                 var response = _apiService.RegistrarAsistenciaAsync(item);
@@ -158,43 +197,61 @@ namespace control_asistencia_savin.Frm
             }
             else
             {
-                //MessageBox.Show("No hay conexión a internet, se registrará en la tabla de TemporalAsistencia", "Estado de la respuesta del servidor");
+                _logger.LogDebug("La asistencia se registrará en el backup del programa.");
                 this.setAddAsistenciaTemporal(item);
             }
         }
         public void registrarAsistenciasTemporales()
         {
-            using (var context = new StoreContext())
+            try
             {
-                // Obtener todos los registros de rrhh_asistencia_temporal
-                var registrosTemporales = context.RrhhAsistenciaTemporals.ToList();
-
-                foreach (var registroTemporal in registrosTemporales)
+                using (var context = new StoreContext())
                 {
-                    // Convertir el registro temporal a un objeto RrhhAsistencia
-                    var item = new RrhhAsistencia
+                    _logger.LogInformation("-> Verificando si existe asistencias almacenadas en el backup...");
+                    // Obtener todos los registros de rrhh_asistencia_temporal
+                    var registrosTemporales = context.RrhhAsistenciaTemporals.ToList();
+                    if (registrosTemporales.Count == 0)
                     {
-                        IdTurno = registroTemporal.IdTurno,
-                        IdPersonal = registroTemporal.IdPersonal,
-                        HoraMarcado = registroTemporal.HoraMarcado,
-                        MinutosAtraso = registroTemporal.MinutosAtraso,
-                        IndTipoMovimiento = registroTemporal.IndTipoMovimiento,
-                        IdPuntoAsistencia = registroTemporal.IdPuntoAsistencia
-                    };
+                        _logger.LogInformation("No existen asistencias guardadas en el backup.");
+                    } else
+                    {
+                        _logger.LogInformation($"Registrando {registrosTemporales.Count} asistencias.");
+                    }
 
-                    // Enviar el objeto a través del servicio API
-                    var response = _apiService.RegistrarAsistenciaAsync(item);
+                    foreach (var registroTemporal in registrosTemporales)
+                    {
+                        // Convertir el registro temporal a un objeto RrhhAsistencia
+                        var item = new RrhhAsistencia
+                        {
+                            IdTurno = registroTemporal.IdTurno,
+                            IdPersonal = registroTemporal.IdPersonal,
+                            HoraMarcado = registroTemporal.HoraMarcado,
+                            MinutosAtraso = registroTemporal.MinutosAtraso,
+                            IndTipoMovimiento = registroTemporal.IndTipoMovimiento,
+                            IdPuntoAsistencia = registroTemporal.IdPuntoAsistencia,
+                            Observaciones = registroTemporal.Observaciones
+                        };
 
-                    // Si el registro se envió con éxito, elimínalo de la tabla temporal
-                    //if (response.IsSuccessStatusCode)
-                    //{
-                    context.RrhhAsistenciaTemporals.Remove(registroTemporal);
-                    //}
+                        // Enviar el objeto a través del servicio API
+                        _logger.LogInformation($"Envio de asistencia del backup: {item}.");
+                        var response = _apiService.RegistrarAsistenciaAsync(item);
+
+                        // Si el registro se envió con éxito, elimínalo de la tabla temporal
+                        //if (response.IsSuccessStatusCode)
+                        //{
+                        _logger.LogInformation($"Eliminando registro del backup.");
+                        context.RrhhAsistenciaTemporals.Remove(registroTemporal);
+                        //}
+                    }
+
+                    // Guardar los cambios en la base de datos
+                    context.SaveChanges();
                 }
-
-                // Guardar los cambios en la base de datos
-                context.SaveChanges();
+            } catch (Exception ex) 
+            {
+                _logger.LogError("Error al verificar asistencias guardadas en el backup: " + ex.Message);
             }
+           
         }
         public bool getExisteConexion()
         {
@@ -238,6 +295,11 @@ namespace control_asistencia_savin.Frm
             {
                 // si el personal es de tipo "horario continuo"
                 return 4;
+            }
+            else if (getAnteriorIndMov(IdPersonal) == 461)
+            {
+                // si sólo marcó la 'entrada' por obligación se marcará su 'salida' con el mismo id Turno.
+                return getAnteriorIdTurno(IdPersonal);
             }
             else
             {
@@ -370,7 +432,17 @@ namespace control_asistencia_savin.Frm
             if (this.getAnteriorIdTurno(IdPersonal) == this.capturaIdTurno(IdPersonal) && this.getAnteriorIndMov(IdPersonal) == 462)
             {
                 //MessageBox.Show("ant. ind mov: " + this.getAnteriorIndMov(IdPersonal));
+                // también validamos si es entrada antes de su horario de entraada, para que no le marque como minutos acumulados de salida
+                //DateTime fechaMarcada = DateTime.Parse(this._capturaHoraMarcado);
+                //TimeSpan horaMarcada = fechaMarcada.TimeOfDay;
+                //var tiempoEntrada = capturaHoraEntrada(capturaIdTurno(IdPersonal));
+
+                //if (horaMarcada > tiempoEntrada)
+                //{
                 return true;
+                //}
+                //return false;
+
             }
             return false;
         }
@@ -592,9 +664,18 @@ namespace control_asistencia_savin.Frm
                 // 08:30:00
                 return horaMarcada > tiempoEntrada ? this.alertPersonalLate(horaMarcada, tiempoEntrada, IdPersonal) : 0;
             }
-            else if (indMov == 462)
+            else if (indMov == 462 )
             {
                 // 12:30:00
+                //if (horaMarcada < tiempoSalida && horaMarcada > tiempoEntrada)
+                //{
+                //    return this.alertPersonalEarly(horaMarcada, tiempoSalida, IdPersonal);
+                //}
+                //else
+                //{
+                //    return 0;
+                //}
+
                 return horaMarcada < tiempoSalida ? this.alertPersonalEarly(horaMarcada, tiempoSalida, IdPersonal): 0;
             }
 
@@ -706,6 +787,7 @@ namespace control_asistencia_savin.Frm
         {
             frmNotification customMessage = new frmNotification(MessageUser, TypeMessage);
             customMessage.ShowDialog();
+            this.guardarObservacionPersonal = customMessage.observacionPersonal;
             //customMessage.ShowWarningNotification(MessageUser);
         }
         private int alertPersonalLate(TimeSpan horaMarcada, TimeSpan tiempoEntrada, int IdPersonal)
@@ -713,7 +795,7 @@ namespace control_asistencia_savin.Frm
             int min = (int)(horaMarcada - tiempoEntrada).TotalMinutes;
             if (min > 0)
             {
-                this.NotificationMessage(this.NombrePersonal(IdPersonal) + "\nEstás llegando tarde por " + min + " minutos.", "alert");
+                this.NotificationMessage(this.NombrePersonal(IdPersonal) + "\nEstás llegando tarde por " + min + " minutos.", "alertLateEarly");
             }
             return min;
         }
@@ -722,7 +804,8 @@ namespace control_asistencia_savin.Frm
             int min = (int)(tiempoSalida - horaMarcada).TotalMinutes;
             if (min > 0)
             {
-                this.NotificationMessage(this.NombrePersonal(IdPersonal) + "\nEstás saliendo antes por " + min + " minutos.", "alert");
+                //this.NotificationMessage(this.NombrePersonal(IdPersonal) + "\nEstás saliendo antes por " + min + " minutos.", "alertLateEarly");
+                this.NotificationMessage(this.NombrePersonal(IdPersonal) + "\nEstás saliendo antes.", "alertLateEarly");
             }
             return min;
         }

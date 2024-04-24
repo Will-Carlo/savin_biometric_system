@@ -1,11 +1,16 @@
 ﻿using control_asistencia_savin.Models;
+using control_asistencia_savin.Notifications;
+using DPFP;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 //Comando para actualiza los modelos desde la base de datos
 //Scaffold-DbContext "Data Source=store.db" Microsoft.EntityFrameworkCore.Sqlite -OutputDir Models
@@ -17,27 +22,34 @@ namespace control_asistencia_savin.ApiService
 
     internal class FunctionsDataBase
     {
+        private readonly Microsoft.Extensions.Logging.ILogger _logger;
         private readonly ApiService _apiService = new ApiService();
         //public bool correctConection = false;
-
+        public FunctionsDataBase()
+        {
+            _logger = LoggingManager.GetLogger<FunctionsDataBase>();
+        }
         public bool verifyConection()
         {
             try
             {
-                var data = _apiService.GetDataAsync();
+                //var data = _apiService.GetDataConexion();
 
-                //MessageBox.Show("respuesta: "+data);
-                if (data != null)
-                {
-                    //MessageBox.Show("Conexión al servidor exitosa.", "Test de conexión", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    //this.correctConection = true;
-                    return true;
+                if (_apiService.GetDataConexion())
+                //if (data != null)
+
+                    {
+
+                        //                    _logger.LogInformation($"Test de conexión: Conexión al servidor exitosa, Respuesta: {@data}");
+                        //this.correctConection = true;
+                        return true;
                 }
+                return false;
+
             }
             catch (Exception ex)
             {
-                //MessageBox.Show($"No se pudo conectar al servidor: {ex.Message} \nDevolviendo False", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return false;
+                _logger.LogError($"Error al verificar conexión: {ex.Message}");
             }
             return false;
         }
@@ -52,12 +64,18 @@ namespace control_asistencia_savin.ApiService
                 {
                     GuardarDatosEnBaseDeDatos(data);
                 }
-                // MessageBox.Show("Datos guardados con éxito");
+
+                _logger.LogDebug("Datos guardados en la base de datos con éxito.");
 
             }
             catch (DbUpdateException ex)
             {
-                MessageBox.Show("error bd reg: " + ex.InnerException.Message);
+                _logger.LogError("Error al cargar los datos en la base de datos: " + ex.InnerException.Message);
+                MessageBox.Show("Ha ocurrido un error al cargar los datos. \nContactar con el administrador. \n");
+                _logger.LogCritical("\n------------------ CERRANDO LA APLICACIÓN POR ERROR AL CARGAR LA BASE DE DATOS ------------------");
+
+                LoggingManager.CloseAndFlush();
+
                 Environment.Exit(0);
 
             }
@@ -67,19 +85,21 @@ namespace control_asistencia_savin.ApiService
         {
             try
             {
-                var data =  _apiService.GetDataAsync();
+                var data = _apiService.GetDataForMac();
 
                 if (data != null)
                 {
                     GuardarDatosEnBaseDeDatos(data);
                 }
-                // MessageBox.Show("Datos guardados con éxito");
+
+                _logger.LogDebug("Los datos se han cargado con éxito.");
 
             }
             catch (DbUpdateException ex)
             {
-                MessageBox.Show("error bd reg: " + ex.InnerException.Message);
-                Environment.Exit(0);
+                _logger.LogError("Error al cargar los datos en la base de datos: " + ex.InnerException.Message);
+                MessageBox.Show("Ha ocurrido un error al cargar los datos: " + ex.InnerException.Message);
+                // Environment.Exit(0);
 
             }
         }
@@ -148,9 +168,10 @@ namespace control_asistencia_savin.ApiService
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Error al guardar en la bd" + ex.Message, "Error");
+                _logger.LogError("Error al guardar tablas en la base de datos: " + ex.Message);
             }
         }
+
         private void GuardarPersonal(StoreContext context, List<RrhhPersonal> personalList)
         {
             try
@@ -223,7 +244,7 @@ namespace control_asistencia_savin.ApiService
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Error al guardar en la bd: " + ex.Message, "Error");
+                _logger.LogError("Error al guardar personal en la base de datos: " + ex.Message);
             }
         }
         public void LimpiarDB()
@@ -252,12 +273,12 @@ namespace control_asistencia_savin.ApiService
 
                     context.SaveChanges();
                 }
-                //MessageBox.Show("La base de datos se ha limpiado con éxito.");
+                _logger.LogDebug("La base de datos se ha limpiado con éxito.");
 
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Error al limpiar base de datos: " + ex.Message, "Error");
+                _logger.LogError("Error al limpiar base de datos: " + ex.Message);
             }
         }
         private void BorrarDatosDeTabla<T>(DbSet<T> dbSet) where T : class
@@ -267,12 +288,16 @@ namespace control_asistencia_savin.ApiService
                 dbSet.Remove(entidad);
             }
         }
-        public void BackUpDB(String dateBackUp)
+        public void BackUpDB(string dateBackUp)
         {
             //string dateBackUp = "2023 12 27 15 56 12";
             var rutaBaseDeDatos = "store.db";
             var backupFolder = "backup";
-            var rutaCopiaDeSeguridad = Path.Combine(backupFolder, "store_backup_" + dateBackUp + ".db");
+            string nameStore = this.GetNombreTienda() ?? "store";
+            string nameBackup = nameStore.Replace(' ', '_').ToLower() + "_backup_" + dateBackUp + ".db";
+            var rutaCopiaDeSeguridad = Path.Combine(backupFolder, nameBackup);
+            _logger.LogInformation("-> Creando copia de seguridad...");
+            _logger.LogInformation($"Backup: {nameBackup}");
 
             // Asegurarse de que la base de datos no está siendo utilizada
             GC.Collect();
@@ -287,11 +312,12 @@ namespace control_asistencia_savin.ApiService
                 // Copiar el archivo de la base de datos a la ruta de copia de seguridad
                 File.Copy(rutaBaseDeDatos, rutaCopiaDeSeguridad, overwrite: true);
 
-                //MessageBox.Show("La copia de seguridad se ha creado con éxito.");
+                _logger.LogDebug("La copia de seguridad se ha creado con éxito.");
             }
             catch (IOException ex)
             {
-                MessageBox.Show("Error al crear la copia de seguridad: " + ex.Message);
+                _logger.LogError("Error al crear la copia de seguridad: " + ex.Message);
+                // MessageBox.Show("Error al crear la copia de seguridad.");
             }
         }
         //public async Task LoadDataBaseAsistenciaAsync(int idPersonal)
@@ -348,12 +374,12 @@ namespace control_asistencia_savin.ApiService
                         }
                     }
                     context.SaveChanges();
-                    //MessageBox.Show("Asistencias guardadas con éxito.");
+                    _logger.LogDebug("Asistencias cargadas con éxito.");
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Error al cargar asistencias: " + ex.Message, "Error");
+                _logger.LogError($"Error al cargar asistencias: {ex.Message}.");
             }
         }
         public void LimpiarAuxAsistencia()
@@ -367,18 +393,25 @@ namespace control_asistencia_savin.ApiService
 
                     context.SaveChanges();
                 }
-                //MessageBox.Show("La tabla auxiliar se ha borrado con éxito.");
+                _logger.LogDebug("La tabla auxiliar se ha borrado con éxito.");
 
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Error al limpiar la tabla auxiliar"+ ex.Message, "Error");
+                _logger.LogError($"Error al limpiar la tabla auxiliar {ex.Message}.");
             }
         }
         public void DeleteBackupFiles(int monthBackups)
         {
+
             string backupDirectory = "backup";
-            string nameBackups = "store_backup_*_" + monthBackups + "_*";
+            string numberMonth = monthBackups < 10 ? "0" + monthBackups : monthBackups.ToString();
+            string nameStore = this.GetNombreTienda() ?? "store";
+            int currentYear = DateTime.Now.Year;
+            string nameBackups = nameStore.Replace(' ','_').ToLower()+"_backup_*_" + numberMonth + "_" + currentYear + "_*";
+            // _logger.LogDebug($"Eliminando old backups. Name directory: {backupDirectory}, Name backup: {nameBackups}.");
+            _logger.LogDebug($"Name format db backup: {nameBackups}.db");
+
             // Asegúrate de que el directorio existe
             if (Directory.Exists(backupDirectory))
             {
@@ -386,27 +419,28 @@ namespace control_asistencia_savin.ApiService
                 DirectoryInfo directoryInfo = new DirectoryInfo(backupDirectory);
 
                 // Encuentra todos los archivos que comienzan con 'store_backup_30_12_'
-                //MessageBox.Show("test: " + nameBackups);
+                //_logger.LogDebug("test: " + nameBackups);
                 FileInfo[] files = directoryInfo.GetFiles(nameBackups);
 
                 // Itera sobre cada archivo y elimínalos
                 foreach (FileInfo file in files)
                 {
+
                     try
                     {
                         file.Delete();
-                        //MessageBox.Show($"El archivo {file.Name} ha sido eliminado.");
+                        _logger.LogDebug($"El archivo {file.Name} ha sido eliminado.");
                     }
                     catch (Exception ex)
                     {
                         // Puedes manejar errores aquí, si no puedes borrar un archivo por alguna razón
-                        MessageBox.Show($"Error al eliminar el archivo {file.Name}: {ex.Message}");
+                        _logger.LogError($"Error al eliminar el archivo {file.Name}: {ex.Message}");
                     }
                 }
             }
             else
             {
-                //MessageBox.Show($"El directorio {backupDirectory} no existe.");
+                _logger.LogError($"El directorio {backupDirectory} no existe.");
             }
         }
 
@@ -423,11 +457,17 @@ namespace control_asistencia_savin.ApiService
                 // Verificar si se encontró el registro
                 if (registro != null)
                 {
+                    _logger.LogDebug($"Seteando a cero 'min de atraso' en asistencias del personal: {IdPersonal}.");
+
                     // Modificar los minutos_atraso a 0
                     registro.MinutosAtraso = 0;
 
                     // Guardar los cambios en la base de datos
                     dbContext.SaveChanges();
+                }
+                else
+                {
+                    _logger.LogError($"No se encontró registros para setear a cero del personal: {IdPersonal}.");
                 }
             }
         }
@@ -445,11 +485,17 @@ namespace control_asistencia_savin.ApiService
                 // Verificar si se encontró el registro
                 if (registro != null)
                 {
+                    _logger.LogDebug($"Seteando a cero 'min de atraso' en backup del personal: {IdPersonal}.");
+
                     // Modificar los minutos_atraso a 0
                     registro.MinutosAtraso = 0;
 
                     // Guardar los cambios en la base de datos
                     dbContext.SaveChanges();
+                }
+                else
+                {
+                    _logger.LogError($"Error al setear a cero en backup del personal: {IdPersonal}.");
                 }
             }
         }
@@ -460,7 +506,10 @@ namespace control_asistencia_savin.ApiService
             using (var context = new StoreContext())
             {
                 // Verifica si existe al menos un registro en la tabla rrhh_asistencia_temporal que coincida con el id_personal
+
                 bool existeRegistro = context.RrhhAsistenciaTemporals.Any(a => a.IdPersonal == idPersonal);
+                _logger.LogDebug($"Verificando registros anteriores en el backup de asistencias: {existeRegistro}.");
+
 
                 return existeRegistro;
             }
@@ -476,7 +525,9 @@ namespace control_asistencia_savin.ApiService
                     .Select(pa => pa.MinutosTolerancia)
                     .FirstOrDefault();
 
-                return minutosTolerancia != null ? (int)minutosTolerancia: 0;
+                int minTol = minutosTolerancia != null ? (int)minutosTolerancia : 0;
+                _logger.LogDebug($"Los minutos de tolerancia de la tienda es: {minTol}");
+                return minTol;
             }
         }
 
@@ -489,7 +540,7 @@ namespace control_asistencia_savin.ApiService
                 return puntoAsistencia?.Nombre;
             }
         }
-
+        // ---------------------------- FUNCIONES PARA VER REGISTROS DE TIENDAS ----------------------------
         public string LoadRegisters(int n, string messageMac)
         {
             this.LimpiarDB();
@@ -498,6 +549,7 @@ namespace control_asistencia_savin.ApiService
             ApiService ap = new ApiService(true, cd._mac);
             this.loadDataBaseForMac(ap);
 
+            _logger.LogDebug($"Cargando datos de la tienda: {messageMac}");
             MessageBox.Show(messageMac);
 
             return "Punto Asistencia: " + this.GetPuntoAsistencia(cd._mac) +
@@ -542,5 +594,29 @@ namespace control_asistencia_savin.ApiService
                 return puntoAsistencia?.Nombre;
             }
         }
+        // ---------------------------- FIN FUNCIONES PARA VER REGISTROS DE TIENDAS ----------------------------
+
+        public bool esConObservacion()
+        {
+
+            using (var context = new StoreContext())
+            {
+                bool permiteObservacion = false;
+                var puntoAsistencia = context.RrhhPuntoAsistencia
+                                            .FirstOrDefault(pa => pa.DireccionMac == _apiService._dirMac);
+                // Verificar si se encontró el punto de asistencia y devolver el valor de permite_observacion
+                if (puntoAsistencia != null)
+                {
+                    permiteObservacion = puntoAsistencia.PermiteObservacion != null ? (puntoAsistencia.PermiteObservacion != false ? true : false) : false;
+                    //return puntoAsistencia.PermiteObservacion == 1; // Devuelve true si permite_observacion es 1, de lo contrario false
+                    _logger.LogDebug($"Observaciones por tienda: {permiteObservacion}");
+                    return permiteObservacion;
+                }
+                return false;
+            }
+         
+
+        }
+
     }
 }

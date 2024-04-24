@@ -1,5 +1,6 @@
 using control_asistencia_savin.ApiService;
 using control_asistencia_savin.Notifications;
+using Serilog;
 
 namespace control_asistencia_savin
 {
@@ -13,6 +14,8 @@ namespace control_asistencia_savin
         [STAThread]
         static void Main()
         {
+            ConfigureSerilog();
+
             // To customize application configuration such as set high DPI settings or default font,
             // see https://aka.ms/applicationconfiguration.
 
@@ -30,8 +33,16 @@ namespace control_asistencia_savin
             ApplicationConfiguration.Initialize();
             Application.Run(new Main());
         }
+        private static void ConfigureSerilog()
+        {
+            // Configuración de Serilog
+            Log.Logger = new LoggerConfiguration()
+                .MinimumLevel.Debug()
+                .WriteTo.Console()
+                .WriteTo.File("logs/savin.txt", rollingInterval: RollingInterval.Day)
+                .CreateLogger();
+        }
 
-       
     }
 }
 

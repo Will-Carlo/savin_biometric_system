@@ -10,11 +10,16 @@ using System.Reflection;
 using System.Text;
 using System.Windows.Forms;
 using System.Timers;
+using control_asistencia_savin.Notifications;
+using Microsoft.Extensions.Logging;
 
 namespace control_asistencia_savin
 {
     public partial class frmVerificar : CaptureForm
     {
+
+        private readonly Microsoft.Extensions.Logging.ILogger _logger = LoggingManager.GetLogger<frmVerificar>();
+
         private System.Timers.Timer timer;
 
 
@@ -101,7 +106,7 @@ namespace control_asistencia_savin
                             if (result.Verified)
                             {
                                 SetPrompt("VERIFICADO");
-
+                                _logger.LogDebug("Huella verificada.");
                                 personalName = emp.Nombres + " " + emp.Paterno + " " + emp.Materno;
                                 idEncontrado = emp.Id;
                                 statusProcess = true;

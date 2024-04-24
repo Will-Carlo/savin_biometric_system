@@ -302,6 +302,7 @@
             cbxCiudad.Name = "cbxCiudad";
             cbxCiudad.Size = new Size(224, 23);
             cbxCiudad.TabIndex = 25;
+            cbxCiudad.SelectedIndexChanged += cbxCiudad_SelectedIndexChanged;
             // 
             // frmRegistrar
             // 

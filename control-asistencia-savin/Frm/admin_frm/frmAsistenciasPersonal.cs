@@ -55,9 +55,9 @@ namespace control_asistencia_savin.Frm.admin_frm
 
         private void btnCargarRegistros_Click(object sender, EventArgs e)
         {
-            int? messageDB = _functionsDataBase.LoadRegistersNew(_IdTienda);
+            int? idPuntoAsistencia = _functionsDataBase.LoadRegistersNew(_IdTienda);
             //MessageBox.Show("Has seleccionado: " + this._NombreTienda);
-            this.lblPuntoAsistencia.Text = messageDB.ToString();
+            this.lblPuntoAsistencia.Text = idPuntoAsistencia.ToString();
             //_functionsDataBase.LimpiarDB();
             //_functionsDataBase.loadDataBase();
             if(_IdTienda == 13)
@@ -66,7 +66,7 @@ namespace control_asistencia_savin.Frm.admin_frm
             }
             else
             {
-                CargarDatosEnDataGridView(messageDB);
+                CargarDatosEnDataGridView(idPuntoAsistencia);
             }
             filtrosDGV();
         }
@@ -103,7 +103,11 @@ namespace control_asistencia_savin.Frm.admin_frm
                                        PuntoAsistencia = context.RrhhPuntoAsistencia.FirstOrDefault(pa => pa.Id == a.IdPuntoAsistencia).Nombre,
                                        TipoMovimiento = a.IndTipoMovimiento == 461 ? "entrada" :
                                                         a.IndTipoMovimiento == 462 ? "salida" :
-                                                        a.IndTipoMovimiento == 469 ? "falta" : ""
+                                                        a.IndTipoMovimiento == 469 ? "falta" : "",
+                                       Turno = a.IdTurno == 1 ? "mañana" :
+                                                        a.IdTurno == 2 ? "tarde" :
+                                                        a.IdTurno == 3 ? "sábado" :
+                                                        a.IdTurno == 4 ? "completo" : ""
                                    }).ToList();
 
                 //return asistencias;
@@ -131,7 +135,11 @@ namespace control_asistencia_savin.Frm.admin_frm
                                        PuntoAsistencia = context.RrhhPuntoAsistencia.FirstOrDefault(pa => pa.Id == a.IdPuntoAsistencia).Nombre,
                                        TipoMovimiento = a.IndTipoMovimiento == 461 ? "entrada" :
                                                         a.IndTipoMovimiento == 462 ? "salida" :
-                                                        a.IndTipoMovimiento == 469 ? "falta" : ""
+                                                        a.IndTipoMovimiento == 469 ? "falta" : "",
+                                       Turno = a.IdTurno == 1 ? "mañana" :
+                                                        a.IdTurno == 2 ? "tarde" :
+                                                        a.IdTurno == 3 ? "sábado" :
+                                                        a.IdTurno == 4 ? "completo" : ""
                                    }).Distinct().ToList(); // Aplicar Distinct() para obtener resultados únicos
 
                 //return asistencias;

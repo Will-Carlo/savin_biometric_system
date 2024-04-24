@@ -1,7 +1,9 @@
 ﻿using control_asistencia_savin.ApiService;
 using control_asistencia_savin.Models;
+using control_asistencia_savin.Notifications;
 using DPFP;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -20,6 +22,7 @@ namespace control_asistencia_savin
 {
     public partial class frmTestApi : Form
     {
+        private readonly Microsoft.Extensions.Logging.ILogger _logger = LoggingManager.GetLogger<frmTestApi>();
         private FunctionsDataBase _functionsDataBase;
         private int _IdTienda;
         private string _NombreTienda;
@@ -57,24 +60,38 @@ namespace control_asistencia_savin
 
         private void btnVerificarApi_Click(object sender, EventArgs e)
         {
+            _logger.LogDebug("Test API: Verificando conexión.");
             _functionsDataBase.verifyConection();
         }
         private void btnCargarDB_Click(object sender, EventArgs e)
         {
+            _logger.LogDebug("Test API: Cargando base de datos.");
             _functionsDataBase.loadDataBase();
+
         }
         private void btnDeleteBD_Click(object sender, EventArgs e)
         {
+            _logger.LogDebug("Test API: Vaciando base de datos.");
             _functionsDataBase.LimpiarDB();
         }
         private void btnMakeBackUp_Click(object sender, EventArgs e)
         {
+            _logger.LogDebug($"Test API: Creando un backup con el nombre: {txtDateBackup.Text}");
+            if (string.IsNullOrEmpty(txtDateBackup.Text))
+            {
+                MessageBox.Show("Debes agregar una fecha para crear el backup.");
+            }
             _functionsDataBase.BackUpDB(this.txtDateBackup.Text);
         }
         private void btnDeleteBackups_Click(object sender, EventArgs e)
         {
-            _functionsDataBase.DeleteBackupFiles(10);
-        }
+            _logger.LogDebug($"Test API: Eliminando backups del mes: {txtBackupMonth.Text}");
+            if (string.IsNullOrEmpty(txtBackupMonth.Text))
+            {
+                MessageBox.Show("Debes agregar un mes 'MM' para eliminar backups.");
+            }
+            _functionsDataBase.DeleteBackupFiles(int.Parse(txtBackupMonth.Text));
+     }
 
         private void btnCargarRegistros_Click(object sender, EventArgs e)
         {
