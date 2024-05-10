@@ -29,14 +29,16 @@ namespace control_asistencia_savin.Frm
         // -------------------------------------------------------------------
         public int getIdTurno(int idPersonal)
         {
+            _logger.LogDebug("idPersonal capturado: " + idPersonal);
             int idTurno = this.capturaIdTurno(idPersonal);
-            //MessageBox.Show("IdTurno capturado: " + idTurno);
+            _logger.LogDebug("IdTurno capturado: " + idTurno);
             if (validarTurno(idPersonal, idTurno))
             {
                 return idTurno;
             }
             else
             {
+                _logger.LogDebug("No tienes asignado el turno: " + idTurno);
                 throw new HttpRequestException($"No tienes asignado el turno: " + turnoNombre2(idTurno) + "\nContactar con el administrador.");
             }
         }
@@ -345,10 +347,10 @@ namespace control_asistencia_savin.Frm
         private int capturaIdTurno(int IdPersonal)
         {
             var horaActual = DateTime.Parse(this._capturaHoraMarcado);
-            //MessageBox.Show("hora capturada: " + this._capturaHoraMarcado);
+            //_logger.LogDebug("hora capturada: " + this._capturaHoraMarcado + " idpersonal: " + IdPersonal);
             var AntesDeLas_14_29 = new DateTime(horaActual.Year, horaActual.Month, horaActual.Day, 14, 29, 59);
             var EsDespuesDe_12_30 = new DateTime(horaActual.Year, horaActual.Month, horaActual.Day, 12, 30, 0);
-            //MessageBox.Show("Hora Actual: " + horaActual + "\nAntes de las 14:29: " + AntesDeLas_14_29 + "\nDespués de 12:30: " + EsDespuesDe_12_30);
+            //_logger.LogDebug("\nHora Actual: " + horaActual + "\nAntes de las 14:29: " + AntesDeLas_14_29 + "\nDespués de 12:30: " + EsDespuesDe_12_30);
             //var horaActual;
             if (EsSabado())
             {
@@ -366,8 +368,12 @@ namespace control_asistencia_savin.Frm
             }
             else
             {
+                //_logger.LogDebug("Validando turno 1 2 3");
+                _logger.LogDebug("existeAnteriorIdTurno " + this.existeAnteriorIdTurno(IdPersonal));
+
                 if (this.existeAnteriorIdTurno(IdPersonal))
                 {
+                    //_logger.LogDebug("getAnteriorIdTurno " + this.getAnteriorIdTurno(IdPersonal));
                     if (this.getAnteriorIdTurno(IdPersonal) == 1)
                     {
                         if (horaActual < AntesDeLas_14_29)
@@ -377,6 +383,7 @@ namespace control_asistencia_savin.Frm
                             {
                                 // Si el personal está saliendo en este rango entonces se le asigna la salida con turno 1
                                 // Pero si esta entrando es decir 461, entonces se le asigna la entrada de la tarde
+                                //_logger.LogDebug("capturaTipoMovimiento " + this.capturaTipoMovimiento(IdPersonal));
                                 if (this.capturaTipoMovimiento(IdPersonal) == 462)
                                 {
                                     return 1;
@@ -404,6 +411,10 @@ namespace control_asistencia_savin.Frm
                     else if (this.getAnteriorIdTurno(IdPersonal) == 2)
                     {
                         return 2;
+                    }
+                    else
+                    {
+                        _logger.LogError("ERROR DE VALIDACIÓN DE TURNO: " + this.getAnteriorIdTurno(IdPersonal));
                     }
                 }
                 else
@@ -440,12 +451,13 @@ namespace control_asistencia_savin.Frm
         {
             switch (idTurno)
             {
+                case 0: return "error";
                 case 1: return "MAÑANA";
                 case 2: return "TARDE";
                 case 3: return "SÁBADO";
                 case 4: return "HORARIO CONTINUO LV";
+                default : return "error def";
             }
-            return "";
         }
         public bool EsSabado()
         {
@@ -898,7 +910,10 @@ namespace control_asistencia_savin.Frm
                 //{
                     // Verificar si hay algún registro para la fecha de hoy
                 bool existeRegistroHoy = context.RrhhAsistencia
-                    .Any(a => a.IdPersonal == IdPersonal && a.HoraMarcado.StartsWith(fechaHoyStr));
+                    // CORRIGIENDO ERROR DE VALIDACIÓN DE TURNO
+                    //.Any(a => a.IdPersonal == IdPersonal && a.HoraMarcado.StartsWith(fechaHoyStr));
+                    .Any(a => a.IdPersonal == IdPersonal && a.HoraMarcado.StartsWith(fechaHoyStr) && a.IndTipoMovimiento != 469 && a.IndTipoMovimiento != 499 && a.IndTipoMovimiento != 506);
+
 
                 return existeRegistroHoy;
                 //}
