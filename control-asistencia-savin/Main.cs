@@ -75,7 +75,15 @@ namespace control_asistencia_savin
 
             //---------------------------------------------------------------
             // verifica la conexión cada 20 minutos v2
-            SetupScheduledTask();
+            if (_apiService._esProduction)
+            {
+                _logger.LogDebug("Se ha activado la función de tarea programada.");
+                SetupScheduledTask();
+            }
+            else
+            {
+                _logger.LogDebug("Se ha desactivado la función de tarea programada.");
+            }
 
 
 
@@ -166,7 +174,7 @@ namespace control_asistencia_savin
             this.lnkInicio.Visible = actionLink;
             this.lnkMarcarCodigo.Visible = actionLink;
             //this.lnkVerAtrasos.Visible = actionLink;
-            this.lnkRegistrar.Visible = actionLink;
+            //this.lnkRegistrar.Visible = actionLink;
             //this.lnkApiTest.Visible = actionLink;
             //this.lnkFakeRegister.Visible = actionLink;
             //this.lnkMarcar2.Visible = actionLink;
