@@ -39,12 +39,15 @@ namespace control_asistencia_savin.ApiService
             if (_functionsDataBase.verifyConection())
             {
                 _m.registrarAsistenciasTemporales();
-                //_functionsDataBase.LimpiarDB();
-                //_functionsDataBase.loadDataBase();
+
+                //System.Threading.Thread.Sleep(10000);
+
+                _functionsDataBase.LimpiarDB();
+                _functionsDataBase.loadDataBase();
                 //MessageBox.Show("INTERNET CHECKER: se ejecutó la tarea con éxito.");
             }
-            {
-                //MessageBox.Show("Aún no se obtiene conexión exitosa del servidor");
+            else {
+                _logger.LogDebug("Aún no se obtiene conexión a internet.");
             }
 
         }

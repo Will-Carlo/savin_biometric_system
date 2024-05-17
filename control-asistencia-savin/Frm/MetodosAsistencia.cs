@@ -369,7 +369,7 @@ namespace control_asistencia_savin.Frm
             else
             {
                 //_logger.LogDebug("Validando turno 1 2 3");
-                _logger.LogDebug("existeAnteriorIdTurno " + this.existeAnteriorIdTurno(IdPersonal));
+                //_logger.LogDebug("existeAnteriorIdTurno " + this.existeAnteriorIdTurno(IdPersonal));
 
                 if (this.existeAnteriorIdTurno(IdPersonal))
                 {
@@ -888,7 +888,8 @@ namespace control_asistencia_savin.Frm
             if (min > 0)
             {
                 //this.NotificationMessage(this.NombrePersonal(IdPersonal) + "\nEstás saliendo antes por " + min + " minutos.", "alertLateEarly");
-                this.NotificationMessage(this.NombrePersonal(IdPersonal) + "\nEstás saliendo antes.", "alertLateEarly");
+                // se está quitando la alerta de que se está saliendo antes del horario de trabajo
+                //this.NotificationMessage(this.NombrePersonal(IdPersonal) + "\nEstás saliendo antes.", "alertLateEarly");
             }
             return min;
         }

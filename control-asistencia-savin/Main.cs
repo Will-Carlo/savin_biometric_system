@@ -38,7 +38,7 @@ namespace control_asistencia_savin
             InitializeComponent();
 
             _logger = LoggingManager.GetLogger<Main>();
-            _logger.LogInformation($"\n------------------ INICIANDO LA APLICACIÓN {_cd._versionApp} ------------------");
+            _logger.LogInformation($"\n#################### INICIANDO LA APLICACIÓN {_cd._versionApp} ####################");
             string typeConexion = _apiService._esProduction ? "production" : "development";
             _logger.LogDebug($"-> Loading data for {typeConexion}...");
             this.Text = $"SAVIN {_cd._versionApp} - CONTROL BIOMÉTRICO";
@@ -85,10 +85,9 @@ namespace control_asistencia_savin
                 _logger.LogDebug("Se ha desactivado la función de tarea programada.");
             }
 
-
-
-
         }
+
+
         private void loadSystem()
         {
             //MessageBox.Show(_functionsDataBase.verifyConection().ToString());
@@ -268,7 +267,7 @@ namespace control_asistencia_savin
         {
             //Environment.Exit(0);
             _logger.LogInformation("Cerrando aplicación por logout");
-            _logger.LogInformation("\n------------------ CERRANDO LA APLICACIÓN ------------------");
+            _logger.LogInformation("\n#################### CERRANDO LA APLICACIÓN ####################");
             LoggingManager.CloseAndFlush();
 
             this.Close();
@@ -277,7 +276,7 @@ namespace control_asistencia_savin
         {
             //Environment.Exit(0);
             _logger.LogInformation("Cerrando aplicación por logout");
-            _logger.LogInformation("\n------------------ CERRANDO LA APLICACIÓN ------------------");
+            _logger.LogInformation("\n#################### CERRANDO LA APLICACIÓN ####################");
             LoggingManager.CloseAndFlush();
 
             this.Close();
@@ -300,7 +299,7 @@ namespace control_asistencia_savin
                 _fecha = DateTime.Now.ToString("dd/MM/yyyy");
                 _functionsDataBase.BackUpDB(_fecha.Replace("/", "_") + "_" + _hora.Replace(":", "_"));
                 _logger.LogWarning("Cerrando la aplicación. (true)");
-                _logger.LogInformation("\n------------------ CERRANDO LA APLICACIÓN ------------------");
+                _logger.LogInformation("\n#################### CERRANDO LA APLICACIÓN ####################");
                 LoggingManager.CloseAndFlush();
 
             }
@@ -350,11 +349,11 @@ namespace control_asistencia_savin
                 new TimeSpan(8, 11, 01), // 12:30 PM
                 //new TimeSpan(8, 21, 01), // 12:30 PM
                 //new TimeSpan(8, 31, 01), // 12:30 PM
-                //new TimeSpan(8, 41, 01), // 12:30 PM
-                //new TimeSpan(8, 51, 01), // 12:30 PM
+                new TimeSpan(8, 41, 01), // 12:30 PM
+                new TimeSpan(8, 51, 01), // 12:30 PM
 
-                //new TimeSpan(9, 01, 01), // 12:30 PM
-                //new TimeSpan(9, 11, 01), // 12:30 PM
+                new TimeSpan(9, 01, 01), // 12:30 PM
+                new TimeSpan(9, 11, 01), // 12:30 PM
                 new TimeSpan(9, 21, 01), // 12:30 PM
                 new TimeSpan(9, 31, 01), // 12:30 PM
                 new TimeSpan(9, 41, 01), // 12:30 PM
@@ -385,8 +384,8 @@ namespace control_asistencia_savin
                 new TimeSpan(14, 11, 01),  // 2:00 PM
                 //new TimeSpan(14, 21, 01),  // 2:00 PM
                 //new TimeSpan(14, 31, 01),  // 2:00 PM
-                //new TimeSpan(14, 41, 01),  // 2:00 PM
-                //new TimeSpan(14, 51, 01),  // 2:00 PM
+                new TimeSpan(14, 41, 01),  // 2:00 PM
+                new TimeSpan(14, 51, 01),  // 2:00 PM
 
                 new TimeSpan(15, 01, 01),  // 2:00 PM
                 new TimeSpan(15, 11, 01),  // 2:00 PM
@@ -417,8 +416,8 @@ namespace control_asistencia_savin
                 new TimeSpan(18, 51, 01),  // 6:30 PM
 
                 //new TimeSpan(19, 01, 01),  // 7:30 PM
-                //new TimeSpan(19, 11, 01),  // 7:30 PM
-                //new TimeSpan(19, 21, 01),  // 7:30 PM
+                new TimeSpan(19, 11, 01),  // 7:30 PM
+                new TimeSpan(19, 21, 01),  // 7:30 PM
                 new TimeSpan(19, 31, 01),  // 7:30 PM
                 new TimeSpan(19, 41, 01),  // 7:30 PM
                 //new TimeSpan(12, 04, 0),  // PRUEBA
@@ -454,7 +453,7 @@ namespace control_asistencia_savin
                 _functionsDataBase.LimpiarDB();
                 _functionsDataBase.loadDataBase();
             }else{
-                _logger.LogDebug("No hay conexión a internet.");
+                _logger.LogDebug("No hay conexión.");
                 if (_functionsDataBase.existenRegistrosSinSincronizar())
                 {
                     advertenciaDeSincronizacion(true);
