@@ -26,6 +26,8 @@ namespace control_asistencia_savin
         private readonly ApiService.ApiService _apiService;
         private readonly Microsoft.Extensions.Logging.ILogger _logger = LoggingManager.GetLogger<frmAsistencia>();
 
+        private Boolean _esFueraDeHorario = false;
+
         public frmAsistencia()
         {
             InitializeComponent();
@@ -118,8 +120,25 @@ namespace control_asistencia_savin
         private void RegistroAsistencia(bool statuProcessVal, int idPersonalVal, string NombrePersonalVal)
         {
             m.setCapturaHoraMarcado(DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
+            string fechaMarcadoStr = m.getCapturaHoraMarcado(); 
+            DateTime fechaMarcado = DateTime.Parse(fechaMarcadoStr);
 
-            if (statuProcessVal)
+            bool esMayorIgualMedianoche = fechaMarcado.TimeOfDay >= TimeSpan.Zero;
+            bool esMenorQueCincoAM = fechaMarcado.TimeOfDay < new TimeSpan(5, 0, 0);
+
+            if (fechaMarcado.TimeOfDay >= TimeSpan.Zero && fechaMarcado.TimeOfDay < new TimeSpan(5, 0, 0))
+            {
+                _esFueraDeHorario = true;
+                _logger.LogInformation("No se puede marcar en este horario.");
+                m.NotificationMessage("Fuera de horario.", "alert");
+            }
+
+            //_logger.LogDebug($"Hora capturada: {fechaMarcado.TimeOfDay}");
+            //_logger.LogDebug($"Es mayor o igual a medianoche: {esMayorIgualMedianoche}");
+            //_logger.LogDebug($"Es menor que las 5 AM: {esMenorQueCincoAM}");
+            //_logger.LogDebug($"Es fuera de horario: {_esFueraDeHorario}");
+
+            if (statuProcessVal && !_esFueraDeHorario)
             {
                 if (!m.EsRegistroDoble(idPersonalVal))
                 {

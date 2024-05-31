@@ -102,6 +102,7 @@
             FormBorderStyle = FormBorderStyle.None;
             Name = "frmAsistenciaSimulation";
             Text = "frmAsistenciaSimulation";
+            Load += frmAsistenciaSimulation_Load;
             ResumeLayout(false);
             PerformLayout();
         }

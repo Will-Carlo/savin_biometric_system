@@ -29,7 +29,7 @@ namespace control_asistencia_savin.Frm
         // -------------------------------------------------------------------
         public int getIdTurno(int idPersonal)
         {
-            _logger.LogDebug("idPersonal capturado: " + idPersonal);
+            _logger.LogDebug("Nombre Personal capturado: " + idPersonal + ". " + this.NombrePersonal(idPersonal));
             int idTurno = this.capturaIdTurno(idPersonal);
             _logger.LogDebug("IdTurno capturado: " + idTurno);
             if (validarTurno(idPersonal, idTurno))
@@ -118,6 +118,10 @@ namespace control_asistencia_savin.Frm
         public void setCapturaHoraMarcado(string capturaHoraMarcado)
         {
             _capturaHoraMarcado = capturaHoraMarcado;
+        }
+        public string getCapturaHoraMarcado()
+        {
+            return this._capturaHoraMarcado;
         }
         public string getHora()
         {

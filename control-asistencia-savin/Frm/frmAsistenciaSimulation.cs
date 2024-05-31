@@ -24,6 +24,7 @@ namespace control_asistencia_savin.Frm
         private readonly ApiService.ApiService _apiService;
         private ApiService.FunctionsDataBase _functionsDataBase = new FunctionsDataBase();
         private readonly Microsoft.Extensions.Logging.ILogger _logger = LoggingManager.GetLogger<frmAsistenciaSimulation>();
+        private Boolean _esFueraDeHorario = false;
 
         public frmAsistenciaSimulation()
         {
@@ -87,30 +88,51 @@ namespace control_asistencia_savin.Frm
         {
             m.setCapturaHoraMarcado(txtFecha.Text);
 
-            if (!m.EsRegistroDoble(idPersonalVal))
+            string fechaMarcadoStr = m.getCapturaHoraMarcado();
+            DateTime fechaMarcado = DateTime.Parse(fechaMarcadoStr);
+
+            bool esMayorIgualMedianoche = fechaMarcado.TimeOfDay >= TimeSpan.Zero;
+            bool esMenorQueCincoAM = fechaMarcado.TimeOfDay < new TimeSpan(5, 0, 0);
+
+            if (fechaMarcado.TimeOfDay >= TimeSpan.Zero && fechaMarcado.TimeOfDay < new TimeSpan(5, 0, 0))
             {
-                   
-                RrhhAsistencia regisAsis = new RrhhAsistencia()
-                {
-                    IdTurno = m.getIdTurno(idPersonalVal),
-                    IdPersonal = idPersonalVal,
-                    HoraMarcado = m.getHoraMarcado(),
-                    MinutosAtraso = m.getMinutosAtraso(idPersonalVal),
-                    IndTipoMovimiento = m.getIndTipoMovimiento(idPersonalVal),
-                    IdPuntoAsistencia = m.getIdPuntoAsistencia()
-                };
-
-                // Enviando asistencia al servidor o a la tabla temporal
-
-                m.ValidarAsistencia(regisAsis);
-
+                _esFueraDeHorario = true;
+                _logger.LogInformation("No se puede marcar en este horario.");
+                m.NotificationMessage("Fuera de horario.", "alert");
             }
-            else
-            {
-                string tipoMov2 = m.capturaTipoMovimiento(idPersonalVal) != 461 ? "ENTRADA" : "SALIDA";
-                m.NotificationMessage("Cuidado estás volviendo a marcar tu: " + tipoMov2 + "\nDebes esperar al menos 1 min. para volver a marcar.", "alert");
-                _logger.LogInformation($"El usuario {idPersonalVal} está marcando por segunda vez su asistencia.");
 
+            //_logger.LogDebug($"Hora capturada: {fechaMarcado.TimeOfDay}");
+            //_logger.LogDebug($"Es mayor o igual a medianoche: {esMayorIgualMedianoche}");
+            //_logger.LogDebug($"Es menor que las 5 AM: {esMenorQueCincoAM}");
+            //_logger.LogDebug($"Es fuera de horario: {_esFueraDeHorario}");
+            if (!_esFueraDeHorario)
+            {
+                if (!m.EsRegistroDoble(idPersonalVal))
+                {
+
+                    RrhhAsistencia regisAsis = new RrhhAsistencia()
+                    {
+                        IdTurno = m.getIdTurno(idPersonalVal),
+                        IdPersonal = idPersonalVal,
+                        HoraMarcado = m.getHoraMarcado(),
+                        MinutosAtraso = m.getMinutosAtraso(idPersonalVal),
+                        IndTipoMovimiento = m.getIndTipoMovimiento(idPersonalVal),
+                        IdPuntoAsistencia = m.getIdPuntoAsistencia()
+                    };
+
+                    // Enviando asistencia al servidor o a la tabla temporal
+
+                    m.ValidarAsistencia(regisAsis);
+
+                }
+                else
+                {
+                    string tipoMov2 = m.capturaTipoMovimiento(idPersonalVal) != 461 ? "ENTRADA" : "SALIDA";
+                    m.NotificationMessage("Cuidado estás volviendo a marcar tu: " + tipoMov2 + "\nDebes esperar al menos 1 min. para volver a marcar.", "alert");
+                    _logger.LogInformation($"El usuario {idPersonalVal} está marcando por segunda vez su asistencia.");
+
+
+                }
             }
 
         }
@@ -179,6 +201,11 @@ namespace control_asistencia_savin.Frm
         private void btnRegFaltas_Click(object sender, EventArgs e)
         {
             m.RegistrarFaltasDelDia();
+        }
+
+        private void frmAsistenciaSimulation_Load(object sender, EventArgs e)
+        {
+
         }
     }
 }
