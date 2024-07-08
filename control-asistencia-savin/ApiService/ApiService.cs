@@ -11,6 +11,8 @@ using System.Linq;
 using System.Net;
 using System.Net.Http.Headers;
 using System.Net.NetworkInformation;
+using System.Net.Sockets;
+using System.Security.Authentication;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -25,7 +27,7 @@ namespace control_asistencia_savin.ApiService
         //private readonly MetodosAsistencia _m = new MetodosAsistencia();
 
         public string _dirMac { get; set; }
-        public bool _esProduction = true;
+        public bool _esProduction = false;
         // ----------------------------------
         // NO MODIFICAR
         //public bool _serverConexion = false;
@@ -158,11 +160,13 @@ namespace control_asistencia_savin.ApiService
             }
         }
 
+
         public bool GetDataConexion()
         {
             try
             {
                 _logger.LogInformation("-> Verificando conexión a internet y servidor...");
+
                 // Verificar la conexión a Internet
                 if (!IsInternetAvailable())
                 {
@@ -173,48 +177,166 @@ namespace control_asistencia_savin.ApiService
                 // Realizar la solicitud HTTP de forma síncrona
                 var response = _httpClient.GetAsync(_credenciales._getApiLink).Result;
 
-                if (response.StatusCode == HttpStatusCode.BadRequest)
+                switch (response.StatusCode)
                 {
-                    MessageBox.Show("Tu dirección MAC no está registrada.\nDir mac: " + _credenciales._PssdMac + "\nCerrando la aplicación.");
-                    _logger.LogError($"-> La dirección MAC no está registrada. Mac: {_credenciales._PssdMac}.");
-                    _logger.LogCritical("\n------------------ CERRANDO LA APLICACIÓN POR MAC NO REGISTRADA ------------------");
-                    LoggingManager.CloseAndFlush();
+                    case HttpStatusCode.BadRequest:
+                        MessageBox.Show("Tu dirección MAC no está registrada.\nDir mac: " + _credenciales._PssdMac + "\nCerrando la aplicación.");
+                        _logger.LogError($"-> La dirección MAC no está registrada. Mac: {_credenciales._PssdMac}.");
+                        _logger.LogCritical("\n------------------ CERRANDO LA APLICACIÓN POR MAC NO REGISTRADA ------------------");
+                        LoggingManager.CloseAndFlush();
+                        Environment.Exit(0);
+                        return false;
 
-                    Environment.Exit(0);
-                    return false;
-                }
-                else if (response.StatusCode == HttpStatusCode.NotFound || response.StatusCode == HttpStatusCode.InternalServerError)
-                {
-                    _logger.LogCritical($"-> No hay conexión con el servidor: {response.StatusCode}."); // mensaje principal de error de conexión
-                    return false;
-                }
-                else if (response.IsSuccessStatusCode)
-                {
-                    var json = response.Content.ReadAsStringAsync().Result;
+                    case HttpStatusCode.NotFound:
+                    case HttpStatusCode.InternalServerError:
+                        _logger.LogCritical($"-> No hay conexión con el servidor: {response.StatusCode}."); // mensaje principal de error de conexión
+                        return false;
 
-                    //if (!string.IsNullOrEmpty(json))
-                    //{
-                    //    //var data = JsonConvert.DeserializeObject<ModelJson>(json);
-                    // //   _serverConexion = true;
-                    _logger.LogInformation("-> La conexión al servidor es correcta.");
-                    return true;
-                    //}
-                    //else
-                    //{
-                    //    return false;
-                    //}
+                    case HttpStatusCode.ServiceUnavailable:
+                        _logger.LogCritical($"-> El servidor no está disponible: {response.StatusCode}.");
+                        //MessageBox.Show("El servidor no está disponible. Por favor, intente nuevamente más tarde.");
+                        return false;
+
+                    case HttpStatusCode.TooManyRequests:
+                        _logger.LogCritical($"-> Límite de solicitudes alcanzado: {response.StatusCode}.");
+                        //MessageBox.Show("Has alcanzado el límite de solicitudes. Por favor, intente nuevamente más tarde.");
+                        return false;
+
+                    default:
+                        if (response.IsSuccessStatusCode)
+                        {
+                            var json = response.Content.ReadAsStringAsync().Result;
+                            _logger.LogInformation("-> La conexión al servidor es correcta.");
+                            return true;
+                        }
+                        _logger.LogError($"-> Error desconocido al conectar con el servidor: {response.StatusCode}.");
+                        return false;
                 }
-                //else
-                //{
-                    return false;
-                //}
+            }
+            catch (AggregateException agEx)
+            {
+                foreach (var ex in agEx.InnerExceptions)
+                {
+                    HandleHttpRequestException(ex);
+                }
+                return false;
             }
             catch (HttpRequestException ex)
             {
-                _logger.LogError(ex, "Error de conexión en el servidor.");
+                HandleHttpRequestException(ex);
+                return false;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Se produjo un error inesperado.");
+                //MessageBox.Show("Se produjo un error inesperado. Por favor, intente nuevamente más tarde.");
                 return false;
             }
         }
+
+
+        private void HandleHttpRequestException(Exception ex)
+        {
+            if (ex is HttpRequestException httpRequestEx && httpRequestEx.InnerException is SocketException socketEx)
+            {
+                switch (socketEx.SocketErrorCode)
+                {
+                    case SocketError.TimedOut:
+                        _logger.LogError(httpRequestEx, "Error de conexión: tiempo de espera agotado.");
+                        //MessageBox.Show("Error de conexión: el tiempo de espera se ha agotado.");
+                        break;
+
+                    case SocketError.HostNotFound:
+                        _logger.LogError(httpRequestEx, "Error de conexión: host no encontrado.");
+                        //MessageBox.Show("Error de conexión: host no encontrado.");
+                        break;
+
+                    case SocketError.ConnectionRefused:
+                        _logger.LogError(httpRequestEx, "Error de conexión: conexión rechazada.");
+                        //MessageBox.Show("Error de conexión: la conexión fue rechazada por el servidor.");
+                        break;
+
+                    case SocketError.NetworkUnreachable:
+                        _logger.LogError(httpRequestEx, "Error de conexión: red no accesible.");
+                        //MessageBox.Show("Error de conexión: la red no es accesible.");
+                        break;
+
+                    default:
+                        _logger.LogError(httpRequestEx, "Error de conexión desconocido.");
+                        //MessageBox.Show("Error de conexión desconocido. Por favor, intente nuevamente más tarde.");
+                        break;
+                }
+            }
+            else if (ex is HttpRequestException httpRequestEx2 && httpRequestEx2.InnerException is AuthenticationException)
+            {
+                _logger.LogError(httpRequestEx2, "Error de conexión: problema con SSL/TLS.");
+                //MessageBox.Show("Error de conexión: problema con la seguridad de la conexión (SSL/TLS).");
+            }
+            else
+            {
+                _logger.LogError(ex, "Error de conexión en el servidor.");
+                //MessageBox.Show("Error de conexión en el servidor. Por favor, intente nuevamente más tarde.");
+            }
+        }
+
+
+        //public bool GetDataConexion()
+        //{
+        //    try
+        //    {
+        //        _logger.LogInformation("-> Verificando conexión a internet y servidor...");
+        //        // Verificar la conexión a Internet
+        //        if (!IsInternetAvailable())
+        //        {
+        //            _logger.LogCritical("-> No hay conexión a Internet.");
+        //            return false;
+        //        }
+
+        //        // Realizar la solicitud HTTP de forma síncrona
+        //        var response = _httpClient.GetAsync(_credenciales._getApiLink).Result;
+
+        //        if (response.StatusCode == HttpStatusCode.BadRequest)
+        //        {
+        //            MessageBox.Show("Tu dirección MAC no está registrada.\nDir mac: " + _credenciales._PssdMac + "\nCerrando la aplicación.");
+        //            _logger.LogError($"-> La dirección MAC no está registrada. Mac: {_credenciales._PssdMac}.");
+        //            _logger.LogCritical("\n------------------ CERRANDO LA APLICACIÓN POR MAC NO REGISTRADA ------------------");
+        //            LoggingManager.CloseAndFlush();
+
+        //            Environment.Exit(0);
+        //            return false;
+        //        }
+        //        else if (response.StatusCode == HttpStatusCode.NotFound || response.StatusCode == HttpStatusCode.InternalServerError)
+        //        {
+        //            _logger.LogCritical($"-> No hay conexión con el servidor: {response.StatusCode}."); // mensaje principal de error de conexión
+        //            return false;
+        //        }
+        //        else if (response.IsSuccessStatusCode)
+        //        {
+        //            var json = response.Content.ReadAsStringAsync().Result;
+
+        //            //if (!string.IsNullOrEmpty(json))
+        //            //{
+        //            //    //var data = JsonConvert.DeserializeObject<ModelJson>(json);
+        //            // //   _serverConexion = true;
+        //            _logger.LogInformation("-> La conexión al servidor es correcta.");
+        //            return true;
+        //            //}
+        //            //else
+        //            //{
+        //            //    return false;
+        //            //}
+        //        }
+        //        //else
+        //        //{
+        //            return false;
+        //        //}
+        //    }
+        //    catch (HttpRequestException ex)
+        //    {
+        //        _logger.LogError(ex, "Error de conexión en el servidor.");
+        //        return false;
+        //    }
+        //}
 
 
         public ModelJson GetDataForMac()

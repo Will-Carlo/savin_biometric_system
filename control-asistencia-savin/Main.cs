@@ -2,6 +2,7 @@
 using control_asistencia_savin.Frm.admin_frm;
 using control_asistencia_savin.Models;
 using control_asistencia_savin.Notifications;
+using control_asistencia_savin.WindowsSystemValidations;
 using Microsoft.Extensions.Logging;
 using Serilog;
 using System;
@@ -12,6 +13,7 @@ using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Net.NetworkInformation;
+using System.Reflection;
 using System.Reflection.Emit;
 using System.Text;
 using System.Timers;
@@ -33,6 +35,11 @@ namespace control_asistencia_savin
         private string _hora = "";
         private string _fecha = "";
         private System.Timers.Timer timer;
+
+        // ejecutar el programa siempre en segundo plano
+        private NotifyIcon notifyIcon;
+
+
         public Main()
         {
             InitializeComponent();
@@ -75,7 +82,7 @@ namespace control_asistencia_savin
 
             //---------------------------------------------------------------
             // verifica la conexión cada 20 minutos v2
-            if (_apiService._esProduction)
+            if (!_apiService._esProduction)
             {
                 _logger.LogDebug("Se ha activado la función de tarea programada.");
                 SetupScheduledTask();
@@ -85,6 +92,64 @@ namespace control_asistencia_savin
                 _logger.LogDebug("Se ha desactivado la función de tarea programada.");
             }
 
+            //---------------------------------------------------------------
+            // Configuración del NotifyIcon
+            notifyIcon = new NotifyIcon();
+            //notifyIcon.Icon = SystemIcons.Application;
+            //
+
+            string baseDirectory = AppDomain.CurrentDomain.BaseDirectory;
+            string iconPath = System.IO.Path.Combine(baseDirectory, "img", "savin_2.ico");
+
+            if (System.IO.File.Exists(iconPath))
+            {
+                notifyIcon.Icon = new Icon(iconPath);
+            }
+            else
+            {
+                var assembly = Assembly.GetExecutingAssembly();
+                var resourceName = "control_asistencia_savin.img.savin.ico";
+
+                using (var stream = assembly.GetManifestResourceStream(resourceName))
+                {
+                    if (stream != null)
+                    {
+                        notifyIcon.Icon = new Icon(stream);
+                    }
+                    else
+                    {
+                        // Fallback en caso de que el ícono no se encuentre
+                        notifyIcon.Icon = SystemIcons.Application;
+                    }
+                }
+            }
+
+            //var assembly = Assembly.GetExecutingAssembly();
+            //var resourceName = "control_asistencia_savin.img.savin.ico";
+
+            //using (var stream = assembly.GetManifestResourceStream(resourceName))
+            //{
+            //    if (stream != null)
+            //    {
+            //        notifyIcon.Icon = new Icon(stream);
+            //    }
+            //    else
+            //    {
+            //        // Fallback en caso de que el icono no se encuentre
+            //        notifyIcon.Icon = SystemIcons.Application;
+            //    }
+            //}
+
+            notifyIcon.Visible = true;
+            notifyIcon.Text = "Control Asistencia Savin";
+            notifyIcon.DoubleClick += NotifyIcon_DoubleClick;
+
+            // Configuración del menú contextual del NotifyIcon
+            var contextMenu = new ContextMenuStrip();
+            var exitMenuItem = new ToolStripMenuItem("Salir");
+            exitMenuItem.Click += ExitMenuItem_Click;
+            contextMenu.Items.Add(exitMenuItem);
+            notifyIcon.ContextMenuStrip = contextMenu;
         }
 
 
@@ -267,19 +332,22 @@ namespace control_asistencia_savin
         {
             //Environment.Exit(0);
             _logger.LogInformation("Cerrando aplicación por logout");
-            _logger.LogInformation("\n#################### CERRANDO LA APLICACIÓN ####################");
-            LoggingManager.CloseAndFlush();
+            cerrarYCrearBackUp();
 
-            this.Close();
+            //this.Close();
+
+            ejecutarEnSegundoPlano();
         }
+
         private void pictureBox2_Click(object sender, EventArgs e)
         {
             //Environment.Exit(0);
             _logger.LogInformation("Cerrando aplicación por logout");
-            _logger.LogInformation("\n#################### CERRANDO LA APLICACIÓN ####################");
-            LoggingManager.CloseAndFlush();
+            cerrarYCrearBackUp();
 
-            this.Close();
+            //this.Close();
+
+            ejecutarEnSegundoPlano();
         }
 
 
@@ -290,19 +358,32 @@ namespace control_asistencia_savin
             if (result == DialogResult.No)
             {
                 e.Cancel = true;
-
                 _logger.LogWarning("Cerrando la aplicación. (false)");
             }
             else
             {
-                _hora = DateTime.Now.ToString("HH:mm:ss");
-                _fecha = DateTime.Now.ToString("dd/MM/yyyy");
-                _functionsDataBase.BackUpDB(_fecha.Replace("/", "_") + "_" + _hora.Replace(":", "_"));
                 _logger.LogWarning("Cerrando la aplicación. (true)");
-                _logger.LogInformation("\n#################### CERRANDO LA APLICACIÓN ####################");
-                LoggingManager.CloseAndFlush();
+                cerrarYCrearBackUp();
 
+                e.Cancel = true;
+                ejecutarEnSegundoPlano();
             }
+        }
+        private void cerrarYCrearBackUp()
+        {
+            _hora = DateTime.Now.ToString("HH:mm:ss");
+            _fecha = DateTime.Now.ToString("dd/MM/yyyy");
+            _functionsDataBase.BackUpDB(_fecha.Replace("/", "_") + "_" + _hora.Replace(":", "_"));
+            _logger.LogInformation("\n#################### CERRANDO LA APLICACIÓN ####################");
+
+            //LoggingManager.CloseAndFlush();
+        }
+
+        private void ejecutarEnSegundoPlano()
+        {
+            this.Hide();
+            notifyIcon.ShowBalloonTip(1000, "Control Asistencia Savin", "La aplicación se está ejecutando en segundo plano.", ToolTipIcon.Info);
+            _logger.LogInformation("\nLa aplicación se ha ocultado y sigue ejecutándose en segundo plano.");
         }
 
         // -------------------------------------------------------------------
@@ -344,11 +425,25 @@ namespace control_asistencia_savin
             // Definir los horarios deseados para ejecutar la tarea automáticamente
             TimeSpan[] scheduledTimes = new TimeSpan[]
             {
+                new TimeSpan(6, 01, 01), // 12:30 PM
+                new TimeSpan(6, 11, 01), // 12:30 PM
+                new TimeSpan(6, 21, 01), // 12:30 PM
+                new TimeSpan(6, 31, 01), // 12:30 PM
+                new TimeSpan(6, 41, 01), // 12:30 PM
+                new TimeSpan(6, 51, 01), // 12:30 PM
+
+                new TimeSpan(7, 01, 01), // 12:30 PM
+                new TimeSpan(7, 11, 01), // 12:30 PM
+                new TimeSpan(7, 21, 01), // 12:30 PM
+                new TimeSpan(7, 31, 01), // 12:30 PM
+                new TimeSpan(7, 41, 01), // 12:30 PM
+                new TimeSpan(7, 51, 01), // 12:30 PM
+
                 //MAÑANA
                 new TimeSpan(8, 01, 01), // 12:30 PM
                 new TimeSpan(8, 11, 01), // 12:30 PM
-                //new TimeSpan(8, 21, 01), // 12:30 PM
-                //new TimeSpan(8, 31, 01), // 12:30 PM
+                new TimeSpan(8, 21, 01), // 12:30 PM
+                new TimeSpan(8, 31, 01), // 12:30 PM
                 new TimeSpan(8, 41, 01), // 12:30 PM
                 new TimeSpan(8, 51, 01), // 12:30 PM
 
@@ -364,7 +459,9 @@ namespace control_asistencia_savin
                 new TimeSpan(10, 21, 01), // 12:30 PM
                 new TimeSpan(10, 31, 01), // 12:30 PM
                 new TimeSpan(10, 41, 01), // 12:30 PM
-                new TimeSpan(10, 51, 01), // 12:30 PM
+                new TimeSpan(10, 56, 01), // 12:30 PM
+                
+                new TimeSpan(10, 58, 01), // 12:30 PM
 
                 new TimeSpan(11, 01, 01), // 12:30 PM
                 new TimeSpan(11, 11, 01), // 12:30 PM
@@ -376,14 +473,14 @@ namespace control_asistencia_savin
                 new TimeSpan(12, 01, 01), // 12:30 PM
                 new TimeSpan(12, 11, 01), // 12:30 PM
                 new TimeSpan(12, 21, 01), // 12:30 PM
-                //new TimeSpan(12, 31, 01), // 12:30 PM
-                //new TimeSpan(12, 41, 01), // 12:30 PM
+                new TimeSpan(12, 31, 01), // 12:30 PM
+                new TimeSpan(12, 41, 01), // 12:30 PM
                 new TimeSpan(12, 51, 01), // 12:30 PM
                 //TARDE
                 new TimeSpan(14, 01, 01),  // 2:00 PM
                 new TimeSpan(14, 11, 01),  // 2:00 PM
-                //new TimeSpan(14, 21, 01),  // 2:00 PM
-                //new TimeSpan(14, 31, 01),  // 2:00 PM
+                new TimeSpan(14, 21, 01),  // 2:00 PM
+                new TimeSpan(14, 31, 01),  // 2:00 PM
                 new TimeSpan(14, 41, 01),  // 2:00 PM
                 new TimeSpan(14, 51, 01),  // 2:00 PM
 
@@ -415,11 +512,40 @@ namespace control_asistencia_savin
                 new TimeSpan(18, 41, 01),  // 6:30 PM
                 new TimeSpan(18, 51, 01),  // 6:30 PM
 
-                //new TimeSpan(19, 01, 01),  // 7:30 PM
+                new TimeSpan(19, 01, 01),  // 7:30 PM
                 new TimeSpan(19, 11, 01),  // 7:30 PM
                 new TimeSpan(19, 21, 01),  // 7:30 PM
                 new TimeSpan(19, 31, 01),  // 7:30 PM
                 new TimeSpan(19, 41, 01),  // 7:30 PM
+                new TimeSpan(19, 51, 01),  // 7:30 PM
+
+                new TimeSpan(20, 01, 01),  // 7:30 PM
+                new TimeSpan(20, 11, 01),  // 7:30 PM
+                new TimeSpan(20, 21, 01),  // 7:30 PM
+                new TimeSpan(20, 31, 01),  // 7:30 PM
+                new TimeSpan(20, 41, 01),  // 7:30 PM
+                new TimeSpan(20, 51, 01),  // 7:30 PM
+                
+                new TimeSpan(21, 01, 01),  // 7:30 PM
+                new TimeSpan(21, 11, 01),  // 7:30 PM
+                new TimeSpan(21, 21, 01),  // 7:30 PM
+                new TimeSpan(21, 31, 01),  // 7:30 PM
+                new TimeSpan(21, 41, 01),  // 7:30 PM
+                new TimeSpan(21, 51, 01),  // 7:30 PM
+                                
+                new TimeSpan(22, 01, 01),  // 7:30 PM
+                new TimeSpan(22, 11, 01),  // 7:30 PM
+                new TimeSpan(22, 21, 01),  // 7:30 PM
+                new TimeSpan(22, 31, 01),  // 7:30 PM
+                new TimeSpan(22, 41, 01),  // 7:30 PM
+                new TimeSpan(22, 51, 01),  // 7:30 PM
+                                                
+                new TimeSpan(23, 01, 01),  // 7:30 PM
+                new TimeSpan(23, 11, 01),  // 7:30 PM
+                new TimeSpan(23, 21, 01),  // 7:30 PM
+                new TimeSpan(23, 31, 01),  // 7:30 PM
+                new TimeSpan(23, 41, 01),  // 7:30 PM
+                new TimeSpan(23, 51, 01),  // 7:30 PM
                 //new TimeSpan(12, 04, 0),  // PRUEBA
                 //new TimeSpan(12, 05, 0),  // PRUEBA
                 //new TimeSpan(12, 06, 0),  // PRUEBA
@@ -461,16 +587,13 @@ namespace control_asistencia_savin
 
             }
         }
-
-
-
         private void advertenciaDeSincronizacion(bool mostrarAdvertencia)
         {
             if (this.InvokeRequired)
             {
                 // Si el llamado viene de un hilo diferente al hilo de la UI,
                 // usar el método Invoke con una expresión lambda para ejecutar mostrarAdvertenciaInterfaz en el hilo de la UI.
-                this.Invoke((MethodInvoker)delegate {
+                this.Invoke((System.Windows.Forms.MethodInvoker)delegate {
                     mostrarAdvertenciaInterfaz(mostrarAdvertencia);
                 });
             }
@@ -522,5 +645,49 @@ namespace control_asistencia_savin
 
 
         }
+
+        // -------------------------------------------------------------------
+        // EJECUTAR EL PROGRAMA SIEMPRE EN SEGUNDO PLANO
+        // -------------------------------------------------------------------
+        private void NotifyIcon_DoubleClick(object sender, EventArgs e)
+        {
+            // Mostrar el formulario cuando se haga doble clic en el icono de la bandeja del sistema
+            //this.Show();
+            //this.WindowState = FormWindowState.Normal;
+            //this.BringToFront();
+            //this.Activate();
+
+            ShowMe();
+        }
+
+        private void ExitMenuItem_Click(object sender, EventArgs e)
+        {
+            // Cerrar la aplicación cuando se seleccione "Salir" en el menú contextual del NotifyIcon
+            notifyIcon.Visible = false;
+            Application.Exit();
+        }
+        protected override void WndProc(ref Message m)
+        {
+            if (m.Msg == NativeMethods.WM_SHOWME)
+            {
+                ShowMe();
+            }
+            base.WndProc(ref m);
+        }
+        private void ShowMe()
+        {
+            if (WindowState == FormWindowState.Minimized)
+            {
+                WindowState = FormWindowState.Normal;
+            }
+            // Llamamos a BringToFront para asegurarnos de que la ventana está en el frente
+            bool top = TopMost;
+            TopMost = true;
+            TopMost = top;
+            Show();
+        }
+
+
+
     }
 }

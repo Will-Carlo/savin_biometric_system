@@ -1,6 +1,7 @@
 using control_asistencia_savin.ApiService;
 using control_asistencia_savin.Frm;
 using control_asistencia_savin.Notifications;
+using control_asistencia_savin.WindowsSystemValidations;
 using Serilog;
 
 namespace control_asistencia_savin
@@ -39,7 +40,8 @@ namespace control_asistencia_savin
 
             if (!createNew)
             {
-                MessageBox.Show("La aplicación ya está en ejecución", "Advertencia", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                //MessageBox.Show("La aplicación ya está en ejecución", "Advertencia", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                RestoreExistingInstance();
                 return;
             }
 
@@ -55,6 +57,15 @@ namespace control_asistencia_savin
         //        .WriteTo.File("logs/nombre2_savin.txt", rollingInterval: RollingInterval.Day)
         //        .CreateLogger();
         //}
+
+        private static void RestoreExistingInstance()
+        {
+            NativeMethods.PostMessage(
+            (IntPtr)NativeMethods.HWND_BROADCAST,
+            NativeMethods.WM_SHOWME,
+            IntPtr.Zero,
+            IntPtr.Zero);
+        }
 
     }
 }
