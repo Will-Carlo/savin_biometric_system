@@ -12,6 +12,7 @@ using System.Data;
 using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
+using System.Net.Http.Headers;
 using System.Net.NetworkInformation;
 using System.Reflection;
 using System.Reflection.Emit;
@@ -39,6 +40,11 @@ namespace control_asistencia_savin
         // ejecutar el programa siempre en segundo plano
         private NotifyIcon notifyIcon;
 
+        // enviar logs a servidor
+        private FileSystemWatcher _watcher;
+        private string _logsDirectory;
+        private string _macAddress;
+        private string _serverUrl = "https://level-hill-gander.glitch.me/upload";
 
         public Main()
         {
@@ -82,14 +88,17 @@ namespace control_asistencia_savin
 
             //---------------------------------------------------------------
             // verifica la conexión cada 20 minutos v2
-            if (!_apiService._esProduction)
+            if (_apiService._esProduction)
             {
                 _logger.LogDebug("Se ha activado la función de tarea programada.");
+                _logger.LogDebug("Se ha activado la función de enviar logs a servidor.");
                 SetupScheduledTask();
+                inicializarVariablesEnvioLog();
             }
             else
             {
                 _logger.LogDebug("Se ha desactivado la función de tarea programada.");
+                _logger.LogDebug("Se ha desactivado la función de enviar logs a servidor.");
             }
 
             //---------------------------------------------------------------
@@ -150,7 +159,13 @@ namespace control_asistencia_savin
             exitMenuItem.Click += ExitMenuItem_Click;
             contextMenu.Items.Add(exitMenuItem);
             notifyIcon.ContextMenuStrip = contextMenu;
+
+
+            // ENVIAR LOGS _apiService._dirMac
+
+
         }
+
 
 
         private void loadSystem()
@@ -688,6 +703,90 @@ namespace control_asistencia_savin
         }
 
 
+        // -------------------------------------------------------------------
+        // ENVIAR LOGS DEL SISTEMA
+        // -------------------------------------------------------------------
+
+        private void inicializarVariablesEnvioLog()
+        {
+            // Establecer el directorio de trabajo actual en el directorio raíz del proyecto
+            Directory.SetCurrentDirectory(AppDomain.CurrentDomain.BaseDirectory);
+
+            // Configurar la ruta de la carpeta de logs en el directorio raíz del proyecto
+            _logsDirectory = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "logs");
+            EnsureLogsDirectoryExists();
+            _macAddress = _apiService._dirMac;
+
+            InitializeFileSystemWatcher();
+        }
+
+        private void InitializeFileSystemWatcher()
+        {
+            _watcher = new FileSystemWatcher
+            {
+                Path = _logsDirectory,
+                Filter = "*.log",
+                NotifyFilter = NotifyFilters.LastWrite | NotifyFilters.FileName | NotifyFilters.Size,
+                EnableRaisingEvents = true
+            };
+
+            _watcher.Changed += OnLogFileChanged;
+            _watcher.Created += OnLogFileChanged;
+        }
+
+        private async void OnLogFileChanged(object sender, FileSystemEventArgs e)
+        {
+            //_logger.LogDebug("Detected change in file: " + e.FullPath);
+            await Task.Delay(500); // Pequeño retraso para asegurar que el archivo se haya escrito completamente
+            await UploadLogFile(e.FullPath);
+        }
+
+
+        private async Task UploadLogFile(string filePath)
+        {
+            //_logger.LogDebug("_dirMac: " + _macAddress);
+            //_logger.LogDebug("Uploading file: " + filePath);
+
+            using (var client = new HttpClient())
+            using (var content = new MultipartFormDataContent())
+            using (var fileStream = new FileStream(filePath, FileMode.Open, FileAccess.Read))
+            using (var fileContent = new StreamContent(fileStream))
+            {
+                fileContent.Headers.ContentType = MediaTypeHeaderValue.Parse("multipart/form-data");
+                content.Add(fileContent, "log", Path.GetFileName(filePath));
+
+                client.DefaultRequestHeaders.Add("x-mac-address", _macAddress);
+                client.DefaultRequestHeaders.Add("User-Agent", "PostmanRuntime/7.39.0");
+                client.DefaultRequestHeaders.Add("Accept", "*/*");
+                client.DefaultRequestHeaders.Add("Host", "level-hill-gander.glitch.me");
+                client.DefaultRequestHeaders.Add("Accept-Encoding", "gzip, deflate, br");
+
+                //_logger.LogDebug("Sending request to: " + _serverUrl);
+                //_logger.LogDebug("Request Headers: " + client.DefaultRequestHeaders.ToString());
+                //_logger.LogDebug("File content: " + fileContent.Headers.ToString());
+
+                var response = await client.PostAsync(_serverUrl, content);
+                //_logger.LogDebug("Response status code: " + response.StatusCode);
+                //_logger.LogDebug("Response reason phrase: " + response.ReasonPhrase);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    //    _logger.LogDebug($"File {filePath} uploaded successfully.");
+                }
+                else
+                {
+                    //    _logger.LogDebug($"Error uploading file {filePath}: {response.ReasonPhrase}");
+                }
+        }
+        }
+
+        private void EnsureLogsDirectoryExists()
+        {
+            if (!Directory.Exists(_logsDirectory))
+            {
+                Directory.CreateDirectory(_logsDirectory);
+            }
+        }
 
     }
 }

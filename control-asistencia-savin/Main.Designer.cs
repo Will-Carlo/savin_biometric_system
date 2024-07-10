@@ -380,9 +380,9 @@
             lblLogOut.ForeColor = Color.FromArgb(241, 206, 0);
             lblLogOut.Location = new Point(67, 73);
             lblLogOut.Name = "lblLogOut";
-            lblLogOut.Size = new Size(103, 21);
+            lblLogOut.Size = new Size(102, 21);
             lblLogOut.TabIndex = 27;
-            lblLogOut.Text = "Cerrar seeión";
+            lblLogOut.Text = "Cerrar sesión";
             lblLogOut.Click += lblLogOut_Click;
             // 
             // pictureBox2

@@ -319,6 +319,14 @@ namespace control_asistencia_savin
                             minutosAtrasadoTarde = g.Where(a => a.IdTurno == 2).Sum(a => a.MinutosAtraso);
                         }
 
+                        // Manejo del personal con IdTurno = 4
+                        if (g.Any(a => a.IdTurno == 4))
+                        {
+                            entradaManana = g.Where(a => a.IdTurno == 4 && a.IndTipoMovimiento == 461).Select(a => a.FechaMarcado.TimeOfDay).FirstOrDefault();
+                            salidaTarde = g.Where(a => a.IdTurno == 4 && a.IndTipoMovimiento == 462).Select(a => a.FechaMarcado.TimeOfDay).FirstOrDefault();
+                            minutosAtrasadoManana = g.Where(a => a.IdTurno == 4).Sum(a => a.MinutosAtraso);
+                        }
+
                         return new RegistroAsistencia
                         {
                             Fecha = g.Key.ToString("dd/MM/yyyy"),

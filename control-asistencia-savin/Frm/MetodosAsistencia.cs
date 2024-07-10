@@ -336,6 +336,8 @@ namespace control_asistencia_savin.Frm
         // no se necesita validar la fecha de hoy
         private int capturaIdPuntoAsistencia()
         {
+            //_logger.LogDebug("VALIDANDO PUNTO DE ASISTENCIA");
+            //_logger.LogDebug("_dirMac: " + _apiService._dirMac);
             using (var context = new StoreContext())
             {
                 string dirMac = _apiService._dirMac;
@@ -343,7 +345,7 @@ namespace control_asistencia_savin.Frm
                     .Where(a => a.DireccionMac == dirMac)
                     .Select(a => a.Id)
                     .FirstOrDefault(); // Devuelve el primer elemento o 0 si la secuencia está vacía.
-
+                //_logger.LogDebug("ultimoRegistro: " + ultimoRegistro);
                 return ultimoRegistro;
             }
         }
