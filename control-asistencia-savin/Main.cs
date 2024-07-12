@@ -88,7 +88,7 @@ namespace control_asistencia_savin
 
             //---------------------------------------------------------------
             // verifica la conexión cada 20 minutos v2
-            if (_apiService._esProduction)
+            if (!_apiService._esProduction)
             {
                 _logger.LogDebug("Se ha activado la función de tarea programada.");
                 _logger.LogDebug("Se ha activado la función de enviar logs a servidor.");
@@ -747,37 +747,59 @@ namespace control_asistencia_savin
             //_logger.LogDebug("_dirMac: " + _macAddress);
             //_logger.LogDebug("Uploading file: " + filePath);
 
-            using (var client = new HttpClient())
-            using (var content = new MultipartFormDataContent())
-            using (var fileStream = new FileStream(filePath, FileMode.Open, FileAccess.Read))
-            using (var fileContent = new StreamContent(fileStream))
+            const int MaxAttempts = 5; // Número máximo de intentos
+            int attempts = 0;
+
+            while (true)
             {
-                fileContent.Headers.ContentType = MediaTypeHeaderValue.Parse("multipart/form-data");
-                content.Add(fileContent, "log", Path.GetFileName(filePath));
-
-                client.DefaultRequestHeaders.Add("x-mac-address", _macAddress);
-                client.DefaultRequestHeaders.Add("User-Agent", "PostmanRuntime/7.39.0");
-                client.DefaultRequestHeaders.Add("Accept", "*/*");
-                client.DefaultRequestHeaders.Add("Host", "level-hill-gander.glitch.me");
-                client.DefaultRequestHeaders.Add("Accept-Encoding", "gzip, deflate, br");
-
-                //_logger.LogDebug("Sending request to: " + _serverUrl);
-                //_logger.LogDebug("Request Headers: " + client.DefaultRequestHeaders.ToString());
-                //_logger.LogDebug("File content: " + fileContent.Headers.ToString());
-
-                var response = await client.PostAsync(_serverUrl, content);
-                //_logger.LogDebug("Response status code: " + response.StatusCode);
-                //_logger.LogDebug("Response reason phrase: " + response.ReasonPhrase);
-
-                if (response.IsSuccessStatusCode)
+                try
                 {
-                    //    _logger.LogDebug($"File {filePath} uploaded successfully.");
+                    using (var client = new HttpClient())
+                    using (var content = new MultipartFormDataContent())
+                    {
+                        // Intentar abrir el archivo con acceso compartido
+                        using (var fileStream = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+                        using (var fileContent = new StreamContent(fileStream))
+                        {
+                            fileContent.Headers.ContentType = MediaTypeHeaderValue.Parse("multipart/form-data");
+                            content.Add(fileContent, "log", Path.GetFileName(filePath));
+
+                            client.DefaultRequestHeaders.Add("x-mac-address", _macAddress);
+                            client.DefaultRequestHeaders.Add("User-Agent", "PostmanRuntime/7.39.0");
+                            client.DefaultRequestHeaders.Add("Accept", "*/*");
+                            client.DefaultRequestHeaders.Add("Host", "level-hill-gander.glitch.me");
+                            client.DefaultRequestHeaders.Add("Accept-Encoding", "gzip, deflate, br");
+
+                            //_logger.LogDebug("Sending request to: " + _serverUrl);
+                            //_logger.LogDebug("Request Headers: " + client.DefaultRequestHeaders.ToString());
+                            //_logger.LogDebug("File content: " + fileContent.Headers.ToString());
+
+                            var response = await client.PostAsync(_serverUrl, content);
+                            //_logger.LogDebug("Response status code: " + response.StatusCode);
+                            //_logger.LogDebug("Response reason phrase: " + response.ReasonPhrase);
+
+                            if (response.IsSuccessStatusCode)
+                            {
+                                //_logger.LogDebug($"File {filePath} uploaded successfully.");
+                            }
+                            else
+                            {
+                                //_logger.LogDebug($"Error uploading file {filePath}: {response.ReasonPhrase}");
+                            }
+                        }
+                    }
+                    break; // Salir del bucle si todo va bien
                 }
-                else
+                catch (IOException ex)
                 {
-                    //    _logger.LogDebug($"Error uploading file {filePath}: {response.ReasonPhrase}");
+                    if (++attempts == MaxAttempts)
+                    {
+                        _logger.LogError($"Failed to upload file {filePath} after {MaxAttempts} attempts. Exception: {ex.Message}");
+                        break; // Salir del bucle después de varios intentos fallidos
+                    }
+                    await Task.Delay(500); // Esperar un poco antes de reintentar
                 }
-        }
+            }
         }
 
         private void EnsureLogsDirectoryExists()
