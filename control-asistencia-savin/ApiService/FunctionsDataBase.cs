@@ -296,6 +296,7 @@ namespace control_asistencia_savin.ApiService
             string nameStore = this.GetNombreTienda() ?? "store";
             string nameBackup = nameStore.Replace(' ', '_').ToLower() + "_backup_" + dateBackUp + ".db";
             var rutaCopiaDeSeguridad = Path.Combine(backupFolder, nameBackup);
+            _logger.LogDebug($"ruta copia de seguridad: {rutaCopiaDeSeguridad}");
             _logger.LogInformation("-> Creando copia de seguridad...");
             _logger.LogInformation($"Backup: {nameBackup}");
 

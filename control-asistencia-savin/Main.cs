@@ -710,10 +710,11 @@ namespace control_asistencia_savin
         private void inicializarVariablesEnvioLog()
         {
             // Establecer el directorio de trabajo actual en el directorio raíz del proyecto
-            Directory.SetCurrentDirectory(AppDomain.CurrentDomain.BaseDirectory);
+            //Directory.SetCurrentDirectory(AppDomain.CurrentDomain.BaseDirectory);
 
             // Configurar la ruta de la carpeta de logs en el directorio raíz del proyecto
-            _logsDirectory = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "logs");
+            //_logsDirectory = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "logs");
+            _logsDirectory = "logs";
             EnsureLogsDirectoryExists();
             _macAddress = _apiService._dirMac;
 
@@ -794,7 +795,7 @@ namespace control_asistencia_savin
                 {
                     if (++attempts == MaxAttempts)
                     {
-                        _logger.LogError($"Failed to upload file {filePath} after {MaxAttempts} attempts. Exception: {ex.Message}");
+                        //_logger.LogError($"Failed to upload file {filePath} after {MaxAttempts} attempts. Exception: {ex.Message}");
                         break; // Salir del bucle después de varios intentos fallidos
                     }
                     await Task.Delay(500); // Esperar un poco antes de reintentar
