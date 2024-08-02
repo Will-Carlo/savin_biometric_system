@@ -33,20 +33,30 @@ namespace control_asistencia_savin
             //Console.ReadLine();
 
 
-            const string appName = "SavinB";
+            const string appName = "ControlAsistenciaSavin";
             bool createNew;
+
 
             mutex = new Mutex(true, appName, out createNew);
 
-            if (!createNew)
+            if (createNew)
             {
                 //MessageBox.Show("La aplicación ya está en ejecución", "Advertencia", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                //RestoreExistingInstance();
+                //return;
+                Application.EnableVisualStyles();
+                Application.SetCompatibleTextRenderingDefault(false);
+                ApplicationConfiguration.Initialize();
+                Application.Run(new Main());
+
+            }
+            else
+            {
                 RestoreExistingInstance();
-                return;
             }
 
-            ApplicationConfiguration.Initialize();
-            Application.Run(new Main());
+            //ApplicationConfiguration.Initialize();
+            //Application.Run(new Main());
         }
         //private static void ConfigureSerilog()
         //{
@@ -61,10 +71,10 @@ namespace control_asistencia_savin
         private static void RestoreExistingInstance()
         {
             NativeMethods.PostMessage(
-            (IntPtr)NativeMethods.HWND_BROADCAST,
-            NativeMethods.WM_SHOWME,
-            IntPtr.Zero,
-            IntPtr.Zero);
+                (IntPtr)NativeMethods.HWND_BROADCAST,
+                NativeMethods.WM_SHOWME,
+                IntPtr.Zero,
+                IntPtr.Zero);
         }
 
     }

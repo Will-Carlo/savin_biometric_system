@@ -311,6 +311,9 @@ namespace control_asistencia_savin
             ShowInOut("none");
 
             _logger.LogDebug("Huella rechazada.");
+
+            frmHuellaRechazada alerta = new frmHuellaRechazada();
+            alerta.ShowDialog();
         }
 
         //private void btnVerificar_Click_1(object sender, EventArgs e)

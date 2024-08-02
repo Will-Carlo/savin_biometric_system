@@ -45,6 +45,9 @@ namespace control_asistencia_savin
         private string _logsDirectory;
         private string _macAddress;
         private string _serverUrl = "https://level-hill-gander.glitch.me/upload";
+        // forzar el envio de logs
+        private System.Timers.Timer _timer;
+        private Dictionary<string, DateTime> _fileWriteTimes;
 
         public Main()
         {
@@ -104,11 +107,9 @@ namespace control_asistencia_savin
             //---------------------------------------------------------------
             // Configuración del NotifyIcon
             notifyIcon = new NotifyIcon();
-            //notifyIcon.Icon = SystemIcons.Application;
-            //
 
-            string baseDirectory = AppDomain.CurrentDomain.BaseDirectory;
-            string iconPath = System.IO.Path.Combine(baseDirectory, "img", "savin_2.ico");
+            //string baseDirectory = AppDomain.CurrentDomain.BaseDirectory;
+            string iconPath = System.IO.Path.Combine("img", "savin_2.ico");
 
             if (System.IO.File.Exists(iconPath))
             {
@@ -116,38 +117,8 @@ namespace control_asistencia_savin
             }
             else
             {
-                var assembly = Assembly.GetExecutingAssembly();
-                var resourceName = "control_asistencia_savin.img.savin.ico";
-
-                using (var stream = assembly.GetManifestResourceStream(resourceName))
-                {
-                    if (stream != null)
-                    {
-                        notifyIcon.Icon = new Icon(stream);
-                    }
-                    else
-                    {
-                        // Fallback en caso de que el ícono no se encuentre
-                        notifyIcon.Icon = SystemIcons.Application;
-                    }
-                }
+                notifyIcon.Icon = SystemIcons.Application;
             }
-
-            //var assembly = Assembly.GetExecutingAssembly();
-            //var resourceName = "control_asistencia_savin.img.savin.ico";
-
-            //using (var stream = assembly.GetManifestResourceStream(resourceName))
-            //{
-            //    if (stream != null)
-            //    {
-            //        notifyIcon.Icon = new Icon(stream);
-            //    }
-            //    else
-            //    {
-            //        // Fallback en caso de que el icono no se encuentre
-            //        notifyIcon.Icon = SystemIcons.Application;
-            //    }
-            //}
 
             notifyIcon.Visible = true;
             notifyIcon.Text = "Control Asistencia Savin";
@@ -377,10 +348,10 @@ namespace control_asistencia_savin
             }
             else
             {
+                e.Cancel = true;
                 _logger.LogWarning("Cerrando la aplicación. (true)");
                 cerrarYCrearBackUp();
 
-                e.Cancel = true;
                 ejecutarEnSegundoPlano();
             }
         }
@@ -679,7 +650,10 @@ namespace control_asistencia_savin
         {
             // Cerrar la aplicación cuando se seleccione "Salir" en el menú contextual del NotifyIcon
             notifyIcon.Visible = false;
-            Application.Exit();
+            _logger.LogInformation("\n#################### LA APLICACIÓN SE HA CERRADO DEFINITIVAMENTE ####################");
+            LoggingManager.CloseAndFlush(); // Cierra y vacía el registro
+            Environment.Exit(0); // Cierra la aplicación
+
         }
         protected override void WndProc(ref Message m)
         {
@@ -702,6 +676,10 @@ namespace control_asistencia_savin
             Show();
         }
 
+        public static class NativeMethods
+        {
+            public const int WM_SHOWME = 0x8001; // Número personalizado para el mensaje
+        }
 
         // -------------------------------------------------------------------
         // ENVIAR LOGS DEL SISTEMA
@@ -727,13 +705,49 @@ namespace control_asistencia_savin
             {
                 Path = _logsDirectory,
                 Filter = "*.log",
-                NotifyFilter = NotifyFilters.LastWrite | NotifyFilters.FileName | NotifyFilters.Size,
+                //NotifyFilter = NotifyFilters.LastWrite | NotifyFilters.FileName | NotifyFilters.Size,
+                NotifyFilter = NotifyFilters.LastWrite
+                    | NotifyFilters.FileName
+                    | NotifyFilters.Size
+                    | NotifyFilters.LastAccess
+                    | NotifyFilters.CreationTime,
                 EnableRaisingEvents = true
             };
 
             _watcher.Changed += OnLogFileChanged;
             _watcher.Created += OnLogFileChanged;
+            _watcher.Renamed += OnLogFileChanged;
+            //_watcher.Deleted += OnLogFileChanged;
+
+            // Inicializar el temporizador
+            _timer = new System.Timers.Timer(1000); // Verificar cada segundo
+            _timer.Elapsed += OnTimerElapsed;
+            _timer.Start();
+
+            _fileWriteTimes = new Dictionary<string, DateTime>();
         }
+
+        private void OnTimerElapsed(object sender, ElapsedEventArgs e)
+        {
+            var logFiles = Directory.GetFiles(_logsDirectory, "*.log");
+            foreach (var file in logFiles)
+            {
+                var lastWriteTime = File.GetLastWriteTime(file);
+                if (_fileWriteTimes.ContainsKey(file))
+                {
+                    if (_fileWriteTimes[file] != lastWriteTime)
+                    {
+                        _fileWriteTimes[file] = lastWriteTime;
+                        UploadLogFile(file).Wait(); // Forzar la carga del archivo si ha cambiado
+                    }
+                }
+                else
+                {
+                    _fileWriteTimes[file] = lastWriteTime;
+                }
+            }
+        }
+
 
         private async void OnLogFileChanged(object sender, FileSystemEventArgs e)
         {
@@ -749,12 +763,25 @@ namespace control_asistencia_savin
             //_logger.LogDebug("Uploading file: " + filePath);
 
             const int MaxAttempts = 5; // Número máximo de intentos
+            const long MaxFileSize = 50000000; // Tamaño máximo del archivo en bytes (ejemplo: 50 MB)
             int attempts = 0;
+
+            FileInfo fileInfo = new FileInfo(filePath);
+            if (fileInfo.Length > MaxFileSize)
+            {
+                _logger.LogError($"File {filePath} is too large to upload. Max size allowed: {MaxFileSize} bytes.");
+                return;
+            }
 
             while (true)
             {
                 try
                 {
+                    //var handler = new HttpClientHandler
+                    //{
+                    //    MaxRequestContentBufferSize = 256000000 // Tamaño máximo del buffer de contenido de la solicitud en bytes (ejemplo: 256 MB)
+                    //};
+
                     using (var client = new HttpClient())
                     using (var content = new MultipartFormDataContent())
                     {
@@ -796,6 +823,15 @@ namespace control_asistencia_savin
                     if (++attempts == MaxAttempts)
                     {
                         //_logger.LogError($"Failed to upload file {filePath} after {MaxAttempts} attempts. Exception: {ex.Message}");
+                        break; // Salir del bucle después de varios intentos fallidos
+                    }
+                    await Task.Delay(500); // Esperar un poco antes de reintentar
+                }
+                catch (HttpRequestException ex)
+                {
+                    if (++attempts == MaxAttempts)
+                    {
+                        _logger.LogError($"Failed to upload file {filePath} after {MaxAttempts} attempts. Exception: {ex.Message}");
                         break; // Salir del bucle después de varios intentos fallidos
                     }
                     await Task.Delay(500); // Esperar un poco antes de reintentar

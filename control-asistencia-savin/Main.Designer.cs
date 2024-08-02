@@ -363,7 +363,7 @@
             // 
             // pctWarning
             // 
-            pctWarning.Image = (Image)resources.GetObject("pctWarning.Image");
+            pctWarning.Image = Properties.Resources.warning;
             pctWarning.Location = new Point(34, 27);
             pctWarning.Name = "pctWarning";
             pctWarning.Size = new Size(29, 29);

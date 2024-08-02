@@ -12,6 +12,21 @@ namespace control_asistencia_savin.Notifications
     {
         private static ILoggerFactory loggerFactory;
 
+        //public static void InitializeLogger()
+        //{
+        //    // Configurar Serilog
+        //    Log.Logger = new LoggerConfiguration()
+        //        .MinimumLevel.Debug()
+        //        .WriteTo.Console()
+        //        .WriteTo.File("logs/savin.log", rollingInterval: RollingInterval.Day)
+        //        .CreateLogger();
+
+        //    // Configurar la fábrica de ILogger para usar Serilog
+        //    loggerFactory = LoggerFactory.Create(builder =>
+        //    {
+        //        builder.AddSerilog();
+        //    });
+        //}
         static LoggingManager()
         {
             // Configurar Serilog
