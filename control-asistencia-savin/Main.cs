@@ -91,7 +91,7 @@ namespace control_asistencia_savin
 
             //---------------------------------------------------------------
             // verifica la conexión cada 20 minutos v2
-            if (!_apiService._esProduction)
+            if (_apiService._esProduction)
             {
                 _logger.LogDebug("Se ha activado la función de tarea programada.");
                 _logger.LogDebug("Se ha activado la función de enviar logs a servidor.");

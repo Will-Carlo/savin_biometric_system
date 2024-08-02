@@ -97,13 +97,16 @@ namespace control_asistencia_savin.Frm.admin_frm
                                    select new
                                    {
                                        IdPersonal = p.Id,
-                                       NombreCompleto = p.Paterno + " " + p.Materno + ", " + p.Nombres,
+                                       NombreCompleto = p.Nombres + " " + p.Paterno + " " + p.Materno,
                                        HoraMarcado = DateTime.Parse(a.HoraMarcado).TimeOfDay, // Extraer solo la hora
                                        MinutosAtraso = a.MinutosAtraso,
                                        PuntoAsistencia = context.RrhhPuntoAsistencia.FirstOrDefault(pa => pa.Id == a.IdPuntoAsistencia).Nombre,
                                        TipoMovimiento = a.IndTipoMovimiento == 461 ? "entrada" :
                                                         a.IndTipoMovimiento == 462 ? "salida" :
-                                                        a.IndTipoMovimiento == 469 ? "falta" : "",
+                                                        a.IndTipoMovimiento == 469 ? "falta" :
+                                                        a.IndTipoMovimiento == 499 ? "feriado" :
+                                                        a.IndTipoMovimiento == 506 ? "permiso" :
+                                                        a.IndTipoMovimiento == 535 ? "abandono" : "",
                                        Turno = a.IdTurno == 1 ? "mañana" :
                                                         a.IdTurno == 2 ? "tarde" :
                                                         a.IdTurno == 3 ? "sábado" :
@@ -129,13 +132,16 @@ namespace control_asistencia_savin.Frm.admin_frm
                                    select new
                                    {
                                        IdPersonal = p.Id,
-                                       NombreCompleto = p.Paterno + " " + p.Materno + ", " + p.Nombres,
+                                       NombreCompleto = p.Nombres + " " + p.Paterno + " " + p.Materno,
                                        HoraMarcado = DateTime.Parse(a.HoraMarcado).TimeOfDay, // Extraer solo la hora
                                        MinutosAtraso = a.MinutosAtraso,
                                        PuntoAsistencia = context.RrhhPuntoAsistencia.FirstOrDefault(pa => pa.Id == a.IdPuntoAsistencia).Nombre,
                                        TipoMovimiento = a.IndTipoMovimiento == 461 ? "entrada" :
                                                         a.IndTipoMovimiento == 462 ? "salida" :
-                                                        a.IndTipoMovimiento == 469 ? "falta" : "",
+                                                        a.IndTipoMovimiento == 469 ? "falta" :
+                                                        a.IndTipoMovimiento == 499 ? "feriado" :
+                                                        a.IndTipoMovimiento == 506 ? "permiso" :
+                                                        a.IndTipoMovimiento == 535 ? "abandono" : "",
                                        Turno = a.IdTurno == 1 ? "mañana" :
                                                         a.IdTurno == 2 ? "tarde" :
                                                         a.IdTurno == 3 ? "sábado" :
@@ -165,10 +171,19 @@ namespace control_asistencia_savin.Frm.admin_frm
             // Ocultar la primera fila que muestra la flecha de ordenamiento
             dgvPersonalAsistencias.RowHeadersVisible = false;
 
+            // Configurar el ajuste automático del ancho de las columnas
+            dgvPersonalAsistencias.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
 
+            // Ajustar el modo de tamaño automático para cada columna
+            foreach (DataGridViewColumn column in dgvPersonalAsistencias.Columns)
+            {
+                column.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
+            }
+
+            // Establecer el modo Fill para la última columna (o la columna que prefieras)
+            dgvPersonalAsistencias.Columns[dgvPersonalAsistencias.Columns.Count - 1].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
 
             dgvPersonalAsistencias.MultiSelect = false;
-
 
             // Establecer la propiedad DataGridView.AutoGenerateColumns en true si no se ha hecho previamente
             dgvPersonalAsistencias.AutoGenerateColumns = true;
